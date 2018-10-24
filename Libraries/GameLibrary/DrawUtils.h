@@ -1,13 +1,13 @@
 #pragma once
 
 // グラフィックハンドル   
-typedef int HGRP;
+using HGRP = int;
 // サウンドハンドル
-typedef int HSND;
+using HSND = int;
 // フォントハンドル
-typedef int HFNT;
+using HFNT = int;
 // ネットワークハンドル 
-typedef int HNET;
+using HNET = int;
 
 // <色コード(標準カラー16色)>
 enum ColorCode : unsigned int

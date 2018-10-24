@@ -61,6 +61,12 @@
     <ClCompile Include="Libraries\GameLibrary\FrameTimer.cpp">
       <Filter>ライブラリ\ゲームライブラリ</Filter>
     </ClCompile>
+    <ClCompile Include="Libraries\GameLibrary\Easings.cpp">
+      <Filter>ライブラリ\ゲームライブラリ</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\GameLibrary\Timer.cpp">
+      <Filter>ライブラリ\ゲームライブラリ</Filter>
+    </ClCompile>
   </ItemGroup>
   <!-- ヘッダファイル -->
   <ItemGroup>
@@ -89,6 +95,12 @@
       <Filter>ライブラリ\ゲームライブラリ</Filter>
     </ClInclude>
     <ClInclude Include="Libraries\GameLibrary\GameLib.h">
+      <Filter>ライブラリ\ゲームライブラリ</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\GameLibrary\Easings.h">
+      <Filter>ライブラリ\ゲームライブラリ</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\GameLibrary\Timer.h">
       <Filter>ライブラリ\ゲームライブラリ</Filter>
     </ClInclude>
   </ItemGroup>
