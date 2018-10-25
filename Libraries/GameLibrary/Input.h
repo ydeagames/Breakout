@@ -1,7 +1,7 @@
 #pragma once
 #include "Vec2.h"
 #include <string>
-#include <map>
+#include <unordered_map>
 #include <memory>
 
 using std::string;
@@ -140,7 +140,7 @@ public:
 class InputManager final
 {
 private:
-	std::map<string, std::shared_ptr<Input>> inputs;
+	std::unordered_map<string, std::shared_ptr<Input>> inputs;
 
 public:
 	std::shared_ptr<JoypadInput> joypad;
@@ -162,7 +162,7 @@ public:
 
 	template<class T> std::shared_ptr<T> GetInput(const string& name)
 	{
-		return std::dynamic_pointer_cast<T, Input>(inputs.at(name));
+		return std::dynamic_pointer_cast<T, Input>(inputs[name]);
 	}
 
 	void Update();

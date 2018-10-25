@@ -161,9 +161,12 @@ Vec2& Vec2::operator *=(float scale)
 Vec2& Vec2::operator /=(float scale)
 {
 	if (scale == 0)
-		return{};
-	x /= scale;
-	y /= scale;
+		*this = {};
+	else
+	{
+		x /= scale;
+		y /= scale;
+	}
 	return *this;
 }
 
