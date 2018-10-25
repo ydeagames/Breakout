@@ -20,6 +20,12 @@ bool InputButton::GetButtonUp()
 	return input.GetButtonUp(button);
 }
 
+// ボタンハンドラ
+InputButton Input::GetInputButton(int button)
+{
+	return{ *this, button };
+}
+
 ButtonInput::ButtonInput() :
 	input_state(0),
 	input_state_last(0)
@@ -127,4 +133,15 @@ bool KeyInput::GetButtonDown(int button)
 bool KeyInput::GetButtonUp(int button)
 {
 	return input_state_last[button] && !input_state[button];
+}
+
+InputManager::InputManager()
+{
+}
+
+void InputManager::Update()
+{
+	joypad.Update();
+	mouse.Update();
+	key.Update();
 }

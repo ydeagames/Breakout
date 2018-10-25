@@ -6,10 +6,10 @@
 // ƒQ[ƒ€‚Ì‰Šú‰»ˆ—
 Game::Game() :
 	m_frame_timer(nullptr),
-	m_joypad(nullptr)
+	m_input(nullptr)
 {
 	m_frame_timer = new FrameTimer;
-	m_joypad = new JoypadInput;
+	m_input = new InputManager;
 	m_pos = { SCREEN_CENTER_X / 2, SCREEN_CENTER_Y / 2 };
 	m_vel = { 0, 0 };
 }
@@ -18,24 +18,24 @@ Game::Game() :
 Game::~Game()
 {
 	delete m_frame_timer;
-	delete m_joypad;
+	delete m_input;
 }
 
 // ƒQ[ƒ€‚ÌXVˆ—
 void Game::Update(void)
 {
 	m_frame_timer->Update();
-	m_joypad->Update();
+	m_input->Update();
 
 	m_vel.y = 0;
-	if (m_joypad->GetButton(PAD_INPUT_UP))
+	if (m_input->joypad.GetButton(PAD_INPUT_UP))
 		m_vel.y -= 1;
-	if (m_joypad->GetButton(PAD_INPUT_DOWN))
+	if (m_input->joypad.GetButton(PAD_INPUT_DOWN))
 		m_vel.y += 1;
 	m_vel.x = 0;
-	if (m_joypad->GetButton(PAD_INPUT_LEFT))
+	if (m_input->joypad.GetButton(PAD_INPUT_LEFT))
 		m_vel.x -= 1;
-	if (m_joypad->GetButton(PAD_INPUT_RIGHT))
+	if (m_input->joypad.GetButton(PAD_INPUT_RIGHT))
 		m_vel.x += 1;
 
 	float length = std::sqrtf(m_vel.x*m_vel.x + m_vel.y*m_vel.y);

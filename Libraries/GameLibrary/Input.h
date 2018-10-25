@@ -1,29 +1,14 @@
 #pragma once
 #include "Vec2.h"
+#include <string>
+#include <map>
+#include <memory>
 
-// <入力デバイス>
-class Input
-{
-public:
-	virtual ~Input() {};
+using std::string;
 
-	// 更新
-	virtual void Update() = 0;
+class Input;
 
-	// 消費
-	virtual void Consume(int button) = 0;
-
-	// 押されているか
-	virtual bool GetButton(int button) = 0;
-
-	// 押されたか
-	virtual bool GetButtonDown(int button) = 0;
-
-	// 離されたか
-	virtual bool GetButtonUp(int button) = 0;
-};
-
-class InputButton
+class InputButton final
 {
 private:
 	Input& input;
@@ -47,6 +32,31 @@ public:
 
 	// 離されたか
 	bool GetButtonUp();
+};
+
+// <入力デバイス>
+class Input
+{
+public:
+	virtual ~Input() {};
+
+	// 更新
+	virtual void Update() = 0;
+
+	// 消費
+	virtual void Consume(int button) = 0;
+
+	// ボタンハンドラ
+	InputButton GetInputButton(int button);
+
+	// 押されているか
+	virtual bool GetButton(int button) = 0;
+
+	// 押されたか
+	virtual bool GetButtonDown(int button) = 0;
+
+	// 離されたか
+	virtual bool GetButtonUp(int button) = 0;
 };
 
 // <ボタン入力デバイス>
@@ -106,7 +116,7 @@ public:
 };
 
 // <キー入力デバイス>
-class KeyInput : public Input
+class KeyInput final : public Input
 {
 private:
 	char input_state[256];
@@ -126,4 +136,20 @@ public:
 	bool GetButtonDown(int button) override;
 
 	bool GetButtonUp(int button) override;
+};
+
+// <入力デバイスマネージャ>
+class InputManager final
+{
+private:
+	std::map<string, std::unique_ptr<Input>> inputs;
+
+public:
+	JoypadInput joypad;
+	MouseInput mouse;
+	KeyInput key;
+
+	InputManager();
+
+	void Update();
 };

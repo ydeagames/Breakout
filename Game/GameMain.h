@@ -41,7 +41,7 @@ private:
 	const float SPEED = 8;
 
 	FrameTimer* m_frame_timer;
-	JoypadInput* m_joypad;
+	InputManager* m_input;
 	Vec2 m_pos;
 	Vec2 m_vel;
 
