@@ -67,6 +67,9 @@
     <ClCompile Include="Libraries\GameLibrary\Timer.cpp">
       <Filter>ライブラリ\ゲームライブラリ</Filter>
     </ClCompile>
+    <ClCompile Include="Game\Paddle.cpp">
+      <Filter>ゲーム</Filter>
+    </ClCompile>
   </ItemGroup>
   <!-- ヘッダファイル -->
   <ItemGroup>
@@ -102,6 +105,9 @@
     </ClInclude>
     <ClInclude Include="Libraries\GameLibrary\Timer.h">
       <Filter>ライブラリ\ゲームライブラリ</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Paddle.h">
+      <Filter>ゲーム</Filter>
     </ClInclude>
   </ItemGroup>
   <!-- リソースファイル -->

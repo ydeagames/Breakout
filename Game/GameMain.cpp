@@ -1,17 +1,18 @@
 #include "GameMain.h"
 #include <cmath>
+#include "Paddle.h"
 
 // <Gameクラス>
 
 // ゲームの初期化処理
 Game::Game() :
-	m_frame_timer(nullptr),
-	m_input(nullptr)
+	m_frame_timer(new FrameTimer),
+	m_input(new InputManager),
+	m_paddle(nullptr)
 {
-	m_frame_timer = new FrameTimer;
-	m_input = new InputManager;
-	m_pos = { SCREEN_CENTER_X / 2, SCREEN_CENTER_Y / 2 };
-	m_vel = { 0, 0 };
+	m_paddle = new Paddle({ static_cast<float>(SCREEN_CENTER_X), static_cast<float>(SCREEN_CENTER_Y) },
+		m_input->GetInput<JoypadInput>("Joypad")->GetInputButton(PAD_INPUT_LEFT),
+		m_input->joypad->GetInputButton(PAD_INPUT_RIGHT));
 }
 
 // ゲームの終了処理
@@ -19,6 +20,7 @@ Game::~Game()
 {
 	delete m_frame_timer;
 	delete m_input;
+	delete m_paddle;
 }
 
 // ゲームの更新処理
@@ -26,32 +28,12 @@ void Game::Update(void)
 {
 	m_frame_timer->Update();
 	m_input->Update();
-
-	m_vel.y = 0;
-	if (m_input->joypad.GetButton(PAD_INPUT_UP))
-		m_vel.y -= 1;
-	if (m_input->joypad.GetButton(PAD_INPUT_DOWN))
-		m_vel.y += 1;
-	m_vel.x = 0;
-	if (m_input->joypad.GetButton(PAD_INPUT_LEFT))
-		m_vel.x -= 1;
-	if (m_input->joypad.GetButton(PAD_INPUT_RIGHT))
-		m_vel.x += 1;
-
-	float length = std::sqrtf(m_vel.x*m_vel.x + m_vel.y*m_vel.y);
-	if (length > 0)
-	{
-		m_vel.x *= SPEED / length;
-		m_vel.y *= SPEED / length;
-	}
-
-	m_pos.x += m_vel.x;
-	m_pos.y += m_vel.y;
+	m_paddle->Update();
 }
 
 // ゲームの描画処理
 void Game::Render(void)
 {
 	DrawFormatString(10, 10, COLOR_WHITE, "FPS = %f", m_frame_timer->GetFrameRate());
-	DrawCircleAA(m_pos.x, m_pos.y, 20, 32, COLOR_WHITE, true);
+	m_paddle->Render();
 }

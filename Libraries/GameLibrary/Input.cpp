@@ -1,29 +1,43 @@
 #include "Input.h"
 
-void InputButton::Consume()
+InputButton::InputButton(Input* input, int button) :
+	input(input),
+	button(button)
 {
-	input.Consume(button);
 }
 
-bool InputButton::GetButton()
+void InputButton::Consume() const
 {
-	return input.GetButton(button);
+	input->Consume(button);
 }
 
-bool InputButton::GetButtonDown()
+bool InputButton::GetButton() const
 {
-	return input.GetButtonDown(button);
+	return input->GetButton(button);
 }
 
-bool InputButton::GetButtonUp()
+bool InputButton::GetButtonDown() const
 {
-	return input.GetButtonUp(button);
+	return input->GetButtonDown(button);
+}
+
+bool InputButton::GetButtonUp() const
+{
+	return input->GetButtonUp(button);
+}
+
+Input::Input()
+{
+}
+
+Input::~Input()
+{
 }
 
 // ボタンハンドラ
 InputButton Input::GetInputButton(int button)
 {
-	return{ *this, button };
+	return{ this, button };
 }
 
 ButtonInput::ButtonInput() :
@@ -137,11 +151,13 @@ bool KeyInput::GetButtonUp(int button)
 
 InputManager::InputManager()
 {
+	joypad = Register("Joypad", std::make_shared<JoypadInput>());
+	mouse = Register("Mouse", std::make_shared<MouseInput>());
+	key = Register("Key", std::make_shared<KeyInput>());
 }
 
 void InputManager::Update()
 {
-	joypad.Update();
-	mouse.Update();
-	key.Update();
+	for (auto itr = inputs.begin(); itr != inputs.end(); ++itr)
+		itr->second->Update();
 }

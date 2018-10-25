@@ -34,6 +34,9 @@ const int SCREEN_CENTER_X = SCREEN_WIDTH / 2;
 // 画面の中央(Y座標)
 const int SCREEN_CENTER_Y = SCREEN_HEIGHT / 2;
 
+// <使用クラス宣言>
+class Paddle;
+
 // <ゲーム>
 class Game
 {
@@ -42,8 +45,7 @@ private:
 
 	FrameTimer* m_frame_timer;
 	InputManager* m_input;
-	Vec2 m_pos;
-	Vec2 m_vel;
+	Paddle* m_paddle;
 
 	// メンバ関数の宣言
 public:

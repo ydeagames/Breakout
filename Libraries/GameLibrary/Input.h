@@ -11,34 +11,32 @@ class Input;
 class InputButton final
 {
 private:
-	Input& input;
-	int button;
+	Input* const input;
+	const int button;
 
 public:
-	InputButton(Input& input, int button) :
-		input(input),
-		button(button)
-	{
-	}
+	InputButton(Input* input, int button);
 
 	// 消費
-	void Consume();
+	void Consume() const;
 
 	// 押されているか
-	bool GetButton();
+	bool GetButton() const;
 
 	// 押されたか
-	bool GetButtonDown();
+	bool GetButtonDown() const;
 
 	// 離されたか
-	bool GetButtonUp();
+	bool GetButtonUp() const;
 };
 
 // <入力デバイス>
 class Input
 {
 public:
-	virtual ~Input() {};
+	Input();
+
+	virtual ~Input();
 
 	// 更新
 	virtual void Update() = 0;
@@ -141,15 +139,31 @@ public:
 // <入力デバイスマネージャ>
 class InputManager final
 {
-//private:
-//	std::map<string, std::unique_ptr<Input>> inputs;
+private:
+	std::map<string, std::shared_ptr<Input>> inputs;
 
 public:
-	JoypadInput joypad;
-	MouseInput mouse;
-	KeyInput key;
+	std::shared_ptr<JoypadInput> joypad;
+	std::shared_ptr<MouseInput> mouse;
+	std::shared_ptr<KeyInput> key;
 
 	InputManager();
+
+	template<class T> std::shared_ptr<T> Register(const string& name, const std::shared_ptr<T> input)
+	{
+		inputs[name] = input;
+		return input;
+	}
+
+	inline void Unregister(const string& name)
+	{
+		inputs.erase(name);
+	}
+
+	template<class T> std::shared_ptr<T> GetInput(const string& name)
+	{
+		return std::dynamic_pointer_cast<T, Input>(inputs.at(name));
+	}
 
 	void Update();
 };
