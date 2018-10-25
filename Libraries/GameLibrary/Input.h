@@ -141,8 +141,8 @@ public:
 // <入力デバイスマネージャ>
 class InputManager final
 {
-private:
-	std::map<string, std::unique_ptr<Input>> inputs;
+//private:
+//	std::map<string, std::unique_ptr<Input>> inputs;
 
 public:
 	JoypadInput joypad;
