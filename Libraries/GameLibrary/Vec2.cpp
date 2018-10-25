@@ -48,8 +48,8 @@ Vec2 Vec2::Normalized() const
 {
 	float length = Length();
 	if (length > 0)
-		return { x / length, y / length };
-	return {};
+		return{ x / length, y / length };
+	return{};
 }
 
 // <同値のベクトルか>
@@ -75,7 +75,7 @@ Vec2 Vec2::Rotate(float rot) const
 {
 	float scale = Length();
 	float angle = Angle();
-	return { std::cosf(angle + rot)*scale, std::sinf(angle + rot)*scale };
+	return{ std::cosf(angle + rot)*scale, std::sinf(angle + rot)*scale };
 }
 
 // <ベクトルを分解>
@@ -110,25 +110,27 @@ Vec2 Vec2::operator -() const
 // <ベクトルを加算>
 Vec2 Vec2::operator +(const Vec2& other) const
 {
-	return { x + other.x, y + other.y };
+	return{ x + other.x, y + other.y };
 }
 
 // <ベクトルを減算>
 Vec2 Vec2::operator -(const Vec2& other) const
 {
-	return { x - other.x, y - other.y };
+	return{ x - other.x, y - other.y };
 }
 
-// <ベクトルを減算>
+// <ベクトルをスケール>
 Vec2 Vec2::operator *(float scale) const
 {
-	return { x * scale, y * scale };
+	return{ x * scale, y * scale };
 }
 
-// <ベクトルを減算>
+// <ベクトルをスケール>
 Vec2 Vec2::operator /(float scale) const
 {
-	return { x / scale, y / scale };
+	if (scale == 0)
+		return{};
+	return{ x / scale, y / scale };
 }
 
 // <複合代入演算 +=>
@@ -158,6 +160,8 @@ Vec2& Vec2::operator *=(float scale)
 // <複合代入演算 /=>
 Vec2& Vec2::operator /=(float scale)
 {
+	if (scale == 0)
+		return{};
 	x /= scale;
 	y /= scale;
 	return *this;
