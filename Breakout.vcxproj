@@ -88,6 +88,7 @@
   </ItemDefinitionGroup>
   <!-- ソースファイル -->
   <ItemGroup>
+    <ClCompile Include="Game\GameObject.cpp" />
     <ClCompile Include="Game\Paddle.cpp" />
     <ClCompile Include="Libraries\GameLibrary\DrawUtils.cpp" />
     <ClCompile Include="Libraries\GameLibrary\Easings.cpp" />
@@ -111,6 +112,7 @@
     <!-- フォント -->
     <None Include="Resources\Fonts\PongScore.dft" />
     <!-- アイコン -->
+    <ClInclude Include="Game\GameObject.h" />
     <ClInclude Include="Game\Paddle.h" />
     <ClInclude Include="Libraries\GameLibrary\DrawUtils.h" />
     <ClInclude Include="Libraries\GameLibrary\Easings.h" />

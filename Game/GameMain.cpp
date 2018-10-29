@@ -10,7 +10,7 @@ Game::Game() :
 	m_input(new InputManager),
 	m_paddle(nullptr)
 {
-	m_paddle = new Paddle({ static_cast<float>(SCREEN_CENTER_X), static_cast<float>(SCREEN_CENTER_Y) },
+	m_paddle = new Paddle({ static_cast<float>(SCREEN_CENTER_X), static_cast<float>(SCREEN_BOTTOM) - 20.f},
 		m_input->GetInput<JoypadInput>("Joypad")->GetInputButton(PAD_INPUT_LEFT),
 		m_input->joypad->GetInputButton(PAD_INPUT_RIGHT));
 }
