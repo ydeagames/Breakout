@@ -1,6 +1,8 @@
 #include "GameObject.h"
 #include "GameMain.h"
 
+#ifdef COMPLETE
+
 using namespace MathUtils;
 
 bool DEBUG_HITBOX = FALSE;
@@ -15,113 +17,130 @@ static int g_deltamilliseconds = 0;
 // <<テクスチャ>> ------------------------------------------------------
 
 // <テクスチャ作成>
-GameTexture GameTexture_Create(HGRP texture, Vec2 anchor, Vec2 size)
+GameTexture::GameTexture(HGRP texture, Vec2 anchor, Vec2 size) :
+	texture(texture),
+	anchor(anchor),
+	size(size),
+	center(Vec2{ size.x / 2, size.y / 2 })
 {
-	return{ texture, anchor, size, Vec2{ size.x / 2, size.y / 2 } };
 }
 
 // <テクスチャなし>
-GameTexture GameTexture_CreateNone()
+GameTexture::GameTexture() :
+	GameTexture(TEXTURE_NONE, Vec2{}, Vec2{})
 {
-	return GameTexture_Create(TEXTURE_NONE, Vec2{}, Vec2{});
-}
-
-// <<スプライトアニメーション>> ----------------------------------------
-
-// <スプライトアニメーション作成>
-GameSpriteAnimation GameSpriteAnimation_Create(int frames_start, int frames_end, int frame_duration, bool pause)
-{
-	return{ frames_start, frames_end, frame_duration, 0, TRUE, pause, ANIMATION_RUNNING };
-}
-
-// <スプライトアニメーションなし>
-GameSpriteAnimation GameSpriteAnimation_CreateNone()
-{
-	return GameSpriteAnimation_Create(-1, -1, 1, TRUE);
-}
-
-// <スプライトアニメーション更新>
-AnimationState GameSpriteAnimation_Update(GameSprite* animate_sprite)
-{
-	if (!animate_sprite->animation.pause_flag && animate_sprite->animation.frame_start >= 0 && animate_sprite->animation.frame_end >= 0)
-	{
-		// アニメーションしているか
-		animate_sprite->animation.result = ANIMATION_RUNNING;
-		// 経過時間
-		animate_sprite->animation.elapsed_time++;
-		// 最初のフレーム以上
-		animate_sprite->frame_index = GetMax(animate_sprite->frame_index, animate_sprite->animation.frame_start);
-
-		// フレーム経過
-		if (animate_sprite->animation.elapsed_time > animate_sprite->animation.frame_duration)
-		{
-			// 経過時間
-			animate_sprite->animation.elapsed_time = 0;
-			// フレーム番号
-			animate_sprite->frame_index++;
-
-			// 最初に戻る
-			if (animate_sprite->frame_index > animate_sprite->animation.frame_end)
-			{
-				// ループするなら
-				if (animate_sprite->animation.loop_flag)
-					// 最初に戻る
-					animate_sprite->frame_index = animate_sprite->animation.frame_start;
-				else
-					// 最後のフレームで停止
-					animate_sprite->frame_index = animate_sprite->animation.frame_end;
-				// アニメーション完了
-				animate_sprite->animation.result = ANIMATION_FINISHED;
-			}
-		}
-	}
-	else
-		// アニメーションしているか
-		animate_sprite->animation.result = ANIMATION_IDLE;
-
-	return animate_sprite->animation.result;
 }
 
 // <<スプライト>> ------------------------------------------------------
 
 // <スプライト作成>
-GameSprite GameSprite_Create(GameTexture texture, float scale, float angle)
+GameSprite::GameSprite(GameTexture texture, float scale, float angle) :
+	color(COLOR_WHITE),
+	texture(texture),
+	size(texture.size),
+	num_columns(1),
+	frame_index(0),
+	offset(Vec2{}),
+	scale(scale),
+	angle(angle)
 {
-	return{ COLOR_WHITE, texture, texture.size, 1, 0, Vec2{}, scale, angle, GameSpriteAnimation_CreateNone() };
 }
 
 // <スプライトなし>
-GameSprite GameSprite_CreateNone()
+GameSprite GameSprite_CreateNone() :
+	GameSprite(GameTexture{}, 0, 0)
 {
-	return GameSprite_Create(GameTexture_CreateNone(), 0, 0);
 }
 
 // <スプライト更新>
-void GameSprite_SetFrame(GameSprite* sprite, int frame)
+void GameSprite::SetFrame(int frame)
 {
 	// フレーム番号
-	sprite->frame_index = frame;
+	frame_index = frame;
 }
 
 // <スプライト描画>
-void GameSprite_Render(const GameSprite* sprite, const Vec2* pos)
+void GameSprite::Render(const Vec2* pos)
 {
-	int column = sprite->frame_index%sprite->num_columns;
-	int row = sprite->frame_index / sprite->num_columns;
+	int column = frame_index%num_columns;
+	int row = frame_index / num_columns;
 
-	Vec2 anchor = sprite->texture.anchor + Vec2{ sprite->size.x * column, sprite->size.y * row };
+	Vec2 anchor = texture.anchor + Vec2{ size.x * column, size.y * row };
 
 	// スプライト描画
 	DrawRectRotaGraph2F(
-		pos->x + sprite->offset.x, pos->y + sprite->offset.y,
+		pos->x + offset.x, pos->y + offset.y,
 		(int)anchor.x, (int)anchor.y,
-		(int)sprite->texture.size.x, (int)sprite->texture.size.y,
-		sprite->texture.center.x, sprite->texture.center.y,
-		(double)sprite->scale,
-		(double)sprite->angle,
-		sprite->texture.texture,
+		(int)texture.size.x, (int)texture.size.y,
+		texture.center.x, texture.center.y,
+		(double)scale,
+		(double)angle,
+		texture.texture,
 		TRUE
 	);
+}
+
+// <<スプライトアニメーション>> ----------------------------------------
+
+// <スプライトアニメーション作成>
+GameSpriteAnimation::GameSpriteAnimation(HGRP texture, int frames_start, int frames_end, int frame_duration, Vec2 anchor, Vec2 size, bool pause) :
+	GameSprite(texture, anchor, size),
+	frames_start(frames_start),
+	frames_end(frames_end),
+	frame_duration(0),
+	elapsed_time(0),
+	loop_flag(true),
+	pause_flag(pause),
+	result(AnimationState::RUNNING)
+{
+}
+
+// <スプライトアニメーションなし>
+GameSpriteAnimation::GameSpriteAnimation() :
+	GameSpriteAnimation(-1, -1, 1, true)
+{
+}
+
+// <スプライトアニメーション更新>
+AnimationState GameSpriteAnimation::Update()
+{
+	if (!pause_flag && frame_start >= 0 && frame_end >= 0)
+	{
+		// アニメーションしているか
+		result = AnimationState::RUNNING;
+		// 経過時間
+		elapsed_time++;
+		// 最初のフレーム以上
+		frame_index = GetMax(frame_index, frame_start);
+
+		// フレーム経過
+		if (elapsed_time > frame_duration)
+		{
+			// 経過時間
+			elapsed_time = 0;
+			// フレーム番号
+			frame_index++;
+
+			// 最初に戻る
+			if (frame_index > frame_end)
+			{
+				// ループするなら
+				if (loop_flag)
+					// 最初に戻る
+					frame_index = frame_start;
+				else
+					// 最後のフレームで停止
+					frame_index = frame_end;
+				// アニメーション完了
+				result = ANIMATION_FINISHED;
+			}
+		}
+	}
+	else
+		// アニメーションしているか
+		result = ANIMATION_IDLE;
+
+	return result;
 }
 
 // <<ティック>> --------------------------------------------------------
@@ -494,3 +513,5 @@ ObjectSide GameObject_Field_CollisionHorizontal(const GameObject* field, GameObj
 
 	return side_hit;
 }
+
+#endif COMPLETE

@@ -3,74 +3,79 @@
 // <デバッグ用当たり判定表示>
 extern bool DEBUG_HITBOX;
 
-// <位置関係>
-typedef enum
+// <横位置関係>
+enum class HorizontalSide
 {
-	NONE = 0,
-	CENTER_X = 1,				// X中央
-	LEFT = -2,					// 左
-	RIGHT = 2,					// 右
-	CENTER_Y = -1,				// Y中央
-	TOP = -3,					// 上
-	BOTTOM = 3					// 下
-} ObjectSide;
+	NONE,
+	CENTER,						// X中央
+	LEFT,						// 左
+	RIGHT,						// 右
+};
+
+// <縦位置関係>
+enum class VerticalSide
+{
+	NONE,
+	CENTER,						// Y中央
+	TOP,						// 上
+	BOTTOM,						// 下
+};
 
 // <縁の位置> 
-typedef enum
+enum class Edge
 {
-	EDGESIDE_CENTER = 0,		// 縁の上
-	EDGESIDE_OUTER = -1,		// 縁の外側
-	EDGESIDE_INNER = 1			// 縁の内側
-} ObjectEdgeSide;
+	CENTER,						// 縁の上
+	OUTER,						// 縁の外側
+	INNER,						// 縁の内側
+};
 
 // <ワールドのつながり>
-typedef enum
+enum class Connection
 {
-	CONNECTION_NONE = 0,		// 繋がりなし、見えない空間に移動
-	CONNECTION_BARRIER,			// 壁があり、進めない
-	CONNECTION_LOOP				// 反対側から出てくる
-} ObjectConnection;
+	NONE,						// 繋がりなし、見えない空間に移動
+	BARRIER,					// 壁があり、進めない
+	LOOP,						// 反対側から出てくる
+};
 
 // <オブジェクトの形>
-typedef enum
+enum class Shape
 {
-	SHAPE_BOX,					// 長方形
-	SHAPE_CIRCLE,				// 円
-	SHAPE_LINE,					// 線
-} ObjectShape;
+	BOX,						// 長方形
+	CIRCLE,						// 円
+	LINE,						// 線
+};
 
 // <アニメーションの結果>
-typedef enum
+enum class AnimationState
 {
-	ANIMATION_RUNNING,			// アニメーションが実行中の状態
-	ANIMATION_FINISHED,			// アニメーション再生が完了した状態
-	ANIMATION_IDLE,				// アニメーションしていない状態
-} AnimationState;
+	RUNNING,					// アニメーションが実行中の状態
+	FINISHED,					// アニメーション再生が完了した状態
+	IDLE,						// アニメーションしていない状態
+};
 
 // <テクスチャ>
-typedef struct
+class GameTexture
 {
+public:
 	HGRP texture;				// <テクスチャ>
 	Vec2 anchor;				// <テクスチャ基点>
 	Vec2 size;					// <テクスチャサイズ>
 	Vec2 center;				// <テクスチャ中心>
-} GameTexture;
+public:
+	static constexpr int TEXTURE_MISSING = -1;		// テクスチャが見つかりません
+	static constexpr int TEXTURE_NONE = -2;			// テクスチャなし
 
-// <スプライトアニメーション>
-typedef struct
-{
-	int frame_start;			// 開始フレームのインデックス
-	int frame_end;				// 終了フレームのインデックス
-	int frame_duration;			// フレーム間隔
-	int elapsed_time;			// 現在のフレームの経過時間
-	bool loop_flag;				// アニメーションのループ
-	bool pause_flag;			// アニメーションの停止
-	AnimationState result;		// 最後の状態
-} GameSpriteAnimation;
+	// <テクスチャ作成>
+	GameTexture(HGRP texture, Vec2 anchor, Vec2 size);
+
+	// <テクスチャなし>
+	GameTexture();
+};
 
 // <スプライトオブジェクト>
-typedef struct
+class GameSprite
 {
+public:
 	unsigned int color;			// <色>
 	GameTexture texture;		// <テクスチャ>
 	Vec2 size;					// <サイズ>
@@ -79,122 +84,125 @@ typedef struct
 	Vec2 offset;				// <オフセット>
 	float scale;				// <スケール>
 	float angle;				// <回転>
-	GameSpriteAnimation animation;	// <スプライトアニメーション>
-} GameSprite;
+public:
+	GameSprite(GameTexture texture, float scale = 1, float angle = 0);
+
+	// <スプライトなし>
+	GameSprite();
+
+	virtual ~GameSprite() {};
+
+	// <スプライト更新>
+	void SetFrame(int frame);
+
+	// <スプライト描画>
+	void Render(const Vec2* pos);
+};
+
+// <スプライトアニメーション>
+class GameSpriteAnimation : public GameSprite
+{
+public:
+	int frame_start;			// 開始フレームのインデックス
+	int frame_end;				// 終了フレームのインデックス
+	int frame_duration;			// フレーム間隔
+	int elapsed_time;			// 現在のフレームの経過時間
+	bool loop_flag;				// アニメーションのループ
+	bool pause_flag;			// アニメーションの停止
+	AnimationState result;		// 最後の状態
+public:
+	// <スプライトアニメーション作成>
+	GameSpriteAnimation(GameTexture texture, int frames_start, int frames_end, int frame_duration, float scale = 1, float angle = 0, bool pause = FALSE);
+
+	// <スプライトアニメーションなし>
+	GameSpriteAnimation();
+
+	virtual ~GameSpriteAnimation() {};
+
+	// <スプライトアニメーション更新>
+	AnimationState Update();
+};
 
 // <ゲームオブジェクト>
-typedef struct
+class GameObject
 {
+public:
 	Vec2 pos;					// <位置>
 	Vec2 vel;					// <速度>
 	Vec2 size;					// <大きさ>
-	ObjectShape shape;			// <形>
+	Shape shape;				// <形>
 	GameSprite sprite;			// <スプライト>
 	bool fill;					// <塗りつぶし>
 	float edge;					// <縁>
-	ObjectConnection sprite_connection;	// <スプライトのつながり>
+	Connection sprite_connection;	// <スプライトのつながり>
 	bool alive;					// <表示状態>
 	int state;					// <状態>
 	int type;					// <タイプ>
 	Timer count;			// <カウンタ>
-} GameObject;
+public:
+	// <オブジェクト作成>
+	GameObject(Vec2 pos = {}, Vec2 vel = {}, Vec2 size = {});
 
-// <テクスチャ>
-#define TEXTURE_MISSING -1		// テクスチャが見つかりません
-#define TEXTURE_NONE -2			// テクスチャなし
+	virtual ~GameObject() {};
 
-// <<テクスチャ>> ------------------------------------------------------
+	// <線オブジェクト作成>
+	static GameObject CreateLine(Vec2 pos1, Vec2 pos2, Vec2 vel = {});
 
-// <テクスチャ作成>
-GameTexture GameTexture_Create(HGRP texture, Vec2 anchor, Vec2 size);
+	// <オブジェクト削除>
+	void Dispose();
 
-// <テクスチャなし>
-GameTexture GameTexture_CreateNone();
+	// <オブジェクト確認>
+	bool IsAlive();
 
-// <<スプライトアニメーション>> ----------------------------------------
+	// <オブジェクト座標更新>
+	void UpdatePosition();
 
-// <スプライトアニメーション作成>
-GameSpriteAnimation GameSpriteAnimation_Create(int frames_start, int frames_end, int frame_duration, bool pause = FALSE);
+	// <オブジェクトXオフセット>
+	float OffsetX(HorizontalSide side, float pos = 0.f, float margin = 0.f);
 
-// <スプライトアニメーションなし>
-GameSpriteAnimation GameSpriteAnimation_CreateNone();
+	// <オブジェクトXオフセット>
+	float OffsetY(VerticalSide side, float pos = 0.f, float margin = 0.f);
 
-// <スプライトアニメーション更新>
-AnimationState GameSpriteAnimation_Update(GameSprite* obj);
+	// <オブジェクトX位置ゲット>
+	float GetX(HorizontalSide side, float margin = 0.f);
 
-// <<スプライト>> ------------------------------------------------------
+	// <オブジェクトY位置ゲット>
+	float GetY(VerticalSide side, float margin = 0.f);
 
-// <スプライト作成>
-GameSprite GameSprite_Create(GameTexture texture, float scale = 1, float angle = 0);
+	// <オブジェクトXオフセット>
+	float OffsetRawX(HorizontalSide side, float pos, float padding = 0.f);
 
-// <スプライトなし>
-GameSprite GameSprite_CreateNone();
+	// <オブジェクトXオフセット>
+	float OffsetRawY(VerticalSide side, float pos, float padding = 0.f);
 
-// <スプライト更新>
-void GameSprite_SetFrame(GameSprite* sprite, int frame);
+	// <オブジェクトX位置ゲット>
+	float GetRawX(HorizontalSide side, float padding = 0.f);
 
-// <スプライト描画>
-void GameSprite_Render(const GameSprite* sprite, const Vec2* pos);
+	// <オブジェクトY位置ゲット>
+	float GetRawY(VerticalSide side, float padding = 0.f);
 
-// <<ティック>>
+	// <オブジェクト描画>
+	void Render(Vec2* translate = &Vec2{});
+
+	// <弾オブジェクトサイズ変更>
+	void SetSize(float scale, float size = 10);
+};
+
+class Field : GameObject
+{
+public:
+	// <フィールドオブジェクト作成>
+	Field(void);
+
+	virtual ~Field() {};
+
+	// <フィールド上下衝突処理>
+	VerticalSide CollisionVertical(GameObject* obj, Connection connection, Edge edge);
+
+	// <フィールド左右衝突処理>
+	HorizontalSide CollisionHorizontal(GameObject* obj, Connection connection, Edge edge);
+};
 
 // <オブジェクト作成>
 void GameTick_Update(void);
 
-// <<オブジェクト>>
-
-// <オブジェクト作成>
-GameObject GameObject_Create(Vec2 pos = {}, Vec2 vel = {}, Vec2 size = {});
-
-// <線オブジェクト作成>
-GameObject GameObject_CreateLine(Vec2 pos1, Vec2 pos2, Vec2 vel = {});
-
-// <オブジェクト削除>
-void GameObject_Dispose(GameObject* obj);
-
-// <オブジェクト確認>
-bool GameObject_IsAlive(const GameObject* obj);
-
-// <オブジェクト座標更新>
-void GameObject_UpdatePosition(GameObject* obj);
-
-// <オブジェクトXオフセット>
-float GameObject_OffsetX(const GameObject* obj, ObjectSide side, float pos = 0.f, float margin = 0.f);
-
-// <オブジェクトXオフセット>
-float GameObject_OffsetY(const GameObject* obj, ObjectSide side, float pos = 0.f, float margin = 0.f);
-
-// <オブジェクトX位置ゲット>
-float GameObject_GetX(const GameObject* obj, ObjectSide side, float margin = 0.f);
-
-// <オブジェクトY位置ゲット>
-float GameObject_GetY(const GameObject* obj, ObjectSide side, float margin = 0.f);
-
-// <オブジェクトXオフセット>
-float GameObject_OffsetRawX(const GameObject* obj, ObjectSide side, float pos, float padding = 0.f);
-
-// <オブジェクトXオフセット>
-float GameObject_OffsetRawY(const GameObject* obj, ObjectSide side, float pos, float padding = 0.f);
-
-// <オブジェクトX位置ゲット>
-float GameObject_GetRawX(const GameObject* obj, ObjectSide side, float padding = 0.f);
-
-// <オブジェクトY位置ゲット>
-float GameObject_GetRawY(const GameObject* obj, ObjectSide side, float padding = 0.f);
-
-// <オブジェクト描画>
-void GameObject_Render(const GameObject* obj, const Vec2* translate = &Vec2{});
-
-// <弾オブジェクトサイズ変更>
-void GameObject_SetSize(GameObject* obj, float scale, float size = 10);
-
-// <<フィールドオブジェクト>>
-
-// <フィールドオブジェクト作成>
-GameObject GameObject_Field_Create(void);
-
-// <フィールド上下衝突処理>
-ObjectSide GameObject_Field_CollisionVertical(const GameObject* field, GameObject* obj, ObjectConnection connection, ObjectEdgeSide edge);
-
-// <フィールド左右衝突処理>
-ObjectSide GameObject_Field_CollisionHorizontal(const GameObject* field, GameObject* obj, ObjectConnection connection, ObjectEdgeSide edge);
