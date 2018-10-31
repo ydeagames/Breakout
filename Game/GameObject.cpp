@@ -455,9 +455,9 @@ VerticalSide Field::CollisionVertical(GameObject* obj, Connection connection, Ed
 		}
 
 		// 当たり判定
-		if (pos.y < padding_top)
+		if (obj->pos.y < padding_top)
 			side_hit = VerticalSide::TOP;
-		else if (padding_bottom <= pos.y)
+		else if (padding_bottom <= obj->pos.y)
 			side_hit = VerticalSide::BOTTOM;
 
 		// フィールドのつながり
@@ -465,11 +465,11 @@ VerticalSide Field::CollisionVertical(GameObject* obj, Connection connection, Ed
 		{
 		case Connection::BARRIER:
 			// 壁にあたったら調整
-			pos.y = GetClamp(pos.y, padding_top, padding_bottom);
+			obj->pos.y = GetClamp(obj->pos.y, padding_top, padding_bottom);
 			break;
 		case Connection::LOOP:
 			// 壁にあたったらループ
-			pos.y = GetLoopRange(pos.y, padding_top, padding_bottom);
+			obj->pos.y = GetLoopRange(obj->pos.y, padding_top, padding_bottom);
 			break;
 		}
 	}
@@ -501,9 +501,9 @@ HorizontalSide Field::CollisionHorizontal(GameObject* obj, Connection connection
 		}
 
 		// 当たり判定
-		if (pos.x < padding_left)
+		if (obj->pos.x < padding_left)
 			side_hit = HorizontalSide::LEFT;
-		else if (padding_right <= pos.x)
+		else if (padding_right <= obj->pos.x)
 			side_hit = HorizontalSide::RIGHT;
 
 		// フィールドのつながり
@@ -511,11 +511,11 @@ HorizontalSide Field::CollisionHorizontal(GameObject* obj, Connection connection
 		{
 		case Connection::BARRIER:
 			// 壁にあたったら調整
-			pos.x = GetClamp(pos.x, padding_left, padding_right);
+			obj->pos.x = GetClamp(obj->pos.x, padding_left, padding_right);
 			break;
 		case Connection::LOOP:
 			// 壁にあたったらループ
-			pos.x = GetLoopRange(pos.x, padding_left, padding_right);
+			obj->pos.x = GetLoopRange(obj->pos.x, padding_left, padding_right);
 			break;
 		}
 	}
