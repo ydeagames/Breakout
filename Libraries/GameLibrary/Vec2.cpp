@@ -73,9 +73,7 @@ float Vec2::Angle() const
 // <ベクトルの角度加算>
 Vec2 Vec2::Rotate(float rot) const
 {
-	float scale = Length();
-	float angle = Angle();
-	return{ std::cosf(angle + rot)*scale, std::sinf(angle + rot)*scale };
+	return{ x * std::cosf(rot) - y * std::sinf(rot), x * std::sinf(rot) + y * std::cosf(rot) };
 }
 
 // <ベクトルを分解>
