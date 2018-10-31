@@ -182,7 +182,7 @@ public:
 	float GetRawY(VerticalSide side, float padding = 0.f);
 
 	// <オブジェクト描画>
-	void Render(Vec2* translate = &Vec2{});
+	void Render(const Vec2* translate = &Vec2{});
 
 	// <弾オブジェクトサイズ変更>
 	void SetSize(float scale, float size = 10);
