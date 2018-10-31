@@ -7,6 +7,7 @@
 // @author 制作者名
 
 #pragma once
+#include <vector>
 
 // <システム>
 
@@ -36,6 +37,7 @@ const int SCREEN_CENTER_Y = SCREEN_HEIGHT / 2;
 
 // <使用クラス宣言>
 class Paddle;
+class Block;
 
 // <ゲーム>
 class Game
@@ -46,6 +48,7 @@ private:
 	FrameTimer* m_frame_timer;
 	InputManager* m_input;
 	Paddle* m_paddle;
+	std::vector<Block> m_blocks;
 
 	// メンバ関数の宣言
 public:

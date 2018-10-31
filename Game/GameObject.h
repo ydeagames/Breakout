@@ -112,7 +112,7 @@ public:
 	AnimationState result;		// 最後の状態
 public:
 	// <スプライトアニメーション作成>
-	GameSpriteAnimation(GameTexture texture, int frames_start, int frames_end, int frame_duration, float scale = 1, float angle = 0, bool pause = FALSE);
+	GameSpriteAnimation(GameTexture texture, int frames_start, int frames_end, int frame_duration, float scale = 1, float angle = 0, bool pause = false);
 
 	// <スプライトアニメーションなし>
 	GameSpriteAnimation();

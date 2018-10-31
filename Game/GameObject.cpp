@@ -1,7 +1,7 @@
 #include "GameObject.h"
 #include "GameMain.h"
 
-#ifdef COMPLETE
+#ifndef COMPLETE
 
 using namespace MathUtils;
 
@@ -83,7 +83,7 @@ void GameSprite::Render(const Vec2* pos)
 // <<スプライトアニメーション>> ----------------------------------------
 
 // <スプライトアニメーション作成>
-GameSpriteAnimation::GameSpriteAnimation(HGRP texture, int frames_start, int frames_end, int frame_duration, Vec2 anchor, Vec2 size, bool pause) :
+GameSpriteAnimation(GameTexture texture, int frames_start, int frames_end, int frame_duration, float scale, float angle, bool pause) :
 	GameSprite(texture, anchor, size),
 	frames_start(frames_start),
 	frames_end(frames_end),
@@ -132,7 +132,7 @@ AnimationState GameSpriteAnimation::Update()
 					// 最後のフレームで停止
 					frame_index = frame_end;
 				// アニメーション完了
-				result = ANIMATION_FINISHED;
+				result = AnimationState::FINISHED;
 			}
 		}
 	}
@@ -156,42 +156,53 @@ void GameTick_Update(void)
 // <<オブジェクト>> ----------------------------------------------------
 
 // <オブジェクト作成>
-GameObject GameObject_Create(Vec2 pos, Vec2 vel, Vec2 size)
+GameObject(Vec2 pos, Vec2 vel, Vec2 size) :
+	pos(pos),
+	vel(vel),
+	size(size),
+	shape(Shape::Box),
+	fill(false),
+	edge(0),
+	sprite_connection(Connection::NONE),
+	alive(true),
+	state(1),
+	type(0),
+	count(Timer{})
 {
 	return{ pos, vel, size, SHAPE_BOX, GameSprite_CreateNone(), FALSE, 0, CONNECTION_NONE, TRUE, 1, 0, Timer{} };
 }
 
 // <線オブジェクト作成>
-GameObject GameObject_CreateLine(Vec2 pos1, Vec2 pos2, Vec2 vel)
+static GameObject GameObject::CreateLine(Vec2 pos1, Vec2 pos2, Vec2 vel)
 {
 	Vec2 pos = (pos1 + pos2) * .5f;
 	Vec2 size = pos2 - pos1;
-	GameObject obj = GameObject_Create(pos, vel, size);
+	GameObject obj = GameObject{ pos, vel, size };
 	obj.shape = SHAPE_LINE;
 	return obj;
 }
 
 // <オブジェクト削除>
-void GameObject_Dispose(GameObject* obj)
+void GameObject::Dispose(GameObject* obj)
 {
 	obj->alive = FALSE;
 }
 
 // <オブジェクト確認>
-bool GameObject_IsAlive(const GameObject* obj)
+bool GameObject::IsAlive(const GameObject* obj)
 {
 	return obj->alive;
 }
 
 // <オブジェクト座標更新>
-void GameObject_UpdatePosition(GameObject* obj)
+void GameObject::UpdatePosition(GameObject* obj)
 {
 	obj->pos.x += obj->vel.x;// *(g_deltamilliseconds / 17.f);
 	obj->pos.y += obj->vel.y;// *(g_deltamilliseconds / 17.f);
 }
 
 // <オブジェクトXオフセット>
-float GameObject_OffsetX(const GameObject* obj, ObjectSide side, float pos, float padding)
+float GameObject::OffsetX(const GameObject* obj, ObjectSide side, float pos, float padding)
 {
 	float offset = 0;
 	switch (side)
@@ -207,7 +218,7 @@ float GameObject_OffsetX(const GameObject* obj, ObjectSide side, float pos, floa
 }
 
 // <オブジェクトXオフセット>
-float GameObject_OffsetY(const GameObject* obj, ObjectSide side, float pos, float padding)
+float GameObject::OffsetY(const GameObject* obj, ObjectSide side, float pos, float padding)
 {
 	float offset = 0;
 	switch (side)
@@ -223,19 +234,19 @@ float GameObject_OffsetY(const GameObject* obj, ObjectSide side, float pos, floa
 }
 
 // <オブジェクトX位置ゲット>
-float GameObject_GetX(const GameObject* obj, ObjectSide side, float padding)
+float GameObject::GetX(const GameObject* obj, ObjectSide side, float padding)
 {
-	return GameObject_OffsetX(obj, side, obj->pos.x, padding);
+	return OffsetX(obj, side, obj->pos.x, padding);
 }
 
 // <オブジェクトY位置ゲット>
-float GameObject_GetY(const GameObject* obj, ObjectSide side, float padding)
+float GameObject::GetY(const GameObject* obj, ObjectSide side, float padding)
 {
-	return GameObject_OffsetY(obj, side, obj->pos.y, padding);
+	return OffsetY(obj, side, obj->pos.y, padding);
 }
 
 // <オブジェクトXオフセット>
-float GameObject_OffsetRawX(const GameObject* obj, ObjectSide side, float pos, float padding)
+float GameObject::OffsetRawX(const GameObject* obj, ObjectSide side, float pos, float padding)
 {
 	float offset = 0;
 	switch (side)
@@ -251,7 +262,7 @@ float GameObject_OffsetRawX(const GameObject* obj, ObjectSide side, float pos, f
 }
 
 // <オブジェクトXオフセット>
-float GameObject_OffsetRawY(const GameObject* obj, ObjectSide side, float pos, float padding)
+float GameObject::OffsetRawY(const GameObject* obj, ObjectSide side, float pos, float padding)
 {
 	float offset = 0;
 	switch (side)
@@ -267,26 +278,26 @@ float GameObject_OffsetRawY(const GameObject* obj, ObjectSide side, float pos, f
 }
 
 // <オブジェクトX位置ゲット>
-float GameObject_GetRawX(const GameObject* obj, ObjectSide side, float padding)
+float GameObject::GetRawX(const GameObject* obj, ObjectSide side, float padding)
 {
-	return GameObject_OffsetRawX(obj, side, obj->pos.x, padding);
+	return OffsetRawX(obj, side, obj->pos.x, padding);
 }
 
 // <オブジェクトY位置ゲット>
-float GameObject_GetRawY(const GameObject* obj, ObjectSide side, float padding)
+float GameObject::GetRawY(const GameObject* obj, ObjectSide side, float padding)
 {
-	return GameObject_OffsetRawY(obj, side, obj->pos.y, padding);
+	return OffsetRawY(obj, side, obj->pos.y, padding);
 }
 
 // <オブジェクト描画>
-void GameObject_Render(const GameObject* obj, const Vec2* translate)
+void GameObject::Render(const GameObject* obj, const Vec2* translate)
 {
-	float box_xl = GameObject_GetRawX(obj, LEFT) + translate->x;
-	float box_xc = GameObject_GetRawX(obj, CENTER_X) + translate->x;
-	float box_xr = GameObject_GetRawX(obj, RIGHT) + translate->x;
-	float box_yt = GameObject_GetRawY(obj, TOP) + translate->y;
-	float box_ym = GameObject_GetRawY(obj, CENTER_Y) + translate->y;
-	float box_yb = GameObject_GetRawY(obj, BOTTOM) + translate->y;
+	float box_xl = GetRawX(LEFT) + translate->x;
+	float box_xc = GetRawX(CENTER_X) + translate->x;
+	float box_xr = GetRawX(RIGHT) + translate->x;
+	float box_yt = GetRawY(TOP) + translate->y;
+	float box_ym = GetRawY(CENTER_Y) + translate->y;
+	float box_yb = GetRawY(BOTTOM) + translate->y;
 	Vec2 box_t = { box_xc, box_ym };
 
 	// テクスチャを確認
@@ -405,7 +416,7 @@ void GameObject_Render(const GameObject* obj, const Vec2* translate)
 }
 
 // <オブジェクトサイズ変更>
-void GameObject_SetSize(GameObject* obj, float scale, float size)
+void GameObject::SetSize(GameObject* obj, float scale, float size)
 {
 	obj->sprite.scale = scale;
 	obj->size = { size * scale, size * scale };
@@ -414,16 +425,17 @@ void GameObject_SetSize(GameObject* obj, float scale, float size)
 // <<フィールドオブジェクト>> ------------------------------------------
 
 // <フィールドオブジェクト作成>
-GameObject GameObject_Field_Create(void)
+GameObject GameObject::Field_Create(void)
 {
-	return GameObject_Create(
+	return GameObject{
 		Vec2{ static_cast<float>(SCREEN_CENTER_X), static_cast<float>(SCREEN_CENTER_Y) },
 		Vec2{},
-		Vec2{ static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT) });
+		Vec2{ static_cast<float>(SCREEN_WIDTH), static_cast<float>(SCREEN_HEIGHT) }
+	};
 }
 
 // <フィールド上下衝突処理>
-ObjectSide GameObject_Field_CollisionVertical(const GameObject* field, GameObject* obj, ObjectConnection connection, ObjectEdgeSide edge)
+ObjectSide GameObject::Field_CollisionVertical(const GameObject* field, GameObject* obj, ObjectConnection connection, ObjectEdgeSide edge)
 {
 	// ヒットサイド
 	ObjectSide side_hit = NONE;
@@ -431,17 +443,17 @@ ObjectSide GameObject_Field_CollisionVertical(const GameObject* field, GameObjec
 	// コウラ・上下壁当たり判定
 	{
 		// 縁に応じてパディングを調整
-		float padding_top = GameObject_GetY(field, TOP);
-		float padding_bottom = GameObject_GetY(field, BOTTOM);
+		float padding_top = GetY(field, TOP);
+		float padding_bottom = GetY(field, BOTTOM);
 		switch (edge)
 		{
 		case EDGESIDE_INNER:
-			padding_top = GameObject_OffsetY(obj, BOTTOM, padding_top);
-			padding_bottom = GameObject_OffsetY(obj, TOP, padding_bottom);
+			padding_top = OffsetY(obj, BOTTOM, padding_top);
+			padding_bottom = OffsetY(obj, TOP, padding_bottom);
 			break;
 		case EDGESIDE_OUTER:
-			padding_top = GameObject_OffsetY(obj, TOP, padding_top);
-			padding_bottom = GameObject_OffsetY(obj, BOTTOM, padding_bottom);
+			padding_top = OffsetY(obj, TOP, padding_top);
+			padding_bottom = OffsetY(obj, BOTTOM, padding_bottom);
 			break;
 		}
 
@@ -469,7 +481,7 @@ ObjectSide GameObject_Field_CollisionVertical(const GameObject* field, GameObjec
 }
 
 // <フィールド左右衝突処理>
-ObjectSide GameObject_Field_CollisionHorizontal(const GameObject* field, GameObject* obj, ObjectConnection connection, ObjectEdgeSide edge)
+ObjectSide GameObject::Field_CollisionHorizontal(const GameObject* field, GameObject* obj, ObjectConnection connection, ObjectEdgeSide edge)
 {
 	// ヒットサイド
 	ObjectSide side_hit = NONE;
@@ -477,17 +489,17 @@ ObjectSide GameObject_Field_CollisionHorizontal(const GameObject* field, GameObj
 	// コウラ・左右壁当たり判定
 	{
 		// 縁に応じてパディングを調整
-		float padding_left = GameObject_GetX(field, LEFT);
-		float padding_right = GameObject_GetX(field, RIGHT);
+		float padding_left = GetX(field, LEFT);
+		float padding_right = GetX(field, RIGHT);
 		switch (edge)
 		{
 		case EDGESIDE_INNER:
-			padding_left = GameObject_OffsetX(obj, RIGHT, padding_left);
-			padding_right = GameObject_OffsetX(obj, LEFT, padding_right);
+			padding_left = OffsetX(obj, RIGHT, padding_left);
+			padding_right = OffsetX(obj, LEFT, padding_right);
 			break;
 		case EDGESIDE_OUTER:
-			padding_left = GameObject_OffsetX(obj, LEFT, padding_left);
-			padding_right = GameObject_OffsetX(obj, RIGHT, padding_right);
+			padding_left = OffsetX(obj, LEFT, padding_left);
+			padding_right = OffsetX(obj, RIGHT, padding_right);
 			break;
 		}
 
