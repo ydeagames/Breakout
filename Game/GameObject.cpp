@@ -3,7 +3,7 @@
 
 using namespace MathUtils;
 
-bool DEBUG_HITBOX = FALSE;
+bool GameObject::DEBUG_HITBOX = FALSE;
 
 // <<ティック>> --------------------------------------------------------
 

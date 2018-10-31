@@ -1,8 +1,5 @@
 #pragma once
 
-// <デバッグ用当たり判定表示>
-extern bool DEBUG_HITBOX;
-
 // <横位置関係>
 enum class HorizontalSide
 {
@@ -57,14 +54,14 @@ enum class AnimationState
 class GameTexture
 {
 public:
+	static constexpr int TEXTURE_MISSING = -1;		// テクスチャが見つかりません
+	static constexpr int TEXTURE_NONE = -2;			// テクスチャなし
+public:
 	HGRP texture;				// <テクスチャ>
 	Vec2 anchor;				// <テクスチャ基点>
 	Vec2 size;					// <テクスチャサイズ>
 	Vec2 center;				// <テクスチャ中心>
 public:
-	static constexpr int TEXTURE_MISSING = -1;		// テクスチャが見つかりません
-	static constexpr int TEXTURE_NONE = -2;			// テクスチャなし
-
 	// <テクスチャ作成>
 	GameTexture(HGRP texture, Vec2 anchor, Vec2 size);
 
@@ -127,6 +124,9 @@ public:
 class GameObject
 {
 public:
+	// <デバッグ用当たり判定表示>
+	static bool DEBUG_HITBOX;
+public:
 	Vec2 pos;					// <位置>
 	Vec2 vel;					// <速度>
 	Vec2 size;					// <大きさ>
@@ -138,7 +138,7 @@ public:
 	bool alive;					// <表示状態>
 	int state;					// <状態>
 	int type;					// <タイプ>
-	Timer count;			// <カウンタ>
+	Timer count;				// <カウンタ>
 public:
 	// <オブジェクト作成>
 	GameObject(Vec2 pos = {}, Vec2 vel = {}, Vec2 size = {});
