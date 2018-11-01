@@ -63,7 +63,13 @@ public:
 	Vec2 center;				// <テクスチャ中心>
 public:
 	// <テクスチャ作成>
-	GameTexture(HGRP texture, Vec2 anchor, Vec2 size);
+	GameTexture(HGRP texture, const Vec2& anchor, const Vec2& size, const Vec2& center);
+
+	// <テクスチャ作成>
+	GameTexture(HGRP texture, const Vec2& anchor, const Vec2& size);
+
+	// <テクスチャ作成>
+	GameTexture(HGRP texture);
 
 	// <テクスチャなし>
 	GameTexture();

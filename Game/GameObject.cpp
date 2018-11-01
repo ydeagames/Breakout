@@ -15,12 +15,40 @@ static int g_deltamilliseconds = 0;
 // <<テクスチャ>> ------------------------------------------------------
 
 // <テクスチャ作成>
-GameTexture::GameTexture(HGRP texture, Vec2 anchor, Vec2 size) :
+GameTexture::GameTexture(HGRP texture, const Vec2& anchor, const Vec2& size, const Vec2& center) :
 	texture(texture),
 	anchor(anchor),
 	size(size),
-	center(Vec2{ size.x / 2, size.y / 2 })
+	center(center)
 {
+}
+
+// <テクスチャ作成>
+GameTexture::GameTexture(HGRP texture, const Vec2& anchor, const Vec2& size) :
+	GameTexture(texture, anchor, size, Vec2{ size.x / 2, size.y / 2 })
+{
+}
+
+// <テクスチャ作成>
+GameTexture::GameTexture(HGRP texture) :
+	texture(texture)
+{
+	anchor = {};
+	size = {};
+	center = {};
+
+	if (texture == TEXTURE_MISSING)
+		return;
+
+	float width, height;
+	if (GetGraphSizeF(texture, &width, &height) != -1)
+	{
+		size = { width, height };
+		center = { width / 2, height / 2 };
+		return;
+	}
+
+	texture = TEXTURE_MISSING;
 }
 
 // <テクスチャなし>
