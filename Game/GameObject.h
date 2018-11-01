@@ -75,6 +75,46 @@ public:
 	GameTexture();
 };
 
+class Sprite
+{
+public:
+	virtual ~Sprite() {}
+
+	// <スプライト描画>
+	virtual void Render(const Vec2& pos) = 0;
+};
+
+class Transform
+{
+public:
+	Vec2 position;				// <テクスチャ>
+	float rotation;				// <回転>
+	float scale;				// <スケール>
+
+public:
+	Transform(const Vec2& position, float rotation, float scale);
+
+	Transform();
+};
+
+class TextureSprite : public Sprite
+{
+public:
+	GameTexture texture;		
+	Transform transform;
+
+public:
+	TextureSprite(const GameTexture& texture, const Transform& transform);
+
+	// <スプライトなし>
+	TextureSprite();
+
+	virtual ~TextureSprite() {}
+
+	// <スプライト描画>
+	void Render(const Vec2& pos) override;
+};
+
 // <スプライトオブジェクト>
 class GameSprite
 {
