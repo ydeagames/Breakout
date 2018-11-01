@@ -5,6 +5,13 @@
 
 // <GameƒNƒ‰ƒX>
 
+const int Game::STAGE_DATA[3][8] = 
+{
+	{ 1, 1, 1, 1, 1, 1, 1, 1 },
+	{ 2, 2, 2, 2, 2, 2, 2, 2 },
+	{ 3, 3, 3, 3, 3, 3, 3, 3 },
+};
+
 // ƒQ[ƒ€‚Ì‰Šú‰»ˆ—
 Game::Game() :
 	m_frame_timer(new FrameTimer),
@@ -17,15 +24,18 @@ Game::Game() :
 
 	const float width = SCREEN_WIDTH / 8;
 	const float height = width / 4;
-	const unsigned int colors[] = { COLOR_RED, COLOR_GREEN, COLOR_BLUE };
 
 	for (int iy = 0; iy < 3; iy++)
 	{
 		for (int ix = 0; ix < 8; ix++)
 		{
-			m_blocks.emplace_back(
-				Vec2{ ix * width + width / 2, iy * height + height / 2 },
-				Vec2{ width, height }, colors[iy]);
+			int type = STAGE_DATA[iy][ix];
+			if (type != 0)
+			{
+				m_blocks.emplace_back(
+					Vec2{ ix * width + width / 2, iy * height + height / 2 },
+					Vec2{ width, height }, type);
+			}
 		}
 	}
 }
@@ -49,7 +59,7 @@ void Game::Update(void)
 // ƒQ[ƒ€‚Ì•`‰æˆ—
 void Game::Render(void)
 {
-	DrawFormatString(10, 10, COLOR_WHITE, "FPS = %f", m_frame_timer->GetFrameRate());
+	DrawFormatString(10, 10, Colors::White, "FPS = %f", m_frame_timer->GetFrameRate());
 	m_paddle->Render();
 
 	for (auto itr = m_blocks.begin(); itr != m_blocks.end(); ++itr) {

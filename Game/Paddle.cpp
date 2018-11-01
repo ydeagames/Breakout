@@ -23,5 +23,5 @@ void Paddle::Update()
 
 void Paddle::Render()
 {
-	DrawBoxAA(m_position.x - 40, m_position.y - 8, m_position.x + 40, m_position.y + 8, COLOR_YELLOW, true);
+	DrawBoxAA(m_position.x - 40, m_position.y - 8, m_position.x + 40, m_position.y + 8, Colors::Yellow, true);
 }

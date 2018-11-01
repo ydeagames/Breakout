@@ -61,7 +61,7 @@ GameTexture::GameTexture() :
 
 // <スプライト作成>
 GameSprite::GameSprite(GameTexture texture, float scale, float angle) :
-	color(COLOR_WHITE),
+	color(Colors::White),
 	texture(texture),
 	size(texture.size),
 	num_columns(1),
@@ -387,9 +387,9 @@ void GameObject::Render(const Vec2* translate)
 		else
 		{
 			// NULLテクスチャを表示
-			DrawBoxAA(box_xl, box_yt, box_xr, box_yb, COLOR_BLACK, TRUE);
-			DrawBoxAA(box_xl, box_yt, box_xc, box_ym, COLOR_FUCHSIA, TRUE);
-			DrawBoxAA(box_xc, box_ym, box_xr, box_yb, COLOR_FUCHSIA, TRUE);
+			DrawBoxAA(box_xl, box_yt, box_xr, box_yb, Colors::Black, TRUE);
+			DrawBoxAA(box_xl, box_yt, box_xc, box_ym, Colors::Fuchsia, TRUE);
+			DrawBoxAA(box_xc, box_ym, box_xr, box_yb, Colors::Fuchsia, TRUE);
 			//DrawBoxAA(box_xl, box_yt, box_xr, box_yb, sprite.color, FALSE, .5f);
 		}
 	}

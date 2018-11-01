@@ -43,14 +43,14 @@ class Block;
 class Game
 {
 private:
-	const float SPEED = 8;
+	static const int STAGE_DATA[3][8];
 
+private:
 	FrameTimer* m_frame_timer;
 	InputManager* m_input;
 	Paddle* m_paddle;
 	std::vector<Block> m_blocks;
 
-	// ƒƒ“ƒoŠÖ”‚ÌéŒ¾
 public:
 	Game();
 	~Game();
