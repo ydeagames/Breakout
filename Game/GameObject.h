@@ -1,47 +1,5 @@
 #pragma once
 
-// <横位置関係>
-enum class HorizontalSide
-{
-	NONE,
-	CENTER,						// X中央
-	LEFT,						// 左
-	RIGHT,						// 右
-};
-
-// <縦位置関係>
-enum class VerticalSide
-{
-	NONE,
-	CENTER,						// Y中央
-	TOP,						// 上
-	BOTTOM,						// 下
-};
-
-// <縁の位置> 
-enum class Edge
-{
-	CENTER,						// 縁の上
-	OUTER,						// 縁の外側
-	INNER,						// 縁の内側
-};
-
-// <ワールドのつながり>
-enum class Connection
-{
-	NONE,						// 繋がりなし、見えない空間に移動
-	BARRIER,					// 壁があり、進めない
-	LOOP,						// 反対側から出てくる
-};
-
-// <オブジェクトの形>
-enum class Shape
-{
-	BOX,						// 長方形
-	CIRCLE,						// 円
-	LINE,						// 線
-};
-
 // <アニメーションの結果>
 enum class AnimationState
 {
@@ -51,19 +9,21 @@ enum class AnimationState
 };
 
 // <テクスチャ>
-class GameTexture
+class GameTexture final
 {
 public:
 	static constexpr int TEXTURE_MISSING = -1;		// テクスチャが見つかりません
 	static constexpr int TEXTURE_NONE = -2;			// テクスチャなし
+
 public:
 	HGRP texture;				// <テクスチャ>
 	Vec2 anchor;				// <テクスチャ基点>
 	Vec2 size;					// <テクスチャサイズ>
-	Vec2 center;				// <テクスチャ中心>
+	Vec2 pivot;					// <テクスチャ中心>
+
 public:
 	// <テクスチャ作成>
-	GameTexture(HGRP texture, const Vec2& anchor, const Vec2& size, const Vec2& center);
+	GameTexture(HGRP texture, const Vec2& anchor, const Vec2& size, const Vec2& pivot = Vec2{ .5f, .5f });
 
 	// <テクスチャ作成>
 	GameTexture(HGRP texture, const Vec2& anchor, const Vec2& size);
@@ -84,7 +44,7 @@ public:
 	virtual void Render(const Vec2& pos) = 0;
 };
 
-class Transform
+class Transform final
 {
 public:
 	Vec2 position;				// <テクスチャ>
@@ -112,14 +72,19 @@ public:
 	virtual ~TextureSprite() {}
 
 	// <スプライト描画>
-	void Render(const Vec2& pos) override;
+	void Render(const Transform& tranform) override;
+};
+
+class ClippingSprite : public Sprite
+{
+
 };
 
 // <スプライトオブジェクト>
 class GameSprite
 {
 public:
-	unsigned int color;			// <色>
+	Color color;			// <色>
 	GameTexture texture;		// <テクスチャ>
 	Vec2 size;					// <サイズ>
 	int num_columns;			// <1行あたりのフレーム数>
@@ -176,7 +141,7 @@ public:
 	Vec2 pos;					// <位置>
 	Vec2 vel;					// <速度>
 	Vec2 size;					// <大きさ>
-	Shape shape;				// <形>
+	ShapeType shape;				// <形>
 	GameSprite sprite;			// <スプライト>
 	bool fill;					// <塗りつぶし>
 	float edge;					// <縁>

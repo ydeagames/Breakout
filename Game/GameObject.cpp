@@ -15,17 +15,11 @@ static int g_deltamilliseconds = 0;
 // <<テクスチャ>> ------------------------------------------------------
 
 // <テクスチャ作成>
-GameTexture::GameTexture(HGRP texture, const Vec2& anchor, const Vec2& size, const Vec2& center) :
+GameTexture::GameTexture(HGRP texture, const Vec2& anchor, const Vec2& size, const Vec2& pivot) :
 	texture(texture),
 	anchor(anchor),
 	size(size),
-	center(center)
-{
-}
-
-// <テクスチャ作成>
-GameTexture::GameTexture(HGRP texture, const Vec2& anchor, const Vec2& size) :
-	GameTexture(texture, anchor, size, Vec2{ size.x / 2, size.y / 2 })
+	pivot(pivot)
 {
 }
 
@@ -35,7 +29,7 @@ GameTexture::GameTexture(HGRP texture) :
 {
 	anchor = {};
 	size = {};
-	center = {};
+	pivot = { .5f, .5f };
 
 	if (texture == TEXTURE_MISSING)
 		return;
@@ -44,7 +38,6 @@ GameTexture::GameTexture(HGRP texture) :
 	if (GetGraphSizeF(texture, &width, &height) != -1)
 	{
 		size = { width, height };
-		center = { width / 2, height / 2 };
 		return;
 	}
 
@@ -186,7 +179,7 @@ GameObject::GameObject(Vec2 pos, Vec2 vel, Vec2 size) :
 	pos(pos),
 	vel(vel),
 	size(size),
-	shape(Shape::BOX),
+	shape(ShapeType::BOX),
 	fill(false),
 	edge(0),
 	sprite_connection(Connection::NONE),
@@ -203,7 +196,7 @@ GameObject GameObject::CreateLine(Vec2 pos1, Vec2 pos2, Vec2 vel)
 	Vec2 pos = (pos1 + pos2) * .5f;
 	Vec2 size = pos2 - pos1;
 	GameObject obj = GameObject{ pos, vel, size };
-	obj.shape = Shape::LINE;
+	obj.shape = ShapeType::LINE;
 	return obj;
 }
 
@@ -224,94 +217,6 @@ void GameObject::UpdatePosition()
 {
 	pos.x += vel.x;// *(g_deltamilliseconds / 17.f);
 	pos.y += vel.y;// *(g_deltamilliseconds / 17.f);
-}
-
-// <オブジェクトXオフセット>
-float GameObject::OffsetX(HorizontalSide side, float pos, float padding)
-{
-	float offset = 0;
-	switch (side)
-	{
-	case HorizontalSide::LEFT:
-		offset = -(padding + GetAbs(size.x) / 2.f);
-		break;
-	case HorizontalSide::RIGHT:
-		offset = (padding + GetAbs(size.x) / 2.f);
-		break;
-	}
-	return pos + offset;
-}
-
-// <オブジェクトXオフセット>
-float GameObject::OffsetY(VerticalSide side, float pos, float padding)
-{
-	float offset = 0;
-	switch (side)
-	{
-	case VerticalSide::TOP:
-		offset = -(padding + GetAbs(size.y) / 2.f);
-		break;
-	case VerticalSide::BOTTOM:
-		offset = (padding + GetAbs(size.y) / 2.f);
-		break;
-	}
-	return pos + offset;
-}
-
-// <オブジェクトX位置ゲット>
-float GameObject::GetX(HorizontalSide side, float padding)
-{
-	return OffsetX(side, pos.x, padding);
-}
-
-// <オブジェクトY位置ゲット>
-float GameObject::GetY(VerticalSide side, float padding)
-{
-	return OffsetY(side, pos.y, padding);
-}
-
-// <オブジェクトXオフセット>
-float GameObject::OffsetRawX(HorizontalSide side, float pos, float padding)
-{
-	float offset = 0;
-	switch (side)
-	{
-	case HorizontalSide::LEFT:
-		offset = -(padding + size.x / 2.f);
-		break;
-	case HorizontalSide::RIGHT:
-		offset = (padding + size.x / 2.f);
-		break;
-	}
-	return pos + offset;
-}
-
-// <オブジェクトXオフセット>
-float GameObject::OffsetRawY(VerticalSide side, float pos, float padding)
-{
-	float offset = 0;
-	switch (side)
-	{
-	case VerticalSide::TOP:
-		offset = -(padding + size.y / 2.f);
-		break;
-	case VerticalSide::BOTTOM:
-		offset = (padding + size.y / 2.f);
-		break;
-	}
-	return pos + offset;
-}
-
-// <オブジェクトX位置ゲット>
-float GameObject::GetRawX(HorizontalSide side, float padding)
-{
-	return OffsetRawX(side, pos.x, padding);
-}
-
-// <オブジェクトY位置ゲット>
-float GameObject::GetRawY(VerticalSide side, float padding)
-{
-	return OffsetRawY(side, pos.y, padding);
 }
 
 // <オブジェクト描画>
@@ -398,7 +303,7 @@ void GameObject::Render(const Vec2* translate)
 	switch (shape)
 	{
 	default:
-	case Shape::BOX:
+	case ShapeType::BOX:
 		// 矩形描画
 		if (fill)
 			DrawBoxAA(box_xl, box_yt, box_xr, box_yb, sprite.color, TRUE);
@@ -411,7 +316,7 @@ void GameObject::Render(const Vec2* translate)
 			DrawLineAA(box_xr, box_yt, box_xl, box_yb, sprite.color, .5f);
 		}
 		break;
-	case Shape::CIRCLE:
+	case ShapeType::CIRCLE:
 		{
 			float r1 = GetMin(GetAbs(size.x), GetAbs(size.y)) / 2;
 			// 円
@@ -428,7 +333,7 @@ void GameObject::Render(const Vec2* translate)
 			}
 			break;
 		}
-	case Shape::LINE:
+	case ShapeType::LINE:
 		{
 			float r1 = edge;
 			// 線

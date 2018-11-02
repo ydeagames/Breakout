@@ -77,9 +77,6 @@ public:
 
 	// <•¡‡‘ã“ü‰‰ŽZ /=>
 	Vec2& operator /=(float scale);
-
-	// <ƒxƒNƒgƒ‹‚ð•`‰æ>
-	void Render(const Vec2& base, unsigned int color, float Thickness = 1.f) const;
 };
 
 // <Vec2 ‚ªŒã‚É‚­‚é 2€ *>
