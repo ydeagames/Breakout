@@ -1,3 +1,14 @@
+/**
+* ベクトルクラス
+*
+* ベクトルの操作を提供します
+*
+* Copyright (c) 2018 YdeaGames
+*
+* This file is released under the MIT License.
+* http://opensource.org/licenses/mit-license.php
+*/
+
 #pragma once
 
 // <ベクトル>
@@ -59,6 +70,9 @@ public:
 
 	// <ベクトルを減算>
 	Vec2 operator -(const Vec2& other) const;
+
+	// <ベクトルをスケール>
+	Vec2 operator *(const Vec2& scale) const;
 
 	// <ベクトルをスケール>
 	Vec2 operator *(float scale) const;

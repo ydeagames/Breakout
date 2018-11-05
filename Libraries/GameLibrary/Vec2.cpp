@@ -1,3 +1,14 @@
+/**
+* ベクトルクラス
+*
+* ベクトルの操作を提供します
+*
+* Copyright (c) 2018 YdeaGames
+*
+* This file is released under the MIT License.
+* http://opensource.org/licenses/mit-license.php
+*/
+
 #include "Vec2.h"
 #include "MathUtils.h"
 #include <cmath>
@@ -115,6 +126,12 @@ Vec2 Vec2::operator +(const Vec2& other) const
 Vec2 Vec2::operator -(const Vec2& other) const
 {
 	return{ x - other.x, y - other.y };
+}
+
+// <ベクトルをスケール>
+Vec2 Vec2::operator *(const Vec2& scale) const
+{
+	return{ x * scale.x, y * scale.y };
 }
 
 // <ベクトルをスケール>

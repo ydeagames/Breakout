@@ -2,6 +2,7 @@
 #include <cmath>
 #include "Paddle.h"
 #include "Block.h"
+#include "Ball.h"
 
 // <GameƒNƒ‰ƒX>
 
@@ -16,7 +17,8 @@ const int Game::STAGE_DATA[3][8] =
 Game::Game() :
 	m_frame_timer(new FrameTimer),
 	m_input(new InputManager),
-	m_paddle(nullptr)
+	m_paddle(nullptr),
+	m_ball(new Ball(Dimension{ Vec2{static_cast<float>(SCREEN_CENTER_X), static_cast<float>(SCREEN_CENTER_Y)}, Vec2{5, 5} }))
 {
 	m_paddle = new Paddle({ static_cast<float>(SCREEN_CENTER_X), static_cast<float>(SCREEN_BOTTOM) - 20.f },
 		m_input->GetInput<JoypadInput>("Joypad")->GetInputButton(PAD_INPUT_LEFT),
@@ -54,6 +56,7 @@ void Game::Update(void)
 	m_frame_timer->Update();
 	m_input->Update();
 	m_paddle->Update();
+	m_ball->Update();
 }
 
 // ƒQ[ƒ€‚Ì•`‰æˆ—
@@ -65,4 +68,6 @@ void Game::Render(void)
 	for (auto itr = m_blocks.begin(); itr != m_blocks.end(); ++itr) {
 		itr->Render();
 	}
+
+	m_ball->Render();
 }

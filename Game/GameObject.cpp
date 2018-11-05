@@ -5,6 +5,8 @@ using namespace MathUtils;
 
 bool GameObject::DEBUG_HITBOX = FALSE;
 
+/*
+
 // <<ティック>> --------------------------------------------------------
 
 // <最終時刻>
@@ -91,7 +93,7 @@ void GameSprite::Render(const Vec2* pos)
 		pos->x + offset.x, pos->y + offset.y,
 		(int)anchor.x, (int)anchor.y,
 		(int)texture.size.x, (int)texture.size.y,
-		texture.center.x, texture.center.y,
+		texture.pivot.x * texture.size.x, texture.pivot.y * texture.size.x,
 		(double)scale,
 		(double)angle,
 		texture.texture,
@@ -241,7 +243,7 @@ void GameObject::Render(const Vec2* translate)
 			case Connection::BARRIER:
 				{
 					// リピートタイル (回転、テクスチャ中心座標 には未対応)
-					Vec2 center_offset = sprite.texture.center * sprite.scale;
+					Vec2 center_offset = sprite.texture.pivot * sprite.texture.size * sprite.scale;
 					Vec2 sp_pos = box_t + sprite.offset;
 					Vec2 sp_size = sprite.texture.size * sprite.scale;
 
@@ -338,7 +340,7 @@ void GameObject::Render(const Vec2* translate)
 			float r1 = edge;
 			// 線
 			if (DEBUG_HITBOX)
-				size.Render(Vec2{ box_xl, box_yt }, sprite.color, .5f);
+				Graphics::DrawVector(size, Vec2{ box_xl, box_yt }, sprite.color, .5f);
 			DrawLineAA(box_xl, box_yt, box_xr, box_yb, sprite.color, r1);
 			break;
 		}
@@ -364,94 +366,4 @@ Field::Field(void) :
 {
 }
 
-// <フィールド上下衝突処理>
-VerticalSide Field::CollisionVertical(GameObject* obj, Connection connection, Edge edge)
-{
-	// ヒットサイド
-	VerticalSide side_hit = VerticalSide::NONE;
-
-	// コウラ・上下壁当たり判定
-	{
-		// 縁に応じてパディングを調整
-		float padding_top = GetY(VerticalSide::TOP);
-		float padding_bottom = GetY(VerticalSide::BOTTOM);
-		switch (edge)
-		{
-		case Edge::INNER:
-			padding_top = obj->OffsetY(VerticalSide::BOTTOM, padding_top);
-			padding_bottom = obj->OffsetY(VerticalSide::TOP, padding_bottom);
-			break;
-		case Edge::OUTER:
-			padding_top = obj->OffsetY(VerticalSide::TOP, padding_top);
-			padding_bottom = obj->OffsetY(VerticalSide::BOTTOM, padding_bottom);
-			break;
-		}
-
-		// 当たり判定
-		if (obj->pos.y < padding_top)
-			side_hit = VerticalSide::TOP;
-		else if (padding_bottom <= obj->pos.y)
-			side_hit = VerticalSide::BOTTOM;
-
-		// フィールドのつながり
-		switch (connection)
-		{
-		case Connection::BARRIER:
-			// 壁にあたったら調整
-			obj->pos.y = GetClamp(obj->pos.y, padding_top, padding_bottom);
-			break;
-		case Connection::LOOP:
-			// 壁にあたったらループ
-			obj->pos.y = GetLoopRange(obj->pos.y, padding_top, padding_bottom);
-			break;
-		}
-	}
-
-	return side_hit;
-}
-
-// <フィールド左右衝突処理>
-HorizontalSide Field::CollisionHorizontal(GameObject* obj, Connection connection, Edge edge)
-{
-	// ヒットサイド
-	HorizontalSide side_hit = HorizontalSide::NONE;
-
-	// コウラ・左右壁当たり判定
-	{
-		// 縁に応じてパディングを調整
-		float padding_left = GetX(HorizontalSide::LEFT);
-		float padding_right = GetX(HorizontalSide::RIGHT);
-		switch (edge)
-		{
-		case Edge::INNER:
-			padding_left = obj->OffsetX(HorizontalSide::RIGHT, padding_left);
-			padding_right = obj->OffsetX(HorizontalSide::LEFT, padding_right);
-			break;
-		case Edge::OUTER:
-			padding_left = obj->OffsetX(HorizontalSide::LEFT, padding_left);
-			padding_right = obj->OffsetX(HorizontalSide::RIGHT, padding_right);
-			break;
-		}
-
-		// 当たり判定
-		if (obj->pos.x < padding_left)
-			side_hit = HorizontalSide::LEFT;
-		else if (padding_right <= obj->pos.x)
-			side_hit = HorizontalSide::RIGHT;
-
-		// フィールドのつながり
-		switch (connection)
-		{
-		case Connection::BARRIER:
-			// 壁にあたったら調整
-			obj->pos.x = GetClamp(obj->pos.x, padding_left, padding_right);
-			break;
-		case Connection::LOOP:
-			// 壁にあたったらループ
-			obj->pos.x = GetLoopRange(obj->pos.x, padding_left, padding_right);
-			break;
-		}
-	}
-
-	return side_hit;
-}
+*/

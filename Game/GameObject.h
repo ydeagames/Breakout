@@ -26,22 +26,10 @@ public:
 	GameTexture(HGRP texture, const Vec2& anchor, const Vec2& size, const Vec2& pivot = Vec2{ .5f, .5f });
 
 	// <テクスチャ作成>
-	GameTexture(HGRP texture, const Vec2& anchor, const Vec2& size);
-
-	// <テクスチャ作成>
 	GameTexture(HGRP texture);
 
 	// <テクスチャなし>
 	GameTexture();
-};
-
-class Sprite
-{
-public:
-	virtual ~Sprite() {}
-
-	// <スプライト描画>
-	virtual void Render(const Vec2& pos) = 0;
 };
 
 class Transform final
@@ -55,6 +43,15 @@ public:
 	Transform(const Vec2& position, float rotation, float scale);
 
 	Transform();
+};
+
+class Sprite
+{
+public:
+	virtual ~Sprite() {}
+
+	// <スプライト描画>
+	virtual void Render(const Transform& tranform) = 0;
 };
 
 class TextureSprite : public Sprite
@@ -206,12 +203,6 @@ public:
 	Field(void);
 
 	virtual ~Field() {};
-
-	// <フィールド上下衝突処理>
-	VerticalSide CollisionVertical(GameObject* obj, Connection connection, Edge edge);
-
-	// <フィールド左右衝突処理>
-	HorizontalSide CollisionHorizontal(GameObject* obj, Connection connection, Edge edge);
 };
 
 // <オブジェクト作成>

@@ -118,4 +118,10 @@ public:
 
 	// <オブジェクトY位置ゲット>
 	float GetRawY(VerticalSide side, float padding = 0.f) const;
+
+	// <上下衝突処理>
+	VerticalSide Dimension::CollisionVertical(const Rect& obj, Connection connection, Edge edge);
+
+	// <左右衝突処理>
+	HorizontalSide Dimension::CollisionHorizontal(const Rect& obj, Connection connection, Edge edge);
 };

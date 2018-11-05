@@ -38,6 +38,7 @@ const int SCREEN_CENTER_Y = SCREEN_HEIGHT / 2;
 // <使用クラス宣言>
 class Paddle;
 class Block;
+class Ball;
 
 // <ゲーム>
 class Game
@@ -50,6 +51,7 @@ private:
 	InputManager* m_input;
 	Paddle* m_paddle;
 	std::vector<Block> m_blocks;
+	Ball* m_ball;
 
 public:
 	Game();
