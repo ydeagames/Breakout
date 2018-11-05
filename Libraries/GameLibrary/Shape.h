@@ -81,6 +81,12 @@ public:
 
 	// <オブジェクトXオフセット>
 	virtual float OffsetRawY(VerticalSide side, float pos, float padding = 0.f) const = 0;
+
+	// <上下衝突処理>
+	virtual VerticalSide CollisionVertical(const Rect& obj, Connection connection, Edge edge) = 0;
+
+	// <左右衝突処理>
+	virtual HorizontalSide CollisionHorizontal(const Rect& obj, Connection connection, Edge edge) = 0;
 };
 
 class Dimension : public Rect
@@ -120,8 +126,8 @@ public:
 	float GetRawY(VerticalSide side, float padding = 0.f) const;
 
 	// <上下衝突処理>
-	VerticalSide Dimension::CollisionVertical(const Rect& obj, Connection connection, Edge edge);
+	VerticalSide CollisionVertical(const Rect& obj, Connection connection, Edge edge) override;
 
 	// <左右衝突処理>
-	HorizontalSide Dimension::CollisionHorizontal(const Rect& obj, Connection connection, Edge edge);
+	HorizontalSide CollisionHorizontal(const Rect& obj, Connection connection, Edge edge) override;
 };

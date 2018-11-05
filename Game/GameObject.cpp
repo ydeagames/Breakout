@@ -5,7 +5,7 @@ using namespace MathUtils;
 
 bool GameObject::DEBUG_HITBOX = FALSE;
 
-/*
+//*
 
 // <<ティック>> --------------------------------------------------------
 
@@ -221,15 +221,23 @@ void GameObject::UpdatePosition()
 	pos.y += vel.y;// *(g_deltamilliseconds / 17.f);
 }
 
+// <枠取得>
+Dimension GameObject::GetCollision()
+{
+	return{ pos, size };
+}
+
 // <オブジェクト描画>
 void GameObject::Render(const Vec2* translate)
 {
-	float box_xl = GetRawX(HorizontalSide::LEFT) + translate->x;
-	float box_xc = GetRawX(HorizontalSide::CENTER) + translate->x;
-	float box_xr = GetRawX(HorizontalSide::RIGHT) + translate->x;
-	float box_yt = GetRawY(VerticalSide::TOP) + translate->y;
-	float box_ym = GetRawY(VerticalSide::CENTER) + translate->y;
-	float box_yb = GetRawY(VerticalSide::BOTTOM) + translate->y;
+	Dimension collision = GetCollision();
+
+	float box_xl = collision.GetX(HorizontalSide::LEFT) + translate->x;
+	float box_xc = collision.GetX(HorizontalSide::CENTER) + translate->x;
+	float box_xr = collision.GetX(HorizontalSide::RIGHT) + translate->x;
+	float box_yt = collision.GetY(VerticalSide::TOP) + translate->y;
+	float box_ym = collision.GetY(VerticalSide::CENTER) + translate->y;
+	float box_yb = collision.GetY(VerticalSide::BOTTOM) + translate->y;
 	Vec2 box_t = { box_xc, box_ym };
 
 	// テクスチャを確認
@@ -366,4 +374,4 @@ Field::Field(void) :
 {
 }
 
-*/
+/**/

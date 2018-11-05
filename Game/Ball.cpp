@@ -16,11 +16,6 @@ void Ball::Update()
 		vel.x *= -1;
 	if (rect.CollisionVertical(dim, Connection::BARRIER, Edge::INNER) != VerticalSide::NONE)
 		vel.y *= -1;
-
-	//if (rect.pos.x < 0 || rect.pos.x > 640)
-	//	vel.x *= -1;
-	//if (rect.pos.y < 0 || rect.pos.y > 480)
-	//	vel.y *= -1;
 }
 
 void Ball::Render()

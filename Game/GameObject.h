@@ -165,29 +165,8 @@ public:
 	// <オブジェクト座標更新>
 	void UpdatePosition();
 
-	// <オブジェクトXオフセット>
-	float OffsetX(HorizontalSide side, float pos = 0.f, float margin = 0.f);
-
-	// <オブジェクトXオフセット>
-	float OffsetY(VerticalSide side, float pos = 0.f, float margin = 0.f);
-
-	// <オブジェクトX位置ゲット>
-	float GetX(HorizontalSide side, float margin = 0.f);
-
-	// <オブジェクトY位置ゲット>
-	float GetY(VerticalSide side, float margin = 0.f);
-
-	// <オブジェクトXオフセット>
-	float OffsetRawX(HorizontalSide side, float pos, float padding = 0.f);
-
-	// <オブジェクトXオフセット>
-	float OffsetRawY(VerticalSide side, float pos, float padding = 0.f);
-
-	// <オブジェクトX位置ゲット>
-	float GetRawX(HorizontalSide side, float padding = 0.f);
-
-	// <オブジェクトY位置ゲット>
-	float GetRawY(VerticalSide side, float padding = 0.f);
+	// <枠取得>
+	Dimension GetCollision();
 
 	// <オブジェクト描画>
 	void Render(const Vec2* translate = &Vec2{});
