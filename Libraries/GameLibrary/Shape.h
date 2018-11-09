@@ -76,12 +76,6 @@ public:
 	// <オブジェクトY位置ゲット>
 	virtual float GetY(VerticalSide side, float margin = 0.f) const = 0;
 
-	// <オブジェクトXオフセット>
-	virtual float OffsetRawX(HorizontalSide side, float pos, float padding = 0.f) const = 0;
-
-	// <オブジェクトXオフセット>
-	virtual float OffsetRawY(VerticalSide side, float pos, float padding = 0.f) const = 0;
-
 	// <上下衝突処理>
 	virtual VerticalSide CollisionVertical(const Rect& obj, Connection connection, Edge edge) = 0;
 
@@ -114,10 +108,10 @@ public:
 	float GetY(VerticalSide side, float margin = 0.f) const override;
 
 	// <オブジェクトXオフセット>
-	float OffsetRawX(HorizontalSide side, float pos, float padding = 0.f) const override;
+	float OffsetRawX(HorizontalSide side, float pos, float padding = 0.f) const;
 
 	// <オブジェクトXオフセット>
-	float OffsetRawY(VerticalSide side, float pos, float padding = 0.f) const override;
+	float OffsetRawY(VerticalSide side, float pos, float padding = 0.f) const;
 
 	// <オブジェクトX位置ゲット>
 	float GetRawX(HorizontalSide side, float padding = 0.f) const;
