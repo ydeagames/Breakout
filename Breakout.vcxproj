@@ -90,6 +90,7 @@
   <ItemGroup>
     <ClCompile Include="Game\Ball.cpp" />
     <ClCompile Include="Game\Block.cpp" />
+    <ClCompile Include="Game\Collider.cpp" />
     <ClCompile Include="Game\GameObject.cpp" />
     <ClCompile Include="Game\Paddle.cpp" />
     <ClCompile Include="Libraries\GameLibrary\DrawUtils.cpp" />
@@ -109,6 +110,7 @@
   <ItemGroup>
     <ClInclude Include="Game\Ball.h" />
     <ClInclude Include="Game\Block.h" />
+    <ClInclude Include="Game\Collider.h" />
     <ClInclude Include="Game\GameMain.h" />
   </ItemGroup>
   <!--リソースファイル -->
