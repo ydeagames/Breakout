@@ -1,16 +1,13 @@
 #pragma once
-class Paddle
+
+class Paddle : public Component
 {
 private:
-	Vec2 m_position;
-	Vec2 m_velocity;
 	InputButton m_key_left;
 	InputButton m_key_right;
 public:
-	Paddle(const Vec2& default_position, const InputButton& key_left, const InputButton& key_right);
-	~Paddle();
+	Paddle(const InputButton& key_left, const InputButton& key_right);
 
-	void Update();
-	void Render();
+	void Update() override;
 };
 

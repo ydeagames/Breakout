@@ -39,9 +39,9 @@ void CircleRenderer::Render()
 
 	// TODO “§–¾“x
 	if (material.base_transparency > 0)
-		DrawOvalAA(box.GetX(HorizontalSide::LEFT), box.GetY(VerticalSide::TOP), box.GetX(HorizontalSide::RIGHT), box.GetY(VerticalSide::BOTTOM), material.base_color, true);
+		DrawOvalAA(box.GetX(HorizontalSide::LEFT), box.GetY(VerticalSide::TOP), box.size.x / 2, box.size.y / 2, 32, material.base_color, true);
 	if (material.edge_transparency > 0)
-		DrawOvalAA(box.GetX(HorizontalSide::LEFT), box.GetY(VerticalSide::TOP), box.GetX(HorizontalSide::RIGHT), box.GetY(VerticalSide::BOTTOM), material.edge_color, false, material.edge_thickness);
+		DrawOvalAA(box.GetX(HorizontalSide::LEFT), box.GetY(VerticalSide::TOP), box.size.x / 2, box.size.y / 2, 32, material.edge_color, false, material.edge_thickness);
 }
 
 void LineRenderer::Render()

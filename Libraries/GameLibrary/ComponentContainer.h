@@ -25,4 +25,8 @@ public:
 	{
 		return components[typeid(T)];
 	}
+
+public:
+	void Update();
+	void Render();
 };

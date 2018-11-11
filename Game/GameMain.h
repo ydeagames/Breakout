@@ -49,7 +49,7 @@ private:
 private:
 	FrameTimer* m_frame_timer;
 	InputManager* m_input;
-	Paddle* m_paddle;
+	GameObject* m_paddle;
 	std::vector<Block> m_blocks;
 	Ball* m_ball;
 

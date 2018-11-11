@@ -11,7 +11,7 @@ public:
 	Vec2 scale;					// <ƒXƒP[ƒ‹>
 
 public:
-	Transform(const Vec2& position, float rotation, float scale);
+	Transform(const Vec2& position, float rotation, const Vec2& scale);
 
 	Transform();
 };

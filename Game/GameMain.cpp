@@ -6,7 +6,7 @@
 
 // <GameƒNƒ‰ƒX>
 
-const int Game::STAGE_DATA[3][8] = 
+const int Game::STAGE_DATA[3][8] =
 {
 	{ 1, 1, 1, 1, 1, 1, 1, 1 },
 	{ 2, 2, 2, 2, 2, 2, 2, 2 },
@@ -20,9 +20,14 @@ Game::Game() :
 	m_paddle(nullptr),
 	m_ball(new Ball(Dimension{ Vec2{static_cast<float>(SCREEN_CENTER_X), static_cast<float>(SCREEN_CENTER_Y)}, Vec2{5, 5} }))
 {
-	m_paddle = new Paddle({ static_cast<float>(SCREEN_CENTER_X), static_cast<float>(SCREEN_BOTTOM) - 20.f },
+	m_paddle = new GameObject();
+	m_paddle->transform()->position = { static_cast<float>(SCREEN_CENTER_X), static_cast<float>(SCREEN_BOTTOM) - 20.f };
+	m_paddle->transform()->scale = { 80, 16 };
+	m_paddle->AddComponent(std::make_shared<Rigidbody>());
+	m_paddle->AddComponent(std::make_shared<Paddle>(
 		m_input->GetInput<JoypadInput>("Joypad")->GetInputButton(PAD_INPUT_LEFT),
-		m_input->joypad->GetInputButton(PAD_INPUT_RIGHT));
+		m_input->joypad->GetInputButton(PAD_INPUT_RIGHT)));
+	m_paddle->AddComponent(std::make_shared<BoxRenderer>());
 
 	const float width = SCREEN_WIDTH / 8;
 	const float height = width / 4;

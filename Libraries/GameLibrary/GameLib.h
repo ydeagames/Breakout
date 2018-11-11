@@ -10,6 +10,8 @@
 #include "Graphics.h"
 #include "Input.h"
 #include "MathUtils.h"
+#include "Renderer.h"
+#include "Rigidbody.h"
 #include "Shape.h"
 #include "Singleton.h"
 #include "SystemUtils.h"

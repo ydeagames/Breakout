@@ -29,8 +29,8 @@ public:
 	Material material;
 
 public:
-	Renderer(Material material)
-		: material(material) {}
+	Renderer()
+		: material(material = Material{}.SetBase(Colors::White)) {}
 	virtual ~Renderer() {}
 
 public:
