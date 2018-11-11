@@ -51,7 +51,7 @@ private:
 	InputManager* m_input;
 	GameObject* m_paddle;
 	std::vector<Block> m_blocks;
-	Ball* m_ball;
+	GameObject* m_ball;
 
 public:
 	Game();

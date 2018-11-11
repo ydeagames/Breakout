@@ -1,16 +1,11 @@
 #pragma once
-class Ball
+
+class Ball : public Component
 {
-private:
-	Dimension rect;
-	Vec2 vel;
-
+public:
+	Ball();
 
 public:
-	Ball(Dimension rect);
-
-public:
-	void Update();
-	void Render();
+	void Update() override;
 };
 
