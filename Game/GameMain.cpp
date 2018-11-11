@@ -30,8 +30,8 @@ Game::Game() :
 	m_paddle->AddComponent(std::make_shared<BoxRenderer>());
 
 	m_ball = new GameObject();
-	m_ball->transform()->position = Vec2{ static_cast<float>(SCREEN_CENTER_X), static_cast<float>(SCREEN_CENTER_Y) };
-	m_ball->transform()->scale = Vec2{ 5, 5 };
+	m_ball->transform()->position = { static_cast<float>(SCREEN_CENTER_X), static_cast<float>(SCREEN_CENTER_Y) };
+	m_ball->transform()->scale = { 5, 5 };
 	m_ball->AddComponent(std::make_shared<Rigidbody>(Vec2{ 5,5 }));
 	m_ball->AddComponent(std::make_shared<Ball>());
 	m_ball->AddComponent(std::make_shared<BoxRenderer>());
@@ -46,9 +46,16 @@ Game::Game() :
 			int type = STAGE_DATA[iy][ix];
 			if (type != 0)
 			{
-				m_blocks.emplace_back(
-					Vec2{ ix * width + width / 2, iy * height + height / 2 },
-					Vec2{ width, height }, type);
+				std::unique_ptr<GameObject> block = std::make_unique<GameObject>();
+
+				block->transform()->position = { ix * width + width / 2, iy * height + height / 2 };
+				block->transform()->scale = { width, height };
+				block->AddComponent(std::make_shared<Block>());
+				auto renderer = std::make_shared<BoxRenderer>();
+				renderer->material = Material{}.SetBorder(Block::COLORS[type]);
+				block->AddComponent(renderer);
+
+				m_blocks.emplace_back(std::move(block));
 			}
 		}
 	}
@@ -78,7 +85,7 @@ void Game::Render(void)
 	m_paddle->Render();
 
 	for (auto itr = m_blocks.begin(); itr != m_blocks.end(); ++itr) {
-		itr->Render();
+		(*itr)->Render();
 	}
 
 	m_ball->Render();
