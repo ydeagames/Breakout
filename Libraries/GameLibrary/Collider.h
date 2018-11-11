@@ -1,13 +1,6 @@
 #pragma once
 #include "Singleton.h"
-#include "Shape.h"
-
-class Collision final
-{
-public:
-	Shape& shape;
-	Vec2& vel;
-};
+#include "Collision.h"
 
 class Collider
 {

@@ -2,9 +2,11 @@
 
 #include "Collider.h"
 #include "Component.h"
+#include "ComponentContainer.h"
 #include "DrawUtils.h"
 #include "Easings.h"
 #include "FrameTimer.h"
+#include "GameObject.h"
 #include "Graphics.h"
 #include "Input.h"
 #include "MathUtils.h"

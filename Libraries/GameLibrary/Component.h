@@ -1,26 +1,14 @@
 #pragma once
-#include <typeindex>
 
+class GameObject;
 class Component
 {
-
-};
-
-class ComponentContainer
-{
-private:
-	std::unordered_map<std::type_index, std::unique_ptr<Component>> components;
+public:
+	GameObject* gameObject;
 
 public:
-	template<class T>
-	void AddComponent(const T& component)
-	{
-		components[typeid(T)] = std::make_unique<T>(component);
-	}
+	virtual ~Component() {}
 
-	template<class T>
-	const T& GetComponent()
-	{
-		return *dynamic_cast<T>(components[typeid(T)]);
-	}
+public:
+	virtual void Update() {}
 };

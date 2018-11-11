@@ -137,10 +137,10 @@ Colliders::Colliders()
 
 bool Colliders::Collide(Collision& a, Collision& b)
 {
-	return colliders[a.shape.GetType()][b.shape.GetType()]->Collide(a, b);
+	return colliders[a.shape->GetType()][b.shape->GetType()]->Collide(a, b);
 }
 
 bool Colliders::IsHit(const Collision& a, const Collision& b)
 {
-	return colliders[a.shape.GetType()][b.shape.GetType()]->IsHit(a, b);
+	return colliders[a.shape->GetType()][b.shape->GetType()]->IsHit(a, b);
 }
