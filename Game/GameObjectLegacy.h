@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef GOBJ
+
 // <アニメーションの結果>
 enum class AnimationState
 {
@@ -187,3 +189,4 @@ public:
 // <オブジェクト作成>
 void GameTick_Update(void);
 
+#endif

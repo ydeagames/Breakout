@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Collider.h"
 #include "DrawUtils.h"
 #include "Easings.h"
 #include "FrameTimer.h"

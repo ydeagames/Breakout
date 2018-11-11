@@ -73,9 +73,6 @@
     <ClCompile Include="Game\Paddle.cpp">
       <Filter>ゲーム</Filter>
     </ClCompile>
-    <ClCompile Include="Game\GameObject.cpp">
-      <Filter>ゲーム</Filter>
-    </ClCompile>
     <ClCompile Include="Game\Block.cpp">
       <Filter>ゲーム</Filter>
     </ClCompile>
@@ -88,11 +85,14 @@
     <ClCompile Include="Game\Ball.cpp">
       <Filter>ゲーム</Filter>
     </ClCompile>
-    <ClCompile Include="Game\Collider.cpp">
-      <Filter>ゲーム</Filter>
-    </ClCompile>
     <ClCompile Include="Libraries\Dependencies\pch.cpp">
       <Filter>ライブラリ\依存関係</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\GameLibrary\Collider.cpp">
+      <Filter>ライブラリ\ゲームライブラリ</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\GameObjectLegacy.cpp">
+      <Filter>ゲーム</Filter>
     </ClCompile>
   </ItemGroup>
   <!-- ヘッダファイル -->
@@ -133,9 +133,6 @@
     <ClInclude Include="Game\Paddle.h">
       <Filter>ゲーム</Filter>
     </ClInclude>
-    <ClInclude Include="Game\GameObject.h">
-      <Filter>ゲーム</Filter>
-    </ClInclude>
     <ClInclude Include="Game\Block.h">
       <Filter>ゲーム</Filter>
     </ClInclude>
@@ -148,14 +145,17 @@
     <ClInclude Include="Game\Ball.h">
       <Filter>ゲーム</Filter>
     </ClInclude>
-    <ClInclude Include="Game\Collider.h">
-      <Filter>ゲーム</Filter>
-    </ClInclude>
     <ClInclude Include="Libraries\Dependencies\pch.h">
       <Filter>ライブラリ\依存関係</Filter>
     </ClInclude>
     <ClInclude Include="Libraries\GameLibrary\Singleton.h">
       <Filter>ライブラリ\ゲームライブラリ</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\GameLibrary\Collider.h">
+      <Filter>ライブラリ\ゲームライブラリ</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\GameObjectLegacy.h">
+      <Filter>ゲーム</Filter>
     </ClInclude>
   </ItemGroup>
   <!-- リソースファイル -->

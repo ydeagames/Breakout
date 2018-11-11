@@ -1,4 +1,6 @@
 #pragma once
+#include "Singleton.h"
+#include "Shape.h"
 
 class Collision final
 {

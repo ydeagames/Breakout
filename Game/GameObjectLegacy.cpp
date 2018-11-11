@@ -1,5 +1,7 @@
-#include "GameObject.h"
+#include "GameObjectLegacy.h"
 #include "GameMain.h"
+
+#ifdef GOBJ
 
 using namespace MathUtils;
 
@@ -375,3 +377,4 @@ Field::Field(void) :
 }
 
 /**/
+#endif GOBJ
