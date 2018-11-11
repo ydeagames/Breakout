@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Collider.h"
+#include "Component.h"
 #include "DrawUtils.h"
 #include "Easings.h"
 #include "FrameTimer.h"
@@ -11,4 +12,5 @@
 #include "Singleton.h"
 #include "SystemUtils.h"
 #include "Timer.h"
+#include "Transform.h"
 #include "Vec2.h"

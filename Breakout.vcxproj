@@ -91,11 +91,13 @@
     <ClCompile Include="Game\Ball.cpp" />
     <ClCompile Include="Game\Block.cpp" />
     <ClCompile Include="Game\GameObjectLegacy.cpp" />
+    <ClCompile Include="Game\GameObject.cpp" />
     <ClCompile Include="Game\Paddle.cpp" />
     <ClCompile Include="Libraries\Dependencies\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Libraries\GameLibrary\Collider.cpp" />
+    <ClCompile Include="Libraries\GameLibrary\Component.cpp" />
     <ClCompile Include="Libraries\GameLibrary\DrawUtils.cpp" />
     <ClCompile Include="Libraries\GameLibrary\Easings.cpp" />
     <ClCompile Include="Libraries\GameLibrary\FrameTimer.cpp" />
@@ -105,6 +107,7 @@
     <ClCompile Include="Libraries\GameLibrary\Shape.cpp" />
     <ClCompile Include="Libraries\GameLibrary\SystemUtils.cpp" />
     <ClCompile Include="Libraries\GameLibrary\Timer.cpp" />
+    <ClCompile Include="Libraries\GameLibrary\Transform.cpp" />
     <ClCompile Include="Libraries\GameLibrary\Vec2.cpp" />
     <ClCompile Include="WinMain.cpp" />
     <ClCompile Include="Game\GameMain.cpp" />
@@ -123,9 +126,11 @@
     <None Include="Resources\Fonts\PongScore.dft" />
     <!-- アイコン -->
     <ClInclude Include="Game\GameObjectLegacy.h" />
+    <ClInclude Include="Game\GameObject.h" />
     <ClInclude Include="Game\Paddle.h" />
     <ClInclude Include="Libraries\Dependencies\pch.h" />
     <ClInclude Include="Libraries\GameLibrary\Collider.h" />
+    <ClInclude Include="Libraries\GameLibrary\Component.h" />
     <ClInclude Include="Libraries\GameLibrary\DrawUtils.h" />
     <ClInclude Include="Libraries\GameLibrary\Easings.h" />
     <ClInclude Include="Libraries\GameLibrary\FrameTimer.h" />
@@ -137,6 +142,7 @@
     <ClInclude Include="Libraries\GameLibrary\Singleton.h" />
     <ClInclude Include="Libraries\GameLibrary\SystemUtils.h" />
     <ClInclude Include="Libraries\GameLibrary\Timer.h" />
+    <ClInclude Include="Libraries\GameLibrary\Transform.h" />
     <ClInclude Include="Libraries\GameLibrary\Vec2.h" />
     <ClInclude Include="Libraries\Utilities\MemoryLeakDetector.h" />
     <ClInclude Include="Resources\Icon\Icon.h" />

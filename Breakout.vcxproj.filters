@@ -94,6 +94,15 @@
     <ClCompile Include="Game\GameObjectLegacy.cpp">
       <Filter>ゲーム</Filter>
     </ClCompile>
+    <ClCompile Include="Game\GameObject.cpp">
+      <Filter>ゲーム</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\GameLibrary\Transform.cpp">
+      <Filter>ライブラリ\ゲームライブラリ</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\GameLibrary\Component.cpp">
+      <Filter>ライブラリ\ゲームライブラリ</Filter>
+    </ClCompile>
   </ItemGroup>
   <!-- ヘッダファイル -->
   <ItemGroup>
@@ -156,6 +165,15 @@
     </ClInclude>
     <ClInclude Include="Game\GameObjectLegacy.h">
       <Filter>ゲーム</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\GameObject.h">
+      <Filter>ゲーム</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\GameLibrary\Transform.h">
+      <Filter>ライブラリ\ゲームライブラリ</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\GameLibrary\Component.h">
+      <Filter>ライブラリ\ゲームライブラリ</Filter>
     </ClInclude>
   </ItemGroup>
   <!-- リソースファイル -->
