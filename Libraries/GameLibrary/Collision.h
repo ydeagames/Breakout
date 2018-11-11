@@ -12,8 +12,4 @@ public:
 	Collision(std::unique_ptr<Shape>&& shape, bool trigger = false)
 		: shape(std::move(shape))
 		, trigger(trigger) {}
-
-public:
-	Vec2& GetVelocity();
-	//PhysicMaterial& GetPhysicMaterial();
 };

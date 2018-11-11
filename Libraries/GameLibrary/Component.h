@@ -11,4 +11,5 @@ public:
 
 public:
 	virtual void Update() {}
+	virtual void Render() {}
 };

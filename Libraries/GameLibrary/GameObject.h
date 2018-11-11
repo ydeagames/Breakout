@@ -3,15 +3,16 @@
 #include "Transform.h"
 #include <typeindex>
 
-class GameObject
+class GameObject final
 {
 private:
 	ComponentContainer components;
-	std::shared_ptr<Transform> transform;
+
+public:
+	std::shared_ptr<Transform> transform();
 
 public:
 	GameObject();
-	~GameObject();
 
 public:
 	template<class T>

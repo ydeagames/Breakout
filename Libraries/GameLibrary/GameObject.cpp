@@ -3,11 +3,10 @@
 
 GameObject::GameObject()
 {
-	transform = std::make_shared<Transform>();
-	AddComponent<Transform>(transform);
+	AddComponent<Transform>(std::make_shared<Transform>());
 }
 
-
-GameObject::~GameObject()
+std::shared_ptr<Transform> GameObject::transform()
 {
+	return GetComponent<Transform>();
 }

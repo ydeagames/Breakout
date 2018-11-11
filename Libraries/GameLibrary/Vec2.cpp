@@ -13,8 +13,15 @@
 #include "MathUtils.h"
 #include <cmath>
 
+const Vec2 Vec2::one = { 1, 1 };
+const Vec2 Vec2::zero = { 0, 0 };
+const Vec2 Vec2::left = { -1, 0 };
+const Vec2 Vec2::up = { 0, -1 };
+const Vec2 Vec2::right = { 1, 0 };
+const Vec2 Vec2::down = { 0, 1 };
+
 // <ベクトル作成>
-Vec2::Vec2(float x, float y)
+constexpr Vec2::Vec2(float x, float y)
 	: x(x),
 	y(y) {};
 
@@ -25,19 +32,19 @@ float Vec2::Length() const
 }
 
 // <ベクトルの長さの二乗>
-float Vec2::LengthSquared() const
+constexpr float Vec2::LengthSquared() const
 {
 	return x * x + y * y;
 }
 
 // <もう一方のベクトルとの内積>
-float Vec2::Dot(const Vec2& other) const
+constexpr float Vec2::Dot(const Vec2& other) const
 {
 	return x * other.x + y * other.y;
 }
 
 // <もう一方のベクトルとの外積>
-float Vec2::Cross(const Vec2& other) const
+constexpr float Vec2::Cross(const Vec2& other) const
 {
 	return x * other.y - y * other.x;
 }
@@ -49,7 +56,7 @@ float Vec2::LengthTo(const Vec2& other) const
 }
 
 // <もう一方のベクトルとの距離の二乗>
-float Vec2::LengthSquaredTo(const Vec2& other) const
+constexpr float Vec2::LengthSquaredTo(const Vec2& other) const
 {
 	return (other.x - x) * (other.x - x) + (other.y - y) * (other.y - y);
 }
@@ -64,13 +71,13 @@ Vec2 Vec2::Normalized() const
 }
 
 // <同値のベクトルか>
-bool Vec2::Equals(const Vec2& other, float epsilon) const
+constexpr bool Vec2::Equals(const Vec2& other, float epsilon) const
 {
 	return fabsf(x - other.x) < epsilon && fabsf(y - other.y) < epsilon;
 }
 
 // <0ベクトルか>
-bool Vec2::IsZero() const
+constexpr bool Vec2::IsZero() const
 {
 	return Equals({});
 }
@@ -105,37 +112,37 @@ void Vec2::Decompose(const Vec2& angle, Vec2& vec_a, Vec2& vec_b) const
 }
 
 // <ベクトルはそのまま>
-Vec2 Vec2::operator +() const
+constexpr Vec2 Vec2::operator +() const
 {
 	return *this;
 }
 
 // <ベクトルを反転>
-Vec2 Vec2::operator -() const
+constexpr Vec2 Vec2::operator -() const
 {
 	return *this*-1;
 }
 
 // <ベクトルを加算>
-Vec2 Vec2::operator +(const Vec2& other) const
+constexpr Vec2 Vec2::operator +(const Vec2& other) const
 {
 	return{ x + other.x, y + other.y };
 }
 
 // <ベクトルを減算>
-Vec2 Vec2::operator -(const Vec2& other) const
+constexpr Vec2 Vec2::operator -(const Vec2& other) const
 {
 	return{ x - other.x, y - other.y };
 }
 
 // <ベクトルをスケール>
-Vec2 Vec2::operator *(const Vec2& scale) const
+constexpr Vec2 Vec2::operator *(const Vec2& scale) const
 {
 	return{ x * scale.x, y * scale.y };
 }
 
 // <ベクトルをスケール>
-Vec2 Vec2::operator *(float scale) const
+constexpr Vec2 Vec2::operator *(float scale) const
 {
 	return{ x * scale, y * scale };
 }
@@ -143,9 +150,10 @@ Vec2 Vec2::operator *(float scale) const
 // <ベクトルをスケール>
 Vec2 Vec2::operator /(float scale) const
 {
-	if (scale == 0)
-		return{};
-	return{ x / scale, y / scale };
+	Vec2 vec = {};
+	if (scale != 0)
+		vec = { x / scale, y / scale };
+	return vec;
 }
 
 // <複合代入演算 +=>
@@ -161,6 +169,14 @@ Vec2& Vec2::operator -=(const Vec2& other)
 {
 	x -= other.x;
 	y -= other.y;
+	return *this;
+}
+
+// <複合代入演算 *=>
+Vec2& Vec2::operator *=(const Vec2& scale)
+{
+	x *= scale.x;
+	y *= scale.y;
 	return *this;
 }
 
@@ -186,7 +202,7 @@ Vec2& Vec2::operator /=(float scale)
 }
 
 // <Vec2 が後にくる 2項 *>
-Vec2 operator *(float scale, const Vec2& vec)
+constexpr Vec2 operator *(float scale, const Vec2& vec)
 {
 	return{ scale * vec.x, scale * vec.y };
 }
