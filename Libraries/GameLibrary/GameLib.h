@@ -7,6 +7,7 @@
 #include "Input.h"
 #include "MathUtils.h"
 #include "Shape.h"
+#include "Singleton.h"
 #include "SystemUtils.h"
 #include "Timer.h"
 #include "Vec2.h"

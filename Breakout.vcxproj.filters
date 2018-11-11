@@ -36,6 +36,9 @@
     <Filter Include="ライブラリ\ゲームライブラリ">
       <UniqueIdentifier>{401aa294-ac15-4a95-af25-96ca263f1b9a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ライブラリ\依存関係">
+      <UniqueIdentifier>{56eb7d2a-31c3-414d-86ca-159cab69dda4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <!-- ソースファイル -->
   <ItemGroup>
@@ -87,6 +90,9 @@
     </ClCompile>
     <ClCompile Include="Game\Collider.cpp">
       <Filter>ゲーム</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\Dependencies\pch.cpp">
+      <Filter>ライブラリ\依存関係</Filter>
     </ClCompile>
   </ItemGroup>
   <!-- ヘッダファイル -->
@@ -144,6 +150,12 @@
     </ClInclude>
     <ClInclude Include="Game\Collider.h">
       <Filter>ゲーム</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\Dependencies\pch.h">
+      <Filter>ライブラリ\依存関係</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\GameLibrary\Singleton.h">
+      <Filter>ライブラリ\ゲームライブラリ</Filter>
     </ClInclude>
   </ItemGroup>
   <!-- リソースファイル -->

@@ -1,19 +1,31 @@
 #pragma once
 
-class Collider
+class Collision final
 {
-protected:
-	bool trigger;
-
 public:
-	Collider(bool trigger = false);
-	virtual ~Collider() {};
-
-protected:
-	virtual bool Collide(Collider& other, bool trigger) = 0;
-
-public:
-	virtual bool Collide(Collider& other) = 0;
-	virtual bool IsHit(Collider& other) = 0;
+	Shape& shape;
+	Vec2& vel;
 };
 
+class Collider
+{
+public:
+	virtual ~Collider() {}
+
+public:
+	virtual bool Collide(Collision& a, Collision& b) = 0;
+	virtual bool IsHit(const Collision& a, const Collision& b) = 0;
+};
+
+class Colliders : public Collider, public Singleton<Colliders>
+{
+private:
+	std::unordered_map<ShapeType, std::unordered_map<ShapeType, std::unique_ptr<Collider>>> colliders;
+
+private:
+	Colliders();
+
+public:
+	bool Collide(Collision& a, Collision& b) override;
+	bool IsHit(const Collision& a, const Collision& b) override;
+};
