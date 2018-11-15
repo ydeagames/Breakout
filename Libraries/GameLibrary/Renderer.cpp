@@ -19,9 +19,7 @@ Material& Material::SetBorder(Color color, float transparency, float thickness)
 void BoxRenderer::Render()
 {
 	auto t = gameObject->transform();
-	Dimension box = { Vec2{}, Vec2{ 1, 1 } };
-	box.pos += t->position;
-	box.size *= t->scale;
+	Bounds box = Bounds{ Vec2{}, Vec2{ 1, 1 } }.Transformed(*t);
 
 	// TODO “§–¾“x
 	if (material.base_transparency > 0)
@@ -33,15 +31,13 @@ void BoxRenderer::Render()
 void CircleRenderer::Render()
 {
 	auto t = gameObject->transform();
-	Dimension box = { Vec2{}, Vec2{ 1, 1 } };
-	box.pos += t->position;
-	box.size *= t->scale;
+	Bounds box = Bounds{ Vec2{}, Vec2{ 1, 1 } }.Transformed(*t);
 
 	// TODO “§–¾“x
 	if (material.base_transparency > 0)
-		DrawOvalAA(box.GetX(HorizontalSide::LEFT), box.GetY(VerticalSide::TOP), box.size.x / 2, box.size.y / 2, 32, material.base_color, true);
+		DrawOvalAA(box.GetX(HorizontalSide::LEFT), box.GetY(VerticalSide::TOP), box.GetExtents().x, box.GetExtents().y, 32, material.base_color, true);
 	if (material.edge_transparency > 0)
-		DrawOvalAA(box.GetX(HorizontalSide::LEFT), box.GetY(VerticalSide::TOP), box.size.x / 2, box.size.y / 2, 32, material.edge_color, false, material.edge_thickness);
+		DrawOvalAA(box.GetX(HorizontalSide::LEFT), box.GetY(VerticalSide::TOP), box.GetExtents().x, box.GetExtents().y, 32, material.edge_color, false, material.edge_thickness);
 }
 
 void LineRenderer::Render()

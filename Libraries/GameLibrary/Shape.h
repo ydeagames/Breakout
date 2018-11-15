@@ -1,5 +1,6 @@
 #pragma once
 #include "Vec2.h"
+#include "Transform.h"
 
 // <横位置関係>
 enum class HorizontalSide
@@ -53,75 +54,76 @@ public:
 	virtual ShapeType GetType() const = 0;
 };
 
-class Rect : public Shape
+class Bounds
 {
-public:
-	virtual ~Rect() {}
+private:
+	Vec2 center;
+	Vec2 size;
 
 public:
-	inline ShapeType GetType() const override final
+	Bounds(const Vec2& pos, const Vec2& size);
+
+public:
+	// <オブジェクトX位置ゲット>
+	float GetX(HorizontalSide side) const;
+
+	// <オブジェクトY位置ゲット>
+	float GetY(VerticalSide side) const;
+
+	// <中心>
+	Vec2 GetCenter() const;
+
+	// <The extents of the Bounding Box. This is always half of the size of the Bounds.>
+	Vec2 GetExtents() const;
+
+	// <The maximal point of the box. This is always equal to center+extents.>
+	Vec2 GetMax() const;
+
+	// <The minimal point of the box. This is always equal to center-extents.>
+	Vec2 GetMin() const;
+
+	// <The total size of the box. This is always twice as large as the extents.>
+	Vec2 GetSize() const;
+
+	// <The closest point on the bounding box.>
+	Vec2 ClosestPoint(const Vec2& point) const;
+
+	// <Is point contained in the bounding box?>
+	bool Contains(const Vec2& point) const;
+
+	// <Expand the bounds by increasing its size by amount along each side.>
+	Bounds Expand(const float amount) const;
+
+	// <Expand the bounds by increasing its size by amount along each side.>
+	Bounds Expand(const Vec2& amount) const;
+
+	// <Transform>
+	Bounds Transformed(const Transform& transform) const;
+
+	// <上下衝突処理>
+	VerticalSide CollisionVertical(const Bounds& obj, Connection connection, Edge edge);
+
+	// <左右衝突処理>
+	HorizontalSide CollisionHorizontal(const Bounds& obj, Connection connection, Edge edge);
+};
+
+class Box final : public Shape
+{
+public:
+	Vec2 center;
+	Vec2 size;
+
+public:
+	Box(const Vec2& pos, const Vec2& size);
+
+	virtual ~Box() {}
+
+public:
+	inline ShapeType GetType() const override
 	{
 		return ShapeType::BOX;
 	}
 
-	// <オブジェクトXオフセット>
-	virtual float OffsetX(HorizontalSide side, float pos = 0.f, float margin = 0.f) const = 0;
-
-	// <オブジェクトXオフセット>
-	virtual float OffsetY(VerticalSide side, float pos = 0.f, float margin = 0.f) const = 0;
-
-	// <オブジェクトX位置ゲット>
-	virtual float GetX(HorizontalSide side, float margin = 0.f) const = 0;
-
-	// <オブジェクトY位置ゲット>
-	virtual float GetY(VerticalSide side, float margin = 0.f) const = 0;
-
-	// <上下衝突処理>
-	virtual VerticalSide CollisionVertical(const Rect& obj, Connection connection, Edge edge) = 0;
-
-	// <左右衝突処理>
-	virtual HorizontalSide CollisionHorizontal(const Rect& obj, Connection connection, Edge edge) = 0;
-};
-
-class Dimension : public Rect
-{
-public:
-	Vec2 pos;
-	Vec2 size;
-
-public:
-	Dimension(const Vec2& pos, const Vec2& size);
-
-	virtual ~Dimension() {}
-
-public:
-	// <オブジェクトXオフセット>
-	float OffsetX(HorizontalSide side, float pos = 0.f, float margin = 0.f) const override;
-
-	// <オブジェクトXオフセット>
-	float OffsetY(VerticalSide side, float pos = 0.f, float margin = 0.f) const override;
-
-	// <オブジェクトX位置ゲット>
-	float GetX(HorizontalSide side, float margin = 0.f) const override;
-
-	// <オブジェクトY位置ゲット>
-	float GetY(VerticalSide side, float margin = 0.f) const override;
-
-	// <オブジェクトXオフセット>
-	float OffsetRawX(HorizontalSide side, float pos, float padding = 0.f) const;
-
-	// <オブジェクトXオフセット>
-	float OffsetRawY(VerticalSide side, float pos, float padding = 0.f) const;
-
-	// <オブジェクトX位置ゲット>
-	float GetRawX(HorizontalSide side, float padding = 0.f) const;
-
-	// <オブジェクトY位置ゲット>
-	float GetRawY(VerticalSide side, float padding = 0.f) const;
-
-	// <上下衝突処理>
-	VerticalSide CollisionVertical(const Rect& obj, Connection connection, Edge edge) override;
-
-	// <左右衝突処理>
-	HorizontalSide CollisionHorizontal(const Rect& obj, Connection connection, Edge edge) override;
+	// <オブジェクト枠>
+	Bounds GetBounds() const;
 };

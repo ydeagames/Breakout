@@ -21,7 +21,7 @@ const Vec2 Vec2::right = { 1, 0 };
 const Vec2 Vec2::down = { 0, 1 };
 
 // <ベクトル作成>
-constexpr Vec2::Vec2(float x, float y)
+Vec2::Vec2(float x, float y)
 	: x(x),
 	y(y) {};
 
@@ -32,19 +32,19 @@ float Vec2::Length() const
 }
 
 // <ベクトルの長さの二乗>
-constexpr float Vec2::LengthSquared() const
+float Vec2::LengthSquared() const
 {
 	return x * x + y * y;
 }
 
 // <もう一方のベクトルとの内積>
-constexpr float Vec2::Dot(const Vec2& other) const
+float Vec2::Dot(const Vec2& other) const
 {
 	return x * other.x + y * other.y;
 }
 
 // <もう一方のベクトルとの外積>
-constexpr float Vec2::Cross(const Vec2& other) const
+float Vec2::Cross(const Vec2& other) const
 {
 	return x * other.y - y * other.x;
 }
@@ -56,7 +56,7 @@ float Vec2::LengthTo(const Vec2& other) const
 }
 
 // <もう一方のベクトルとの距離の二乗>
-constexpr float Vec2::LengthSquaredTo(const Vec2& other) const
+float Vec2::LengthSquaredTo(const Vec2& other) const
 {
 	return (other.x - x) * (other.x - x) + (other.y - y) * (other.y - y);
 }
@@ -71,13 +71,13 @@ Vec2 Vec2::Normalized() const
 }
 
 // <同値のベクトルか>
-constexpr bool Vec2::Equals(const Vec2& other, float epsilon) const
+bool Vec2::Equals(const Vec2& other, float epsilon) const
 {
 	return fabsf(x - other.x) < epsilon && fabsf(y - other.y) < epsilon;
 }
 
 // <0ベクトルか>
-constexpr bool Vec2::IsZero() const
+bool Vec2::IsZero() const
 {
 	return Equals({});
 }
@@ -112,37 +112,37 @@ void Vec2::Decompose(const Vec2& angle, Vec2& vec_a, Vec2& vec_b) const
 }
 
 // <ベクトルはそのまま>
-constexpr Vec2 Vec2::operator +() const
+Vec2 Vec2::operator +() const
 {
 	return *this;
 }
 
 // <ベクトルを反転>
-constexpr Vec2 Vec2::operator -() const
+Vec2 Vec2::operator -() const
 {
 	return *this*-1;
 }
 
 // <ベクトルを加算>
-constexpr Vec2 Vec2::operator +(const Vec2& other) const
+Vec2 Vec2::operator +(const Vec2& other) const
 {
 	return{ x + other.x, y + other.y };
 }
 
 // <ベクトルを減算>
-constexpr Vec2 Vec2::operator -(const Vec2& other) const
+Vec2 Vec2::operator -(const Vec2& other) const
 {
 	return{ x - other.x, y - other.y };
 }
 
 // <ベクトルをスケール>
-constexpr Vec2 Vec2::operator *(const Vec2& scale) const
+Vec2 Vec2::operator *(const Vec2& scale) const
 {
 	return{ x * scale.x, y * scale.y };
 }
 
 // <ベクトルをスケール>
-constexpr Vec2 Vec2::operator *(float scale) const
+Vec2 Vec2::operator *(float scale) const
 {
 	return{ x * scale, y * scale };
 }
@@ -202,7 +202,7 @@ Vec2& Vec2::operator /=(float scale)
 }
 
 // <Vec2 が後にくる 2項 *>
-constexpr Vec2 operator *(float scale, const Vec2& vec)
+Vec2 operator *(float scale, const Vec2& vec)
 {
 	return{ scale * vec.x, scale * vec.y };
 }

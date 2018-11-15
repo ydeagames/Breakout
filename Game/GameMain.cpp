@@ -35,6 +35,9 @@ Game::Game() :
 	m_ball->AddComponent(std::make_shared<Rigidbody>(Vec2{ 5,5 }));
 	m_ball->AddComponent(std::make_shared<Ball>());
 	m_ball->AddComponent(std::make_shared<BoxRenderer>());
+	auto collision = std::make_shared<Collision>(std::make_unique<Box>(Vec2{}, m_ball->transform()->scale));
+	m_ball->AddComponent(collision);
+
 
 	const float width = SCREEN_WIDTH / 8;
 	const float height = width / 4;
@@ -54,6 +57,8 @@ Game::Game() :
 				auto renderer = std::make_shared<BoxRenderer>();
 				renderer->material = Material{}.SetBorder(Block::COLORS[type]);
 				block->AddComponent(renderer);
+				auto collision = std::make_shared<Collision>(std::make_unique<Box>(Vec2{}, block->transform()->scale));
+				block->AddComponent(collision);
 
 				m_blocks.emplace_back(std::move(block));
 			}
@@ -76,6 +81,17 @@ void Game::Update(void)
 	m_input->Update();
 	m_paddle->Update();
 	m_ball->Update();
+
+	for (auto itr = m_blocks.begin(); itr != m_blocks.end();)
+	{
+		if (Colliders::singleton().IsHit(m_ball->GetComponent<Collision>(), (*itr)->GetComponent<Collision>()))
+		{
+			m_ball->GetComponent<Rigidbody>()->vel *= -1;
+			itr = m_blocks.erase(itr);
+			continue;
+		}
+		++itr;
+	}
 }
 
 // ƒQ[ƒ€‚Ì•`‰æˆ—
