@@ -92,6 +92,9 @@
     <ClCompile Include="Game\Block.cpp" />
     <ClCompile Include="Game\GameObjectLegacy.cpp" />
     <ClCompile Include="Game\Paddle.cpp" />
+    <ClCompile Include="Game\Scene.cpp" />
+    <ClCompile Include="Game\SceneManager.cpp" />
+    <ClCompile Include="Game\TitleScene.cpp" />
     <ClCompile Include="Libraries\Dependencies\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
@@ -132,6 +135,9 @@
     <!-- アイコン -->
     <ClInclude Include="Game\GameObjectLegacy.h" />
     <ClInclude Include="Game\Paddle.h" />
+    <ClInclude Include="Game\Scene.h" />
+    <ClInclude Include="Game\SceneManager.h" />
+    <ClInclude Include="Game\TitleScene.h" />
     <ClInclude Include="Libraries\Dependencies\pch.h" />
     <ClInclude Include="Libraries\GameLibrary\Collider.h" />
     <ClInclude Include="Libraries\GameLibrary\Collision.h" />

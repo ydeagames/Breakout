@@ -118,6 +118,15 @@
     <ClCompile Include="Libraries\GameLibrary\Renderer.cpp">
       <Filter>ライブラリ\ゲームライブラリ</Filter>
     </ClCompile>
+    <ClCompile Include="Game\SceneManager.cpp">
+      <Filter>ゲーム</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Scene.cpp">
+      <Filter>ゲーム</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\TitleScene.cpp">
+      <Filter>ゲーム</Filter>
+    </ClCompile>
   </ItemGroup>
   <!-- ヘッダファイル -->
   <ItemGroup>
@@ -201,6 +210,15 @@
     </ClInclude>
     <ClInclude Include="Libraries\GameLibrary\Renderer.h">
       <Filter>ライブラリ\ゲームライブラリ</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\SceneManager.h">
+      <Filter>ゲーム</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Scene.h">
+      <Filter>ゲーム</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\TitleScene.h">
+      <Filter>ゲーム</Filter>
     </ClInclude>
   </ItemGroup>
   <!-- リソースファイル -->
