@@ -4,8 +4,8 @@ void Scene::Update()
 {
 	for (auto itr = objects.begin(); itr != objects.end();)
 	{
-		itr->Update();
-		if (!itr->IsDestroyed())
+		itr->second->Update();
+		if (!itr->second->IsDestroyed())
 		{
 			itr = objects.erase(itr);
 			continue;
@@ -17,5 +17,5 @@ void Scene::Update()
 void Scene::Render()
 {
 	for (auto& object : objects)
-		object.Render();
+		object.second->Render();
 }

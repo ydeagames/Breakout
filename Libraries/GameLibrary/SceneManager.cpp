@@ -4,22 +4,10 @@
 
 // <SceneManagerクラス>
 
-SceneManager* SceneManager::GetInstance()
-{
-	static SceneManager instance;
-
-	return &instance;
-}
-
 SceneManager::SceneManager()
 {
 	m_active_scene = nullptr;
 	m_next_scene_id = SceneID::SCENE_NONE;
-}
-
-SceneManager::~SceneManager()
-{
-	delete m_active_scene;
 }
 
 // <シーンの追加>
@@ -54,6 +42,11 @@ void SceneManager::UpdateActiveScene()
 		m_next_scene_id = SceneID::SCENE_NONE;
 	}
 
+	// 追加キューのオブジェクトを追加
+	while (!addingObjects.empty()) {
+		m_active_scene->objects.emplace(std::move(addingObjects.front()));
+		addingObjects.pop();
+	}
 
 	// 活動中のシーンの更新
 	m_active_scene->Update();
@@ -78,6 +71,16 @@ void SceneManager::RequestScene(SceneID scene_id)
 	m_next_scene_id = scene_id;
 }
 
+std::shared_ptr<Scene> SceneManager::GetActiveScene()
+{
+	return m_active_scene;
+}
+
+void SceneManager::AddObject(const std::shared_ptr<GameObject>& object)
+{
+	addingObjects.push(std::make_pair(object->name, object));
+}
+
 // <シーン変更>
 // scene_id 変更したいシーンのID
 void SceneManager::ChangeScene(SceneID scene_id)
@@ -88,7 +91,6 @@ void SceneManager::ChangeScene(SceneID scene_id)
 	// 活動中のシーンの削除
 	if (m_active_scene != nullptr)
 	{
-		delete m_active_scene;
 		m_active_scene = nullptr;
 	}
 

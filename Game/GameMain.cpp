@@ -1,6 +1,5 @@
 #include "GameMain.h"
 #include <cmath>
-#include "SceneManager.h"
 #include "TitleScene.h"
 #include "PlayScene.h"
 
@@ -10,12 +9,12 @@
 Game::Game() :
 	m_frame_timer(new FrameTimer)
 {
-	SceneManager* scene_manager = SceneManager::GetInstance();
+	SceneManager& scene_manager = SceneManager::GetInstance();
 
-	scene_manager->AddScene(SceneID::SCENE_TITLE, TitleScene::Create);
-	scene_manager->AddScene(SceneID::SCENE_TITLE, PlayScene::Create);
+	scene_manager.AddScene(SceneID::SCENE_TITLE, TitleScene::Create);
+	scene_manager.AddScene(SceneID::SCENE_TITLE, PlayScene::Create);
 
-	scene_manager->SetStartScene(SceneID::SCENE_TITLE);
+	scene_manager.SetStartScene(SceneID::SCENE_TITLE);
 }
 
 // ƒQ[ƒ€‚ÌI—¹ˆ—

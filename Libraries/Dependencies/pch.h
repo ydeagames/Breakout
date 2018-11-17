@@ -8,5 +8,8 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <unordered_set>
+#include <deque>
+#include <queue>
 #include <initializer_list>
 #include <typeindex>

@@ -2,9 +2,9 @@
 
 // <ƒV[ƒ“>
 
-Scene* TitleScene::Create()
+std::shared_ptr<Scene> TitleScene::Create()
 {
-	return new TitleScene();
+	return std::make_shared<TitleScene>();
 }
 
 TitleScene::TitleScene()
@@ -14,16 +14,6 @@ TitleScene::TitleScene()
 }
 
 TitleScene::~TitleScene()
-{
-
-}
-
-void TitleScene::Update()
-{
-
-}
-
-void TitleScene::Render()
 {
 
 }

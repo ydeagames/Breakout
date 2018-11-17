@@ -4,7 +4,7 @@
 class Scene
 {
 public:
-	std::vector<GameObject> objects;
+	std::unordered_multimap<std::string, std::shared_ptr<GameObject>> objects;
 
 public:
 	Scene() = default;
@@ -13,6 +13,4 @@ public:
 public:
 	void Update();
 	void Render();
-
-	void Add
 };

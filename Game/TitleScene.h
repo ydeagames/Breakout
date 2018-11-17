@@ -1,11 +1,10 @@
 #pragma once
-#include "Scene.h"
 
 // <ƒV[ƒ“>
 class TitleScene : public Scene
 {
 public:
-	static Scene* Create();
+	static std::shared_ptr<Scene> Create();
 
 public:
 	TitleScene();

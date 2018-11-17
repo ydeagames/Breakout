@@ -6,7 +6,7 @@ class Singleton
 public:
 	static T& GetInstance()
 	{
-		static typename T::singleton_pointer_type s_singleton(T::createInstance());
+		static typename T::singleton_pointer_type s_singleton(T::CreateInstance());
 
 		return GetReference(s_singleton);
 	}

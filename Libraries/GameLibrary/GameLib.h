@@ -12,6 +12,8 @@
 #include "MathUtils.h"
 #include "Renderer.h"
 #include "Rigidbody.h"
+#include "SceneManager.h"
+#include "Scene.h"
 #include "Shape.h"
 #include "Singleton.h"
 #include "SystemUtils.h"

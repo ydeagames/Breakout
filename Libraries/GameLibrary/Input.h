@@ -174,7 +174,7 @@ public:
 
 	template<class T> std::shared_ptr<T> GetInput()
 	{
-		return GetInput(inputstype[typeid(T)]);
+		return GetInput<T>(inputstype[typeid(T)]);
 	}
 
 	void Update();
