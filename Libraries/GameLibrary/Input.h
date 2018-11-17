@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_map>
 #include <memory>
+#include "Singleton.h"
 
 using std::string;
 
@@ -137,32 +138,43 @@ public:
 };
 
 // <入力デバイスマネージャ>
-class InputManager final
+class InputManager final : public Singleton<InputManager>
 {
 private:
-	std::unordered_map<string, std::shared_ptr<Input>> inputs;
+	std::unordered_map<string, std::shared_ptr<Input>> inputsname;
+	std::unordered_map<std::type_index, string> inputstype;
 
 public:
 	std::shared_ptr<JoypadInput> joypad;
 	std::shared_ptr<MouseInput> mouse;
 	std::shared_ptr<KeyInput> key;
 
+private:
 	InputManager();
+	friend class Singleton<InputManager>;
 
+public:
 	template<class T> std::shared_ptr<T> Register(const string& name, const std::shared_ptr<T> input)
 	{
-		inputs[name] = input;
+		inputsname[name] = input;
+		if (inputstype.count(typeid(T)))
+			inputstype[typeid(T)] = name;
 		return input;
 	}
 
 	inline void Unregister(const string& name)
 	{
-		inputs.erase(name);
+		inputsname.erase(name);
 	}
 
 	template<class T> std::shared_ptr<T> GetInput(const string& name)
 	{
-		return std::dynamic_pointer_cast<T, Input>(inputs[name]);
+		return std::dynamic_pointer_cast<T, Input>(inputsname[name]);
+	}
+
+	template<class T> std::shared_ptr<T> GetInput()
+	{
+		return GetInput(inputstype[typeid(T)]);
 	}
 
 	void Update();

@@ -14,12 +14,7 @@ SceneManager* SceneManager::GetInstance()
 SceneManager::SceneManager()
 {
 	m_active_scene = nullptr;
-	m_next_scene_id = SCENE_NONE;
-
-	for (int i = 0; i < NUM_SCENES; i++)
-	{
-		m_scene_factory_methods[i] = nullptr;
-	}
+	m_next_scene_id = SceneID::SCENE_NONE;
 }
 
 SceneManager::~SceneManager()
@@ -32,7 +27,7 @@ SceneManager::~SceneManager()
 // factory_method 登録するシーンの生成用関数
 void SceneManager::AddScene(SceneID scene_id, FactoryMethod factory_method)
 {
-	assert(scene_id >= 0 && scene_id < NUM_SCENES && "シーンIDが不正です。");
+	//assert(scene_id >= 0 && scene_id < NUM_SCENES && "シーンIDが不正です。");
 	assert(factory_method && "生成用関数が指定されていません。");
 
 	m_scene_factory_methods[scene_id] = factory_method;
@@ -42,7 +37,7 @@ void SceneManager::AddScene(SceneID scene_id, FactoryMethod factory_method)
 // scene_id 開始シーンのID
 void SceneManager::SetStartScene(SceneID scene_id)
 {
-	assert(scene_id >= 0 && scene_id < NUM_SCENES && "シーンIDが不正です。");
+	//assert(scene_id >= 0 && scene_id < NUM_SCENES && "シーンIDが不正です。");
 
 	ChangeScene(scene_id);
 }
@@ -53,10 +48,10 @@ void SceneManager::UpdateActiveScene()
 	assert(m_active_scene && "活動中のシーンがありません。");
 
 	// シーンの変更（要求があった場合)
-	if (m_next_scene_id != SCENE_NONE)
+	if (m_next_scene_id != SceneID::SCENE_NONE)
 	{
 		ChangeScene(m_next_scene_id);
-		m_next_scene_id = SCENE_NONE;
+		m_next_scene_id = SceneID::SCENE_NONE;
 	}
 
 
@@ -78,7 +73,7 @@ void SceneManager::RenderActiveScene()
 // scene_id 変更を要求するシーンのID
 void SceneManager::RequestScene(SceneID scene_id)
 {
-	assert(scene_id >= 0 && scene_id < NUM_SCENES && "シーンIDが不正です。");
+	//assert(scene_id >= 0 && scene_id < NUM_SCENES && "シーンIDが不正です。");
 
 	m_next_scene_id = scene_id;
 }
@@ -87,7 +82,7 @@ void SceneManager::RequestScene(SceneID scene_id)
 // scene_id 変更したいシーンのID
 void SceneManager::ChangeScene(SceneID scene_id)
 {
-	assert(scene_id >= 0 && scene_id < NUM_SCENES && "シーンIDが不正です。");
+	//assert(scene_id >= 0 && scene_id < NUM_SCENES && "シーンIDが不正です。");
 	assert(m_scene_factory_methods[scene_id] && "生成用関数が登録されていません。");
 
 	// 活動中のシーンの削除

@@ -158,6 +158,6 @@ InputManager::InputManager()
 
 void InputManager::Update()
 {
-	for (auto itr = inputs.begin(); itr != inputs.end(); ++itr)
+	for (auto itr = inputsname.begin(); itr != inputsname.end(); ++itr)
 		itr->second->Update();
 }

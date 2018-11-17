@@ -7,6 +7,7 @@ class GameObject final
 {
 private:
 	ComponentContainer components;
+	bool destroyed;
 
 public:
 	std::shared_ptr<Transform> transform();
@@ -38,5 +39,8 @@ public:
 public:
 	void Update();
 	void Render();
+
+	void Destroy();
+	bool IsDestroyed();
 };
 

@@ -35,23 +35,11 @@ const int SCREEN_CENTER_X = SCREEN_WIDTH / 2;
 // 画面の中央(Y座標)
 const int SCREEN_CENTER_Y = SCREEN_HEIGHT / 2;
 
-// <使用クラス宣言>
-class Paddle;
-class Block;
-class Ball;
-
 // <ゲーム>
 class Game
 {
 private:
-	static const int STAGE_DATA[3][8];
-
-private:
 	FrameTimer* m_frame_timer;
-	InputManager* m_input;
-	GameObject* m_paddle;
-	std::vector<std::unique_ptr<GameObject>> m_blocks;
-	GameObject* m_ball;
 
 public:
 	Game();

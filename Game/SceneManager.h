@@ -1,19 +1,17 @@
 ﻿#pragma once
 
 // シーンID
-enum SceneID
+enum class SceneID
 {
 	SCENE_NONE = -1,
 	SCENE_TITLE,
 	SCENE_PLAY,
-
-	NUM_SCENES
 };
 
 class Scene;
 
 // <シーン管理>
-class SceneManager
+class SceneManager final
 {
 	// エイリアス宣言
 	using FactoryMethod = Scene*(*)();
@@ -26,7 +24,7 @@ class SceneManager
 	private:
 		Scene*        m_active_scene;     // 活動中のシーン
 		SceneID       m_next_scene_id;    // 変更予定のシーンのID
-		FactoryMethod m_scene_factory_methods[NUM_SCENES];    // 各シーンのファクトリメソッド
+		std::unordered_map<SceneID, FactoryMethod> m_scene_factory_methods;    // 各シーンのファクトリメソッド
 
 	// メンバ関数の宣言
 	private:
@@ -35,7 +33,7 @@ class SceneManager
 
 	public:
 		// デストラクタ
-		virtual ~SceneManager();
+		~SceneManager();
 
 	public:
 		// 操作

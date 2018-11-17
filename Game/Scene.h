@@ -3,11 +3,16 @@
 // <シーン>
 class Scene
 {
-	public:
-		Scene() = default;
-		virtual ~Scene() = default;
+public:
+	std::vector<GameObject> objects;
 
-	public:
-		virtual void Update() = 0;
-		virtual void Render() = 0;
+public:
+	Scene() = default;
+	virtual ~Scene() = default;
+
+public:
+	void Update();
+	void Render();
+
+	void Add
 };

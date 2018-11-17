@@ -2,6 +2,7 @@
 
 
 GameObject::GameObject()
+	: destroyed(false)
 {
 	AddComponent<Transform>(std::make_shared<Transform>());
 }
@@ -19,4 +20,14 @@ void GameObject::Update()
 void GameObject::Render()
 {
 	components.Render();
+}
+
+void GameObject::Destroy()
+{
+	destroyed = true;
+}
+
+bool GameObject::IsDestroyed()
+{
+	return destroyed;
 }
