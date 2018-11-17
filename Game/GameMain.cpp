@@ -11,10 +11,10 @@ Game::Game() :
 {
 	SceneManager& scene_manager = SceneManager::GetInstance();
 
-	scene_manager.AddScene(SceneID::SCENE_TITLE, TitleScene::Create);
-	scene_manager.AddScene(SceneID::SCENE_TITLE, PlayScene::Create);
+	scene_manager.AddScene<TitleScene>(SceneID::SCENE_TITLE);
+	scene_manager.AddScene<PlayScene>(SceneID::SCENE_PLAY);
 
-	scene_manager.SetStartScene(SceneID::SCENE_TITLE);
+	scene_manager.SetStartScene(SceneID::SCENE_PLAY);
 }
 
 // ƒQ[ƒ€‚ÌI—¹ˆ—
@@ -27,10 +27,14 @@ Game::~Game()
 void Game::Update(void)
 {
 	m_frame_timer->Update();
+
+	SceneManager::GetInstance().UpdateActiveScene();
 }
 
 // ƒQ[ƒ€‚Ì•`‰æˆ—
 void Game::Render(void)
 {
 	DrawFormatString(10, 10, Colors::White, "FPS = %f", m_frame_timer->GetFrameRate());
+
+	SceneManager::GetInstance().RenderActiveScene();
 }

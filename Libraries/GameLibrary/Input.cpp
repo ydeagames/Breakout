@@ -151,9 +151,9 @@ bool KeyInput::GetButtonUp(int button)
 
 InputManager::InputManager()
 {
-	joypad = Register("Joypad", std::make_shared<JoypadInput>());
-	mouse = Register("Mouse", std::make_shared<MouseInput>());
-	key = Register("Key", std::make_shared<KeyInput>());
+	joypad = Register<JoypadInput>("Joypad", std::make_shared<JoypadInput>());
+	mouse = Register<MouseInput>("Mouse", std::make_shared<MouseInput>());
+	key = Register<KeyInput>("Key", std::make_shared<KeyInput>());
 }
 
 void InputManager::Update()

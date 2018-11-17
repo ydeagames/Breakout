@@ -29,6 +29,12 @@ public:
 		components.AddComponent(component);
 	}
 
+	template<class T, typename... Args>
+	void AddNewComponent(Args&&... args)
+	{
+		AddComponent<T>(std::make_shared<T>(std::forward<Args>(args)...));
+	}
+
 	template<class T>
 	std::shared_ptr<T> GetComponent()
 	{

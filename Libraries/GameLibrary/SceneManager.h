@@ -30,6 +30,13 @@ private:
 
 public:
 	void AddScene(SceneID scene_id, FactoryMethod factory_method);    // シーンの追加
+
+	template <class T>
+	void AddScene(SceneID scene_id)
+	{
+		AddScene(scene_id, []() -> std::shared_ptr<Scene> { return std::make_shared<T>(); });
+	}
+
 	void SetStartScene(SceneID scene_id);    // 開始シーンの設定
 
 	void UpdateActiveScene();    // 活動中のシーンの更新

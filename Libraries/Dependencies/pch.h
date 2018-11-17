@@ -13,3 +13,4 @@
 #include <queue>
 #include <initializer_list>
 #include <typeindex>
+#include <cassert>

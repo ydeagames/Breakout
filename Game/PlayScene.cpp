@@ -69,7 +69,7 @@ PlayScene::PlayScene()
 
 						void Start()
 						{
-							ball = gameObject->Find("ball");
+							ball = gameObject->Find("Ball");
 						}
 
 						void Update()
@@ -82,6 +82,7 @@ PlayScene::PlayScene()
 								}
 						}
 					};
+					block->AddNewComponent<BlockBehaviour>();
 				}
 			}
 		}

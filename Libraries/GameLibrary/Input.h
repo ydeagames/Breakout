@@ -157,7 +157,7 @@ public:
 	template<class T> std::shared_ptr<T> Register(const string& name, const std::shared_ptr<T> input)
 	{
 		inputsname[name] = input;
-		if (inputstype.count(typeid(T)))
+		if (inputstype.count(typeid(T)) <= 0)
 			inputstype[typeid(T)] = name;
 		return input;
 	}
