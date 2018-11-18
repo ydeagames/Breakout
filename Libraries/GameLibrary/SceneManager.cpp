@@ -7,7 +7,7 @@
 SceneManager::SceneManager()
 {
 	m_active_scene = nullptr;
-	m_next_scene_id = SceneID::SCENE_NONE;
+	m_next_scene_id = SceneID::NONE;
 }
 
 // <シーンの追加>
@@ -36,10 +36,10 @@ void SceneManager::UpdateActiveScene()
 	assert(m_active_scene && "活動中のシーンがありません。");
 
 	// シーンの変更（要求があった場合)
-	if (m_next_scene_id != SceneID::SCENE_NONE)
+	if (m_next_scene_id != SceneID::NONE)
 	{
 		ChangeScene(m_next_scene_id);
-		m_next_scene_id = SceneID::SCENE_NONE;
+		m_next_scene_id = SceneID::NONE;
 	}
 
 	// 追加キューのオブジェクトを追加

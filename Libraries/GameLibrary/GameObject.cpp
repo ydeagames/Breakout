@@ -52,23 +52,23 @@ std::shared_ptr<GameObject> GameObject::CreatePrefab(std::string name)
 	return obj;
 }
 
-std::weak_ptr<GameObject> GameObject::Create(std::string name)
+std::shared_ptr<GameObject> GameObject::Create(std::string name)
 {
 	auto object = CreatePrefab(name);
 	SceneManager::GetInstance().AddObject(object);
 	return object;
 }
 
-std::weak_ptr<GameObject> GameObject::Find(std::string name)
+std::shared_ptr<GameObject> GameObject::Find(std::string name)
 {
 	return SceneManager::GetInstance().GetActiveScene()->objects.find(name)->second;
 }
 
-std::weak_ptr<GameObject> GameObject::Instantiate(const std::shared_ptr<GameObject>& originalObject)
+std::shared_ptr<GameObject> GameObject::Instantiate(const std::shared_ptr<GameObject>& originalObject)
 {
 	if (originalObject->IsDestroyed())
 		throw std::invalid_argument("Cannot instantiate destroyed object");
 	auto object = Create(originalObject->name + "(Clone)");
-	*object.lock()->components = *originalObject->components;
+	*object->components = *originalObject->components;
 	return object;
 }

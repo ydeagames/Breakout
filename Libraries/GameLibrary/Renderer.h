@@ -54,3 +54,14 @@ class LineRenderer : public Renderer
 public:
 	void Render() override;
 };
+
+class TextRenderer : public Component
+{
+private:
+	std::string text;
+
+public:
+	TextRenderer(std::string text);
+
+	void Render() override;
+};

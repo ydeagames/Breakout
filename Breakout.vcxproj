@@ -90,6 +90,9 @@
   <ItemGroup>
     <ClCompile Include="Game\Ball.cpp" />
     <ClCompile Include="Game\Block.cpp" />
+    <ClCompile Include="Game\Demo\DemoSceneLogo.cpp" />
+    <ClCompile Include="Game\Demo\DemoScenePlay.cpp" />
+    <ClCompile Include="Game\Demo\DemoSceneTitle.cpp" />
     <ClCompile Include="Game\GameObjectLegacy.cpp" />
     <ClCompile Include="Game\Paddle.cpp" />
     <ClCompile Include="Game\PlayScene.cpp" />
@@ -125,6 +128,9 @@
   <ItemGroup>
     <ClInclude Include="Game\Ball.h" />
     <ClInclude Include="Game\Block.h" />
+    <ClInclude Include="Game\Demo\DemoSceneLogo.h" />
+    <ClInclude Include="Game\Demo\DemoScenePlay.h" />
+    <ClInclude Include="Game\Demo\DemoSceneTitle.h" />
     <ClInclude Include="Game\GameMain.h" />
   </ItemGroup>
   <!--リソースファイル -->

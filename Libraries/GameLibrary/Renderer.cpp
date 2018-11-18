@@ -43,3 +43,14 @@ void CircleRenderer::Render()
 void LineRenderer::Render()
 {
 }
+
+TextRenderer::TextRenderer(std::string text)
+	: text(text)
+{
+}
+
+void TextRenderer::Render()
+{
+	Vec2 pos = gameObject().transform()->position;
+	DrawFormatStringF(pos.x, pos.y, Colors::White, text.c_str());
+}

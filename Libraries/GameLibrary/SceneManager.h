@@ -3,9 +3,10 @@
 // シーンID
 enum class SceneID
 {
-	SCENE_NONE = -1,
-	SCENE_TITLE,
-	SCENE_PLAY,
+	NONE = -1,
+	LOGO,
+	TITLE,
+	PLAY,
 };
 
 class Scene;

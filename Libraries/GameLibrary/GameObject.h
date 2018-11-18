@@ -64,8 +64,8 @@ public:
 
 public:
 	static std::shared_ptr<GameObject> CreatePrefab(std::string name = "New Game Object");
-	static std::weak_ptr<GameObject> Create(std::string name = "New Game Object");
-	static std::weak_ptr<GameObject> Find(std::string name);
-	static std::weak_ptr<GameObject> Instantiate(const std::shared_ptr<GameObject>& originalObject);
+	static std::shared_ptr<GameObject> Create(std::string name = "New Game Object");
+	static std::shared_ptr<GameObject> Find(std::string name);
+	static std::shared_ptr<GameObject> Instantiate(const std::shared_ptr<GameObject>& originalObject);
 };
 

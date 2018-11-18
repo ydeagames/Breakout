@@ -1,6 +1,6 @@
 #include "ComponentContainer.h"
 
-ComponentContainer& ComponentContainer::operator=(const ComponentContainer & container)
+ComponentContainer& ComponentContainer::operator=(const ComponentContainer& container)
 {
 	components.clear();
 	for (auto& entry : container.components)
