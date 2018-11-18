@@ -13,7 +13,7 @@ void Paddle::Update()
 		vel.x += -8;
 	if (m_key_right.GetButton())
 		vel.x += 8;
-	gameObject->GetComponent<Rigidbody>()->vel = vel;
+	gameObject().GetComponent<Rigidbody>()->vel = vel;
 }
 //
 //void Paddle::Render()

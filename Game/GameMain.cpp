@@ -28,6 +28,8 @@ void Game::Update(void)
 {
 	m_frame_timer->Update();
 
+	InputManager::GetInstance().Update();
+
 	SceneManager::GetInstance().UpdateActiveScene();
 }
 

@@ -35,11 +35,10 @@ PlayScene::PlayScene()
 	{
 		ball->transform()->position = { static_cast<float>(SCREEN_CENTER_X), static_cast<float>(SCREEN_CENTER_Y) };
 		ball->transform()->scale = { 5, 5 };
-		ball->AddComponent(std::make_shared<Rigidbody>(Vec2{ 5,5 }));
-		ball->AddComponent(std::make_shared<Ball>());
-		ball->AddComponent(std::make_shared<BoxRenderer>());
-		auto collision = std::make_shared<Collision>(std::make_unique<Box>(Vec2{}, ball->transform()->scale));
-		ball->AddComponent(collision);
+		ball->AddNewComponent<Rigidbody>(Vec2{ 5,5 });
+		ball->AddNewComponent<Ball>();
+		ball->AddNewComponent<BoxRenderer>();
+		ball->AddNewComponent<Collision>(std::make_unique<Box>(Vec2{}, ball->transform()->scale));
 	}
 
 	const float width = SCREEN_WIDTH / 8;
@@ -69,16 +68,16 @@ PlayScene::PlayScene()
 
 						void Start()
 						{
-							ball = gameObject->Find("Ball");
+							ball = gameObject().Find("Ball");
 						}
 
 						void Update()
 						{
 							if (auto ball0 = ball.lock())
-								if (Colliders::GetInstance().IsHit(ball0->GetComponent<Collision>(), gameObject->GetComponent<Collision>()))
+								if (Colliders::GetInstance().IsHit(ball0->GetComponent<Collision>(), gameObject().GetComponent<Collision>()))
 								{
 									ball0->GetComponent<Rigidbody>()->vel *= -1;
-									ball0->Destroy();
+									gameObject().Destroy();
 								}
 						}
 					};

@@ -5,21 +5,24 @@ ComponentContainer& ComponentContainer::operator=(const ComponentContainer & con
 	components.clear();
 	for (auto& entry : container.components)
 	{
-		entry.second->gameObject = nullptr;
+		entry.second->Finalize();
 		components.insert(std::make_pair(entry.first, entry.second));
 	}
 	return *this;
 }
 
-void ComponentContainer::Update()
+void ComponentContainer::Start()
 {
 	for (auto& entry : components)
-		if (entry.second && entry.second->gameObject != gameObject)
+		if (entry.second && !entry.second->Initialized())
 		{
-			entry.second->gameObject = gameObject;
+			entry.second->Initialize(gameObject);
 			entry.second->Start();
 		}
+}
 
+void ComponentContainer::Update()
+{
 	for (auto& entry : components)
 		if (entry.second)
 			entry.second->Update();

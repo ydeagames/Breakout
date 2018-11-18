@@ -29,10 +29,10 @@ public:
 		// TODO ŽÀ‘•
 		Box& dim_a = dynamic_cast<Box&>(*a->shape);
 		Box& dim_b = dynamic_cast<Box&>(*b->shape);
-		Bounds bounds_a = dim_a.GetBounds().Transformed(*a->gameObject->transform());
-		Bounds bounds_b = dim_b.GetBounds().Transformed(*b->gameObject->transform());
-		Vec2& vel_a = a->gameObject->GetComponent<Rigidbody>()->vel;
-		Vec2& vel_b = b->gameObject->GetComponent<Rigidbody>()->vel;
+		Bounds bounds_a = dim_a.GetBounds().Transformed(*a->gameObject().transform());
+		Bounds bounds_b = dim_b.GetBounds().Transformed(*b->gameObject().transform());
+		Vec2& vel_a = a->gameObject().GetComponent<Rigidbody>()->vel;
+		Vec2& vel_b = b->gameObject().GetComponent<Rigidbody>()->vel;
 
 		float Lx1 = (bounds_b.GetX(HorizontalSide::LEFT) - bounds_a.GetSize().x) - bounds_a.GetX(HorizontalSide::LEFT);
 		float Lx2 = bounds_a.GetX(HorizontalSide::RIGHT) - (bounds_b.GetX(HorizontalSide::RIGHT) - bounds_a.GetSize().x);
@@ -54,11 +54,11 @@ public:
 		// TODO ŽÀ‘•
 		Box& dim_a = dynamic_cast<Box&>(*a->shape);
 		Box& dim_b = dynamic_cast<Box&>(*b->shape);
-		Vec2& vel_a = a->gameObject->GetComponent<Rigidbody>()->vel;
-		Vec2& vel_b = b->gameObject->GetComponent<Rigidbody>()->vel;
-		Bounds bounds_a1 = { dim_a.GetBounds().GetCenter() + a->gameObject->transform()->position, dim_a.GetBounds().GetSize() };
+		Vec2& vel_a = a->gameObject().GetComponent<Rigidbody>()->vel;
+		Vec2& vel_b = b->gameObject().GetComponent<Rigidbody>()->vel;
+		Bounds bounds_a1 = { dim_a.GetBounds().GetCenter() + a->gameObject().transform()->position, dim_a.GetBounds().GetSize() };
 		Bounds bounds_a2 = { bounds_a1.GetCenter() + vel_a, bounds_a1.GetSize() };
-		Bounds bounds_b = { dim_b.GetBounds().GetCenter() + b->gameObject->transform()->position, dim_b.GetBounds().GetSize() };
+		Bounds bounds_b = { dim_b.GetBounds().GetCenter() + b->gameObject().transform()->position, dim_b.GetBounds().GetSize() };
 
 		float Lx1 = (bounds_b.GetX(HorizontalSide::LEFT) - bounds_a1.GetSize().x) - bounds_a1.GetX(HorizontalSide::LEFT);
 		float Lx2 = bounds_a2.GetX(HorizontalSide::RIGHT) - (bounds_b.GetX(HorizontalSide::RIGHT) + bounds_a1.GetSize().x);

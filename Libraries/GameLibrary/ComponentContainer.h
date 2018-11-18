@@ -6,11 +6,11 @@ class GameObject;
 class ComponentContainer
 {
 private:
-	GameObject* gameObject;
+	std::weak_ptr<GameObject> gameObject;
 	std::unordered_multimap<std::type_index, std::shared_ptr<Component>> components;
 
 public:
-	ComponentContainer(GameObject* gameObject)
+	ComponentContainer(const std::weak_ptr<GameObject>& gameObject)
 		: gameObject(gameObject) {};
 	ComponentContainer() = delete;
 
@@ -32,14 +32,20 @@ public:
 	template<class T>
 	std::shared_ptr<T> GetComponent()
 	{
-		return std::dynamic_pointer_cast<T>(components.find(typeid(T))->second);
+		if (components.count(typeid(T)) > 0)
+			return std::dynamic_pointer_cast<T>(components.find(typeid(T))->second);
+		return nullptr;
 	}
 
 	template<class T>
 	std::vector<std::shared_ptr<T>> GetComponents()
 	{
-		auto range = components.equal_range(typeid(T));
-		return std::vector<std::shared_ptr<T>>(range.first, range.second);
+		if (components.count(typeid(T)) > 0)
+		{
+			auto range = components.equal_range(typeid(T));
+			return std::vector<std::shared_ptr<T>>(range.first, range.second);
+		}
+		return nullptr;
 	}
 
 	template<class T>
@@ -49,6 +55,7 @@ public:
 	}
 
 public:
+	void Start();
 	void Update();
 	void Render();
 };

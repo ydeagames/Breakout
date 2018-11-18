@@ -3,11 +3,17 @@
 class GameObject;
 class Component
 {
-public:
-	GameObject* gameObject;
+private:
+	std::weak_ptr<GameObject> gameobject;
 
 public:
 	virtual ~Component() {}
+
+public:
+	void Initialize(const std::weak_ptr<GameObject>& gameobj);
+	void Finalize();
+	bool Initialized() const;
+	GameObject& gameObject() const;
 
 public:
 	virtual void Start() {}

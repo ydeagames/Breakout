@@ -8,5 +8,5 @@ void Rigidbody::AddForce(const Vec2& velocity)
 
 void Rigidbody::Update()
 {
-	gameObject->transform()->position += vel;
+	gameObject().transform()->position += vel;
 }
