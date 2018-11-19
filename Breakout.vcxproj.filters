@@ -91,9 +91,6 @@
     <ClCompile Include="Libraries\Dependencies\pch.cpp">
       <Filter>ライブラリ\依存関係</Filter>
     </ClCompile>
-    <ClCompile Include="Libraries\GameLibrary\Collider.cpp">
-      <Filter>ライブラリ\ゲームライブラリ</Filter>
-    </ClCompile>
     <ClCompile Include="Game\GameObjectLegacy.cpp">
       <Filter>ゲーム</Filter>
     </ClCompile>
@@ -141,6 +138,9 @@
     </ClCompile>
     <ClCompile Include="Game\Demo\DemoSceneTitle.cpp">
       <Filter>ゲーム\Demo</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\GameLibrary\CollisionBehaviour.cpp">
+      <Filter>ライブラリ\ゲームライブラリ</Filter>
     </ClCompile>
   </ItemGroup>
   <!-- ヘッダファイル -->
@@ -199,9 +199,6 @@
     <ClInclude Include="Libraries\GameLibrary\Singleton.h">
       <Filter>ライブラリ\ゲームライブラリ</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\GameLibrary\Collider.h">
-      <Filter>ライブラリ\ゲームライブラリ</Filter>
-    </ClInclude>
     <ClInclude Include="Game\GameObjectLegacy.h">
       <Filter>ゲーム</Filter>
     </ClInclude>
@@ -246,6 +243,9 @@
     </ClInclude>
     <ClInclude Include="Game\Demo\DemoSceneTitle.h">
       <Filter>ゲーム\Demo</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\GameLibrary\CollisionBehaviour.h">
+      <Filter>ライブラリ\ゲームライブラリ</Filter>
     </ClInclude>
   </ItemGroup>
   <!-- リソースファイル -->

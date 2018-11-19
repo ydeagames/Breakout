@@ -68,7 +68,7 @@ PlayScene::PlayScene()
 						void Update()
 						{
 							if (auto ball0 = ball.lock())
-								if (Colliders::GetInstance().IsHit(ball0->GetComponent<Collision>(), gameObject().GetComponent<Collision>()))
+								if (CollisionBehaviours::GetInstance().IsHit(ball0->GetComponent<Collision>(), gameObject().GetComponent<Collision>()))
 								{
 									ball0->GetComponent<Rigidbody>()->vel *= -1;
 									gameObject().Destroy();

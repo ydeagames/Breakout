@@ -2,24 +2,24 @@
 #include "Singleton.h"
 #include "Collision.h"
 
-class Collider
+class CollisionBehaviour
 {
 public:
-	virtual ~Collider() {}
+	virtual ~CollisionBehaviour() {}
 
 public:
 	virtual bool Collide(const std::shared_ptr<Collision>& a, const std::shared_ptr<Collision>& b) = 0;
 	virtual bool IsHit(const std::shared_ptr<const Collision>& a, const std::shared_ptr<const Collision>& b) = 0;
 };
 
-class Colliders : public Collider, public Singleton<Colliders>
+class CollisionBehaviours : public CollisionBehaviour, public Singleton<CollisionBehaviours>
 {
 private:
-	std::unordered_map<ShapeType, std::unordered_map<ShapeType, std::unique_ptr<Collider>>> colliders;
+	std::unordered_map<ShapeType, std::unordered_map<ShapeType, std::unique_ptr<CollisionBehaviour>>> colliders;
 
 private:
-	friend class Singleton<Colliders>;
-	Colliders();
+	friend class Singleton<CollisionBehaviours>;
+	CollisionBehaviours();
 
 public:
 	bool Collide(const std::shared_ptr<Collision>& a, const std::shared_ptr<Collision>& b) override;

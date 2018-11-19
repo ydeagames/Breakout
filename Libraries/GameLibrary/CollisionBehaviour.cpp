@@ -1,12 +1,12 @@
-#include "Collider.h"
+#include "CollisionBehaviour.h"
 
-class InverseCollider final : public Collider
+class InverseCollisionBehaviour final : public CollisionBehaviour
 {
 private:
-	std::unique_ptr<Collider> collider;
+	std::unique_ptr<CollisionBehaviour> collider;
 
 public:
-	InverseCollider(std::unique_ptr<Collider>&& collider)
+	InverseCollisionBehaviour(std::unique_ptr<CollisionBehaviour>&& collider)
 		: collider(std::move(collider)) {}
 
 public:
@@ -21,7 +21,7 @@ public:
 	}
 };
 
-class BoxAndBoxCollider : public Collider
+class BoxAndBoxCollisionBehaviour : public CollisionBehaviour
 {
 public:
 	bool Collide(const std::shared_ptr<Collision>& a, const std::shared_ptr<Collision>& b) override
@@ -80,7 +80,7 @@ public:
 };
 
 
-class BoxAndCircleCollider : public Collider
+class BoxAndCircleCollisionBehaviour : public CollisionBehaviour
 {
 public:
 	bool Collide(const std::shared_ptr<Collision>& a, const std::shared_ptr<Collision>& b) override
@@ -97,7 +97,7 @@ public:
 };
 
 
-class BoxAndLineCollider : public Collider
+class BoxAndLineCollisionBehaviour : public CollisionBehaviour
 {
 public:
 	bool Collide(const std::shared_ptr<Collision>& a, const std::shared_ptr<Collision>& b) override
@@ -114,7 +114,7 @@ public:
 };
 
 
-class CircleAndCircleCollider : public Collider
+class CircleAndCircleCollisionBehaviour : public CollisionBehaviour
 {
 public:
 	bool Collide(const std::shared_ptr<Collision>& a, const std::shared_ptr<Collision>& b) override
@@ -131,7 +131,7 @@ public:
 };
 
 
-class CircleAndLineCollider : public Collider
+class CircleAndLineCollisionBehaviour : public CollisionBehaviour
 {
 public:
 	bool Collide(const std::shared_ptr<Collision>& a, const std::shared_ptr<Collision>& b) override
@@ -148,7 +148,7 @@ public:
 };
 
 
-class LineAndLineCollider : public Collider
+class LineAndLineCollisionBehaviour : public CollisionBehaviour
 {
 public:
 	bool Collide(const std::shared_ptr<Collision>& a, const std::shared_ptr<Collision>& b) override
@@ -164,25 +164,25 @@ public:
 	}
 };
 
-Colliders::Colliders()
+CollisionBehaviours::CollisionBehaviours()
 {
-	colliders[ShapeType::BOX][ShapeType::BOX] = std::make_unique<BoxAndBoxCollider>();
-	colliders[ShapeType::BOX][ShapeType::CIRCLE] = std::make_unique<BoxAndCircleCollider>();
-	colliders[ShapeType::BOX][ShapeType::LINE] = std::make_unique<BoxAndLineCollider>();
-	colliders[ShapeType::CIRCLE][ShapeType::BOX] = std::make_unique<InverseCollider>(std::make_unique<BoxAndCircleCollider>());
-	colliders[ShapeType::CIRCLE][ShapeType::CIRCLE] = std::make_unique<CircleAndCircleCollider>();
-	colliders[ShapeType::CIRCLE][ShapeType::LINE] = std::make_unique<CircleAndLineCollider>();
-	colliders[ShapeType::LINE][ShapeType::BOX] = std::make_unique<InverseCollider>(std::make_unique<BoxAndLineCollider>());
-	colliders[ShapeType::LINE][ShapeType::CIRCLE] = std::make_unique<InverseCollider>(std::make_unique<CircleAndLineCollider>());
-	colliders[ShapeType::LINE][ShapeType::LINE] = std::make_unique<BoxAndBoxCollider>();
+	colliders[ShapeType::BOX][ShapeType::BOX] = std::make_unique<BoxAndBoxCollisionBehaviour>();
+	colliders[ShapeType::BOX][ShapeType::CIRCLE] = std::make_unique<BoxAndCircleCollisionBehaviour>();
+	colliders[ShapeType::BOX][ShapeType::LINE] = std::make_unique<BoxAndLineCollisionBehaviour>();
+	colliders[ShapeType::CIRCLE][ShapeType::BOX] = std::make_unique<InverseCollisionBehaviour>(std::make_unique<BoxAndCircleCollisionBehaviour>());
+	colliders[ShapeType::CIRCLE][ShapeType::CIRCLE] = std::make_unique<CircleAndCircleCollisionBehaviour>();
+	colliders[ShapeType::CIRCLE][ShapeType::LINE] = std::make_unique<CircleAndLineCollisionBehaviour>();
+	colliders[ShapeType::LINE][ShapeType::BOX] = std::make_unique<InverseCollisionBehaviour>(std::make_unique<BoxAndLineCollisionBehaviour>());
+	colliders[ShapeType::LINE][ShapeType::CIRCLE] = std::make_unique<InverseCollisionBehaviour>(std::make_unique<CircleAndLineCollisionBehaviour>());
+	colliders[ShapeType::LINE][ShapeType::LINE] = std::make_unique<BoxAndBoxCollisionBehaviour>();
 }
 
-bool Colliders::Collide(const std::shared_ptr<Collision>& a, const std::shared_ptr<Collision>& b)
+bool CollisionBehaviours::Collide(const std::shared_ptr<Collision>& a, const std::shared_ptr<Collision>& b)
 {
 	return colliders[a->shape->GetType()][b->shape->GetType()]->Collide(a, b);
 }
 
-bool Colliders::IsHit(const std::shared_ptr<const Collision>& a, const std::shared_ptr<const Collision>& b)
+bool CollisionBehaviours::IsHit(const std::shared_ptr<const Collision>& a, const std::shared_ptr<const Collision>& b)
 {
 	if (a && b)
 	{
