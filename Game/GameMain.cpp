@@ -1,8 +1,9 @@
 #include "GameMain.h"
 #include <cmath>
-#include "Demo\DemoSceneLogo.h"
-#include "Demo\DemoSceneTitle.h"
-#include "Demo\DemoScenePlay.h"
+//#include "Demo\DemoSceneLogo.h"
+//#include "Demo\DemoSceneTitle.h"
+//#include "Demo\DemoScenePlay.h"
+#include "PlayScene.h"
 
 // <Gameクラス>
 
@@ -12,11 +13,13 @@ Game::Game() :
 {
 	SceneManager& scene_manager = SceneManager::GetInstance();
 
-	scene_manager.AddScene<DemoSceneLogo>(SceneID::LOGO);
-	scene_manager.AddScene<DemoSceneTitle>(SceneID::TITLE);
-	scene_manager.AddScene<DemoScenePlay>(SceneID::PLAY);
+	//scene_manager.AddScene<DemoSceneLogo>(SceneID::LOGO);
+	//scene_manager.AddScene<DemoSceneTitle>(SceneID::TITLE);
+	//scene_manager.AddScene<DemoScenePlay>(SceneID::PLAY);
 
-	scene_manager.SetStartScene(SceneID::TITLE);
+	scene_manager.AddScene<PlayScene>(SceneID::PLAY);
+
+	scene_manager.SetStartScene(SceneID::PLAY);
 }
 
 // ゲームの終了処理

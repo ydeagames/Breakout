@@ -45,31 +45,6 @@ PlayScene::PlayScene()
 		const float width = SCREEN_WIDTH / 8;
 		const float height = width / 4;
 
-		auto blockPrefab = GameObject::CreatePrefab("Block");
-		blockPrefab->transform()->scale = { width, height };
-		blockPrefab->AddNewComponent<Block>();
-		blockPrefab->AddNewComponent<Collision>(std::make_unique<Box>(Vec2{}, blockPrefab->transform()->scale));
-		class BlockBehaviour : public Component
-		{
-			std::weak_ptr<GameObject> ball;
-
-			void Start()
-			{
-				ball = gameObject().Find("Ball");
-			}
-
-			void Update()
-			{
-				if (auto ball0 = ball.lock())
-					if (Colliders::GetInstance().IsHit(ball0->GetComponent<Collision>(), gameObject().GetComponent<Collision>()))
-					{
-						ball0->GetComponent<Rigidbody>()->vel *= -1;
-						gameObject().Destroy();
-					}
-			}
-		};
-		blockPrefab->AddNewComponent<BlockBehaviour>();
-
 		for (int iy = 0; iy < 3; iy++)
 		{
 			for (int ix = 0; ix < 8; ix++)
@@ -77,7 +52,31 @@ PlayScene::PlayScene()
 				int type = STAGE_DATA[iy][ix];
 				if (type != 0)
 				{
-					auto block = GameObject::Instantiate(blockPrefab);
+					auto block = GameObject::Create("Block");
+					block->transform()->scale = { width, height };
+					block->AddNewComponent<Block>();
+					block->AddNewComponent<Collision>(std::make_unique<Box>(Vec2{}, block->transform()->scale));
+					class BlockBehaviour : public Component
+					{
+						std::weak_ptr<GameObject> ball;
+
+						void Start()
+						{
+							ball = gameObject().Find("Ball");
+						}
+
+						void Update()
+						{
+							if (auto ball0 = ball.lock())
+								if (Colliders::GetInstance().IsHit(ball0->GetComponent<Collision>(), gameObject().GetComponent<Collision>()))
+								{
+									ball0->GetComponent<Rigidbody>()->vel *= -1;
+									gameObject().Destroy();
+								}
+						}
+					};
+					block->AddNewComponent<BlockBehaviour>();
+
 					block->transform()->position = { ix * width + width / 2, iy * height + height / 2 };
 					auto renderer = std::make_shared<BoxRenderer>();
 					renderer->material = Material{}.SetBorder(Block::COLORS[type]);
