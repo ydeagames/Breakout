@@ -38,7 +38,7 @@ PlayScene::PlayScene()
 		ball->AddNewComponent<Rigidbody>(Vec2{ 5,5 });
 		ball->AddNewComponent<Ball>();
 		ball->AddNewComponent<BoxRenderer>();
-		ball->AddNewComponent<Collision>(std::make_unique<Box>(Vec2{}, ball->transform()->scale));
+		ball->AddNewComponent<Collider>(std::make_unique<Box>(Vec2{}, ball->transform()->scale));
 	}
 
 	{
@@ -55,7 +55,7 @@ PlayScene::PlayScene()
 					auto block = GameObject::Create("Block");
 					block->transform()->scale = { width, height };
 					block->AddNewComponent<Block>();
-					block->AddNewComponent<Collision>(std::make_unique<Box>(Vec2{}, block->transform()->scale));
+					block->AddNewComponent<Collider>(std::make_unique<Box>(Vec2{}, block->transform()->scale));
 					class BlockBehaviour : public Component
 					{
 						std::weak_ptr<GameObject> ball;
@@ -68,7 +68,7 @@ PlayScene::PlayScene()
 						void Update()
 						{
 							if (auto ball0 = ball.lock())
-								if (CollisionBehaviours::GetInstance().IsHit(ball0->GetComponent<Collision>(), gameObject().GetComponent<Collision>()))
+								if (CollisionBehaviours::GetInstance().IsHit(ball0->GetComponent<Collider>(), gameObject().GetComponent<Collider>()))
 								{
 									ball0->GetComponent<Rigidbody>()->vel *= -1;
 									gameObject().Destroy();

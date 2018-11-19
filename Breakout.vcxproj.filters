@@ -106,9 +106,6 @@
     <ClCompile Include="Libraries\GameLibrary\ComponentContainer.cpp">
       <Filter>ライブラリ\ゲームライブラリ</Filter>
     </ClCompile>
-    <ClCompile Include="Libraries\GameLibrary\Collision.cpp">
-      <Filter>ライブラリ\ゲームライブラリ</Filter>
-    </ClCompile>
     <ClCompile Include="Libraries\GameLibrary\Rigidbody.cpp">
       <Filter>ライブラリ\ゲームライブラリ</Filter>
     </ClCompile>
@@ -140,6 +137,9 @@
       <Filter>ゲーム\Demo</Filter>
     </ClCompile>
     <ClCompile Include="Libraries\GameLibrary\CollisionBehaviour.cpp">
+      <Filter>ライブラリ\ゲームライブラリ</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\GameLibrary\Collider.cpp">
       <Filter>ライブラリ\ゲームライブラリ</Filter>
     </ClCompile>
   </ItemGroup>
@@ -211,9 +211,6 @@
     <ClInclude Include="Libraries\GameLibrary\ComponentContainer.h">
       <Filter>ライブラリ\ゲームライブラリ</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\GameLibrary\Collision.h">
-      <Filter>ライブラリ\ゲームライブラリ</Filter>
-    </ClInclude>
     <ClInclude Include="Libraries\GameLibrary\Rigidbody.h">
       <Filter>ライブラリ\ゲームライブラリ</Filter>
     </ClInclude>
@@ -245,6 +242,9 @@
       <Filter>ゲーム\Demo</Filter>
     </ClInclude>
     <ClInclude Include="Libraries\GameLibrary\CollisionBehaviour.h">
+      <Filter>ライブラリ\ゲームライブラリ</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\GameLibrary\Collider.h">
       <Filter>ライブラリ\ゲームライブラリ</Filter>
     </ClInclude>
   </ItemGroup>

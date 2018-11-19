@@ -10,12 +10,12 @@ public:
 		: collider(std::move(collider)) {}
 
 public:
-	bool Collide(const std::shared_ptr<Collision>& a, const std::shared_ptr<Collision>& b) override
+	bool Collide(const std::shared_ptr<Collider>& a, const std::shared_ptr<Collider>& b) override
 	{
 		return collider->Collide(b, a);
 	}
 
-	bool IsHit(const std::shared_ptr<const Collision>& a, const std::shared_ptr<const Collision>& b) override
+	bool IsHit(const std::shared_ptr<const Collider>& a, const std::shared_ptr<const Collider>& b) override
 	{
 		return collider->IsHit(b, a);
 	}
@@ -24,7 +24,7 @@ public:
 class BoxAndBoxCollisionBehaviour : public CollisionBehaviour
 {
 public:
-	bool Collide(const std::shared_ptr<Collision>& a, const std::shared_ptr<Collision>& b) override
+	bool Collide(const std::shared_ptr<Collider>& a, const std::shared_ptr<Collider>& b) override
 	{
 		// TODO ŽÀ‘•
 		Box& dim_a = dynamic_cast<Box&>(*a->shape);
@@ -49,7 +49,7 @@ public:
 		return hit;
 	}
 
-	bool IsHit(const std::shared_ptr<const Collision>& a, const std::shared_ptr<const Collision>& b) override
+	bool IsHit(const std::shared_ptr<const Collider>& a, const std::shared_ptr<const Collider>& b) override
 	{
 		// TODO ŽÀ‘•
 		Box& dim_a = dynamic_cast<Box&>(*a->shape);
@@ -83,13 +83,13 @@ public:
 class BoxAndCircleCollisionBehaviour : public CollisionBehaviour
 {
 public:
-	bool Collide(const std::shared_ptr<Collision>& a, const std::shared_ptr<Collision>& b) override
+	bool Collide(const std::shared_ptr<Collider>& a, const std::shared_ptr<Collider>& b) override
 	{
 		// TODO ŽÀ‘•
 		return false;
 	}
 
-	bool IsHit(const std::shared_ptr<const Collision>& a, const std::shared_ptr<const Collision>& b) override
+	bool IsHit(const std::shared_ptr<const Collider>& a, const std::shared_ptr<const Collider>& b) override
 	{
 		// TODO ŽÀ‘•
 		return false;
@@ -100,13 +100,13 @@ public:
 class BoxAndLineCollisionBehaviour : public CollisionBehaviour
 {
 public:
-	bool Collide(const std::shared_ptr<Collision>& a, const std::shared_ptr<Collision>& b) override
+	bool Collide(const std::shared_ptr<Collider>& a, const std::shared_ptr<Collider>& b) override
 	{
 		// TODO ŽÀ‘•
 		return false;
 	}
 
-	bool IsHit(const std::shared_ptr<const Collision>& a, const std::shared_ptr<const Collision>& b) override
+	bool IsHit(const std::shared_ptr<const Collider>& a, const std::shared_ptr<const Collider>& b) override
 	{
 		// TODO ŽÀ‘•
 		return false;
@@ -117,13 +117,13 @@ public:
 class CircleAndCircleCollisionBehaviour : public CollisionBehaviour
 {
 public:
-	bool Collide(const std::shared_ptr<Collision>& a, const std::shared_ptr<Collision>& b) override
+	bool Collide(const std::shared_ptr<Collider>& a, const std::shared_ptr<Collider>& b) override
 	{
 		// TODO ŽÀ‘•
 		return false;
 	}
 
-	bool IsHit(const std::shared_ptr<const Collision>& a, const std::shared_ptr<const Collision>& b) override
+	bool IsHit(const std::shared_ptr<const Collider>& a, const std::shared_ptr<const Collider>& b) override
 	{
 		// TODO ŽÀ‘•
 		return false;
@@ -134,13 +134,13 @@ public:
 class CircleAndLineCollisionBehaviour : public CollisionBehaviour
 {
 public:
-	bool Collide(const std::shared_ptr<Collision>& a, const std::shared_ptr<Collision>& b) override
+	bool Collide(const std::shared_ptr<Collider>& a, const std::shared_ptr<Collider>& b) override
 	{
 		// TODO ŽÀ‘•
 		return false;
 	}
 
-	bool IsHit(const std::shared_ptr<const Collision>& a, const std::shared_ptr<const Collision>& b) override
+	bool IsHit(const std::shared_ptr<const Collider>& a, const std::shared_ptr<const Collider>& b) override
 	{
 		// TODO ŽÀ‘•
 		return false;
@@ -151,13 +151,13 @@ public:
 class LineAndLineCollisionBehaviour : public CollisionBehaviour
 {
 public:
-	bool Collide(const std::shared_ptr<Collision>& a, const std::shared_ptr<Collision>& b) override
+	bool Collide(const std::shared_ptr<Collider>& a, const std::shared_ptr<Collider>& b) override
 	{
 		// TODO ŽÀ‘•
 		return false;
 	}
 
-	bool IsHit(const std::shared_ptr<const Collision>& a, const std::shared_ptr<const Collision>& b) override
+	bool IsHit(const std::shared_ptr<const Collider>& a, const std::shared_ptr<const Collider>& b) override
 	{
 		// TODO ŽÀ‘•
 		return false;
@@ -177,12 +177,12 @@ CollisionBehaviours::CollisionBehaviours()
 	colliders[ShapeType::LINE][ShapeType::LINE] = std::make_unique<BoxAndBoxCollisionBehaviour>();
 }
 
-bool CollisionBehaviours::Collide(const std::shared_ptr<Collision>& a, const std::shared_ptr<Collision>& b)
+bool CollisionBehaviours::Collide(const std::shared_ptr<Collider>& a, const std::shared_ptr<Collider>& b)
 {
 	return colliders[a->shape->GetType()][b->shape->GetType()]->Collide(a, b);
 }
 
-bool CollisionBehaviours::IsHit(const std::shared_ptr<const Collision>& a, const std::shared_ptr<const Collision>& b)
+bool CollisionBehaviours::IsHit(const std::shared_ptr<const Collider>& a, const std::shared_ptr<const Collider>& b)
 {
 	if (a && b)
 	{
