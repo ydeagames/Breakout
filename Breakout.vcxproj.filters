@@ -262,5 +262,6 @@
     <Image Include="Resources\Textures\TridentLogo.png">
       <Filter>リソース\テクスチャ</Filter>
     </Image>
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

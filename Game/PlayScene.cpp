@@ -27,8 +27,34 @@ PlayScene::PlayScene()
 		paddle->AddComponent(std::make_shared<Rigidbody>());
 		paddle->AddComponent(std::make_shared<Paddle>(
 			InputManager::GetInstance().GetInput<JoypadInput>()->GetInputButton(PAD_INPUT_LEFT),
-			InputManager::GetInstance().GetInput<JoypadInput>()->GetInputButton(PAD_INPUT_RIGHT)));
+			InputManager::GetInstance().GetInput<JoypadInput>()->GetInputButton(PAD_INPUT_RIGHT),
+			InputManager::GetInstance().GetInput<JoypadInput>()->GetInputButton(PAD_INPUT_1),
+			InputManager::GetInstance().GetInput<JoypadInput>()->GetInputButton(PAD_INPUT_2)
+			));
 		paddle->AddComponent(std::make_shared<BoxRenderer>());
+		paddle->AddComponent<Collider>(std::make_shared<BoxCollider>(Box{ Vec2{}, paddle->transform()->scale }));
+		class PaddleBehaviour : public Component
+		{
+			std::weak_ptr<GameObject> ball;
+
+			void Start()
+			{
+				ball = gameObject()->Find("Ball");
+			}
+
+			void Update()
+			{
+				if (auto ball0 = ball.lock())
+				{
+					CollisionResult result = ball0->GetComponent<Collider>()->Collide(*gameObject()->GetComponent<Collider>());
+					if (result.hit)
+					{
+						ball0->GetComponent<Collider>()->Apply(result);
+					}
+				}
+			}
+		};
+		paddle->AddNewComponent<PaddleBehaviour>();
 	}
 
 	{

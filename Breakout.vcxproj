@@ -135,6 +135,7 @@
   <!--リソースファイル -->
   <ItemGroup>
     <!-- 音 -->
+    <None Include="cpp.hint" />
     <None Include="Resources\Audio\SE00.ogg" />
     <!-- フォント -->
     <None Include="Resources\Fonts\PongScore.dft" />

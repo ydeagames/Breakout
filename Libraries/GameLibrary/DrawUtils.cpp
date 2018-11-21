@@ -2,6 +2,8 @@
 #include <cmath>
 #include <cstdio>
 
+#define DX(exp) if (exp) { return -1; }
+
 namespace DrawUtils
 {
 	// ÉJÉvÉZÉãï`âÊÇ…Ç®ÇØÇÈîºâ~ÇÃï™äÑêî
@@ -24,20 +26,14 @@ namespace DrawUtils
 
 		for (int i = 0; i < count; i += 2)
 		{
-			if (DrawLine(static_cast<int>(x), static_cast<int>(y), static_cast<int>(x + dx), static_cast<int>(y + dy), color, thickness) == -1)
-			{
-				return -1;
-			}
+			DX(DrawLine(static_cast<int>(x), static_cast<int>(y), static_cast<int>(x + dx), static_cast<int>(y + dy), color, thickness));
 			x += dx * 2;
 			y += dy * 2;
 		}
 
 		if (count % 2 == 0)
 		{
-			if (DrawLine(static_cast<int>(x), static_cast<int>(y), x2, y2, color, thickness) == -1)
-			{
-				return -1;
-			}
+			DX(DrawLine(static_cast<int>(x), static_cast<int>(y), x2, y2, color, thickness));
 		}
 
 		return 0;
@@ -60,20 +56,14 @@ namespace DrawUtils
 
 		for (int i = 0; i < count; i += 2)
 		{
-			if (DrawLineAA(x, y, (x + dx), (y + dy), color, thickness) == -1)
-			{
-				return -1;
-			}
+			DX(DrawLineAA(x, y, (x + dx), (y + dy), color, thickness));
 			x += dx * 2;
 			y += dy * 2;
 		}
 
 		if (count % 2 == 0)
 		{
-			if (DrawLineAA(x, y, x2, y2, color, thickness) == -1)
-			{
-				return -1;
-			}
+			DX(DrawLineAA(x, y, x2, y2, color, thickness));
 		}
 
 		return 0;
@@ -98,31 +88,19 @@ namespace DrawUtils
 		}
 
 
-		if (DrawLine(static_cast<int>(x1 + dx[0]), static_cast<int>(y1 + dy[0]), static_cast<int>(x2 + dx[0]), static_cast<int>(y2 + dy[0]), color, thickness))
-		{
-			return -1;
-		}
+		DX(DrawLine(static_cast<int>(x1 + dx[0]), static_cast<int>(y1 + dy[0]), static_cast<int>(x2 + dx[0]), static_cast<int>(y2 + dy[0]), color, thickness));
 
-		if (DrawLine(static_cast<int>(x1 + dx[NUM_CAPSULE_DIVISION]), static_cast<int>(y1 + dy[NUM_CAPSULE_DIVISION]), static_cast<int>(x2 + dx[NUM_CAPSULE_DIVISION]), static_cast<int>(y2 + dy[NUM_CAPSULE_DIVISION]), color, thickness))
-		{
-			return -1;
-		}
+		DX(DrawLine(static_cast<int>(x1 + dx[NUM_CAPSULE_DIVISION]), static_cast<int>(y1 + dy[NUM_CAPSULE_DIVISION]), static_cast<int>(x2 + dx[NUM_CAPSULE_DIVISION]), static_cast<int>(y2 + dy[NUM_CAPSULE_DIVISION]), color, thickness));
 
 
 		for (i = 0; i < NUM_CAPSULE_DIVISION; i++)
 		{
-			if (DrawLine(static_cast<int>(x1 + dx[i]), static_cast<int>(y1 + dy[i]), static_cast<int>(x1 + dx[i + 1]), static_cast<int>(y1 + dy[i + 1]), color, thickness))
-			{
-				return -1;
-			}
+			DX(DrawLine(static_cast<int>(x1 + dx[i]), static_cast<int>(y1 + dy[i]), static_cast<int>(x1 + dx[i + 1]), static_cast<int>(y1 + dy[i + 1]), color, thickness));
 		}
 
 		for (i = 0; i < NUM_CAPSULE_DIVISION; i++)
 		{
-			if (DrawLine(static_cast<int>(x2 - dx[i]), static_cast<int>(y2 - dy[i]), static_cast<int>(x2 - dx[i + 1]), static_cast<int>(y2 - dy[i + 1]), color, thickness))
-			{
-				return -1;
-			}
+			DX(DrawLine(static_cast<int>(x2 - dx[i]), static_cast<int>(y2 - dy[i]), static_cast<int>(x2 - dx[i + 1]), static_cast<int>(y2 - dy[i + 1]), color, thickness));
 		}
 
 		return 0;
@@ -147,31 +125,19 @@ namespace DrawUtils
 		}
 
 
-		if (DrawLineAA(x1 + dx[0], y1 + dy[0], x2 + dx[0], y2 + dy[0], color, thickness))
-		{
-			return -1;
-		}
+		DX(DrawLineAA(x1 + dx[0], y1 + dy[0], x2 + dx[0], y2 + dy[0], color, thickness));
 
-		if (DrawLineAA(x1 + dx[NUM_CAPSULE_DIVISION], y1 + dy[NUM_CAPSULE_DIVISION], x2 + dx[NUM_CAPSULE_DIVISION], y2 + dy[NUM_CAPSULE_DIVISION], color, thickness))
-		{
-			return -1;
-		}
+		DX(DrawLineAA(x1 + dx[NUM_CAPSULE_DIVISION], y1 + dy[NUM_CAPSULE_DIVISION], x2 + dx[NUM_CAPSULE_DIVISION], y2 + dy[NUM_CAPSULE_DIVISION], color, thickness));
 
 
 		for (i = 0; i < NUM_CAPSULE_DIVISION; i++)
 		{
-			if (DrawLineAA(x1 + dx[i], y1 + dy[i], x1 + dx[i + 1], y1 + dy[i + 1], color, thickness))
-			{
-				return -1;
-			}
+			DX(DrawLineAA(x1 + dx[i], y1 + dy[i], x1 + dx[i + 1], y1 + dy[i + 1], color, thickness));
 		}
 
 		for (i = 0; i < NUM_CAPSULE_DIVISION; i++)
 		{
-			if (DrawLineAA(x2 - dx[i], y2 - dy[i], x2 - dx[i + 1], y2 - dy[i + 1], color, thickness))
-			{
-				return -1;
-			}
+			DX(DrawLineAA(x2 - dx[i], y2 - dy[i], x2 - dx[i + 1], y2 - dy[i + 1], color, thickness));
 		}
 
 		return 0;

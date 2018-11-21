@@ -19,13 +19,13 @@ Material& Material::SetBorder(Color color, float transparency, float thickness)
 void BoxRenderer::Render()
 {
 	auto t = gameObject()->transform();
-	Bounds box = Bounds{ Vec2{}, Vec2{ 1, 1 } }.Transformed(*t);
+	Box box = Box{ Vec2{}, t->scale, 0 }.Transformed(*t);
 
 	// TODO “§–¾“x
 	if (material.base_transparency > 0)
-		DrawBoxAA(box.GetX(HorizontalSide::LEFT), box.GetY(VerticalSide::TOP), box.GetX(HorizontalSide::RIGHT), box.GetY(VerticalSide::BOTTOM), material.base_color, true);
+		Graphics::DrawBoxRotate(box, material.base_color, true);
 	if (material.edge_transparency > 0)
-		DrawBoxAA(box.GetX(HorizontalSide::LEFT), box.GetY(VerticalSide::TOP), box.GetX(HorizontalSide::RIGHT), box.GetY(VerticalSide::BOTTOM), material.edge_color, false, material.edge_thickness);
+		Graphics::DrawBoxRotate(box, material.edge_color, false, material.edge_thickness);
 }
 
 void CircleRenderer::Render()
