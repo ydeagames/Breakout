@@ -30,7 +30,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 #endif
 
 	// ‰Šúó‘Ô‚Ì‰æ–Êƒ‚[ƒh‚Ìİ’è
-	SetGraphMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32);
+	SetGraphMode(static_cast<int>(SCREEN.GetSize().x), static_cast<int>(SCREEN.GetSize().y), 32);
 
 	SetAlwaysRunFlag(true);
 	SetDoubleStartValidFlag(true);

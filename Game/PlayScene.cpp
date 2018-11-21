@@ -17,7 +17,7 @@ PlayScene::PlayScene()
 {
 	{
 		auto paddle = GameObject::Create("Paddle", 3);
-		paddle->transform()->position = { static_cast<float>(SCREEN_CENTER_X), static_cast<float>(SCREEN_BOTTOM) - 20.f };
+		paddle->transform()->position = { SCREEN.GetX(HorizontalSide::CENTER), SCREEN.GetY(VerticalSide::BOTTOM) - 20.f };
 		paddle->transform()->scale = { 80, 16 };
 		paddle->AddNewComponent<Rigidbody>();
 		paddle->AddNewComponent<Paddle>(
@@ -32,7 +32,7 @@ PlayScene::PlayScene()
 
 	{
 		auto ball = GameObject::Create("Ball", 2);
-		ball->transform()->position = { static_cast<float>(SCREEN_CENTER_X), static_cast<float>(SCREEN_CENTER_Y) };
+		ball->transform()->position = SCREEN.GetCenter();
 		ball->transform()->scale = { 5, 5 };
 		ball->AddNewComponent<Rigidbody>(Vec2{ 5,5 }, std::vector<int>{ {1, 3} });
 		ball->AddNewComponent<Ball>();
@@ -41,7 +41,7 @@ PlayScene::PlayScene()
 	}
 
 	{
-		const float width = SCREEN_WIDTH / 8;
+		const float width = SCREEN.GetSize().x / 8;
 		const float height = width / 4;
 
 		for (int iy = 0; iy < 3; iy++)
