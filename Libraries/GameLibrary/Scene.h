@@ -4,9 +4,12 @@
 class Scene
 {
 public:
+	static constexpr int MAX_LAYERS = 32;
+
+public:
 	std::unordered_multimap<std::string, std::shared_ptr<GameObject>> objects;
 	std::unordered_multimap<std::string, std::weak_ptr<GameObject>> tags;
-	std::unordered_multimap<std::string, std::weak_ptr<GameObject>> layers;
+	std::vector<std::weak_ptr<GameObject>> layers[MAX_LAYERS];
 
 public:
 	Scene() = default;

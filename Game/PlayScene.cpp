@@ -58,25 +58,13 @@ PlayScene::PlayScene()
 	}
 
 	{
-		auto ball = GameObject::Create("Ball");
+		auto ball = GameObject::Create("Ball", "Ball", 0);
 		ball->transform()->position = { static_cast<float>(SCREEN_CENTER_X), static_cast<float>(SCREEN_CENTER_Y) };
 		ball->transform()->scale = { 5, 5 };
 		ball->AddNewComponent<Rigidbody>(Vec2{ 5,5 });
 		ball->AddNewComponent<Ball>();
 		ball->AddNewComponent<CircleRenderer>();
 		ball->AddComponent<Collider>(std::make_shared<CircleCollider>(Circle{ Vec2{}, ball->transform()->scale.x }));
-		class BallBehaviour : public Component
-		{
-			void Start()
-			{
-			}
-
-			void Update()
-			{
-				//gameObject()->transform()->position = InputManager::GetInstance().mouse->GetPosition();
-			}
-		};
-		ball->AddNewComponent<BallBehaviour>();
 	}
 
 	{

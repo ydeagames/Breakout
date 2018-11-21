@@ -2,7 +2,7 @@
 #include "Scene.h"
 #include "SceneManager.h"
 
-GameObject::GameObject(const std::string& name, const std::string& tag, const std::string& layer)
+GameObject::GameObject(const std::string& name, const std::string& tag, int layer)
 	: name(name)
 	, tag(tag)
 	, layer(layer)
@@ -47,14 +47,14 @@ bool GameObject::IsDestroyed()
 	return destroyed;
 }
 
-std::shared_ptr<GameObject> GameObject::CreatePrefab(const std::string& name, const std::string& tag, const std::string& layer)
+std::shared_ptr<GameObject> GameObject::CreatePrefab(const std::string& name, const std::string& tag, int layer)
 {
 	auto obj = std::shared_ptr<GameObject>(new GameObject(name, tag, layer));
 	obj->Initialize();
 	return obj;
 }
 
-std::shared_ptr<GameObject> GameObject::Create(const std::string& name, const std::string& tag, const std::string& layer)
+std::shared_ptr<GameObject> GameObject::Create(const std::string& name, const std::string& tag, int layer)
 {
 	auto object = CreatePrefab(name);
 	SceneManager::GetInstance().AddObject(object);
@@ -111,24 +111,11 @@ std::vector<std::shared_ptr<GameObject>> GameObject::FindGameObjectsWithTag(cons
 	return result;
 }
 
-std::vector<std::shared_ptr<GameObject>> GameObject::FindGameObjectsWithLayer(const std::string& layer)
+std::vector<std::weak_ptr<GameObject>>& GameObject::FindGameObjectsWithLayer(int layer)
 {
-	std::vector<std::shared_ptr<GameObject>> result;
-	auto& mmap = SceneManager::GetInstance().GetActiveScene()->layers;
-	auto range = mmap.equal_range(layer);
-	for (auto it = range.first; it != range.second;)
-	{
-		auto obj = it->second.lock();
-		if (obj && !obj->IsDestroyed())
-			result.push_back(obj);
-		else
-		{
-			it = mmap.erase(it);
-			continue;
-		}
-		++it;
-	}
-	return result;
+	if (layer < 0 && Scene::MAX_LAYERS <= layer)
+		throw std::invalid_argument("Invalid layer number");
+	return SceneManager::GetInstance().GetActiveScene()->layers[layer];
 }
 
 std::shared_ptr<GameObject> GameObject::Instantiate(const std::shared_ptr<GameObject>& originalObject)

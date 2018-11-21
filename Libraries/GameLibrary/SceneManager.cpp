@@ -46,7 +46,7 @@ void SceneManager::UpdateActiveScene()
 	while (!addingObjects.empty()) {
 		auto& node = addingObjects.front();
 		m_active_scene->tags.insert(std::make_pair(node->tag, node));
-		m_active_scene->layers.insert(std::make_pair(node->layer, node));
+		m_active_scene->layers[node->layer].push_back(node);
 		m_active_scene->objects.emplace(node->name, node);
 		addingObjects.pop();
 	}
