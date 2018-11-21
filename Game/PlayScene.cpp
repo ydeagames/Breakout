@@ -12,11 +12,6 @@ const int PlayScene::STAGE_DATA[3][8] =
 	{ 3, 3, 3, 3, 3, 3, 3, 3 },
 };
 
-std::shared_ptr<Scene> PlayScene::Create()
-{
-	return std::make_shared<PlayScene>();
-}
-
 PlayScene::PlayScene()
 	: Scene()
 {
