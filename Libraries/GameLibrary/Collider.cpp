@@ -11,7 +11,7 @@ Vec2 Collider::GetVelocity() const
 
 // Utils
 static CollisionResult CollisionSegment(const Vec2& _p1, const Vec2& _p2, const Vec2& _p3, const Vec2& _p4) {
-	float _time;
+	float _time = -1;
 
 	//åç∑îªíË
 	float d1 = (_p4 - _p3).Cross(_p1 - _p3);
@@ -74,7 +74,7 @@ static CollisionResult CollisionRayCircle(const Vec2& _ray_pos, const Vec2& _ray
 }
 
 static CollisionResult CollisionCircleSegment(const Circle& _circle, const Vec2& _circle_vel, Vec2& _p1, Vec2& _p2) {
-	float _time;
+	float _time = -1;
 
 	//è’ìÀÇµÇΩÇ©ÇÃîªíË
 	bool is_collision = false;
@@ -261,7 +261,7 @@ CollisionResult BoxCollider::Collide(const CircleCollider& other) const
 		if (result.hit) {
 			t_b = result.time;
 			if (!is_collision || t_b < t_a) {
-				_time = result.time;;
+				_time = result.time;
 				_ref_normal = _rect.angle + DX_PI_F / 2;
 				is_collision = true;
 			}
@@ -288,7 +288,10 @@ CollisionResult BoxCollider::Collide(const LineCollider& other) const
 void CircleCollider::Apply(const CollisionResult & result) const
 {
 	auto transform = gameObject()->transform();
-	transform->position += GetVelocity() * result.time;
+	Vec2 vel = GetVelocity();
+	transform->position += vel * result.time;
+	if (!vel.IsZero())
+		transform->rotation = vel.Angle();
 	float rotate = DX_PI_F / 2 - result.normal;
 	float rotate_angle = transform->rotation + rotate;
 	if (sinf(rotate_angle) < 0) {
@@ -296,7 +299,7 @@ void CircleCollider::Apply(const CollisionResult & result) const
 	}
 	auto rigidbody = gameObject()->GetComponent<Rigidbody>();
 	if (rigidbody)
-		rigidbody->vel = Vec2::right.Rotate(transform->rotation) * (1.f - result.time);
+		rigidbody->vel = Vec2::right.Rotate(transform->rotation) * vel.Length()/* * (1.f - result.time)*/;
 }
 
 CollisionResult CircleCollider::Collide(const Collider& other) const
