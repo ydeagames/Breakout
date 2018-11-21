@@ -18,7 +18,7 @@ public:
 	std::shared_ptr<Transform> transform();
 
 private:
-	GameObject(const std::string& name, const std::string& tag, int layer);
+	GameObject(const std::string& name, int layer, const std::string& tag);
 	GameObject(const GameObject &) = delete;
 	GameObject& operator=(const GameObject &) = delete;
 	GameObject(GameObject &&) = delete;
@@ -38,6 +38,14 @@ public:
 		AddComponent<T>(std::make_shared<T>(std::forward<Args>(args)...));
 	}
 
+	template<class TypeClass, class CreateClass, typename... Args>
+	void AddNewComponentAs(Args&&... args)
+	{
+		auto component = std::make_shared<CreateClass>(std::forward<Args>(args)...);
+		AddComponent<TypeClass>(component);
+		AddComponent<CreateClass>(component);
+	}
+
 	template<class T>
 	std::shared_ptr<T> GetComponent()
 	{
@@ -53,7 +61,7 @@ public:
 	template<class T>
 	bool HasComponent()
 	{
-		return components->HasComponent();
+		return components->HasComponent<T>();
 	}
 
 public:
@@ -65,8 +73,8 @@ public:
 	bool IsDestroyed();
 
 public:
-	static std::shared_ptr<GameObject> CreatePrefab(const std::string& name = "New Game Object", const std::string& tag = "Untagged", int layer = 0);
-	static std::shared_ptr<GameObject> Create(const std::string& name = "New Game Object", const std::string& tag = "Untagged", int layer = 0);
+	static std::shared_ptr<GameObject> CreatePrefab(const std::string& name = "New Game Object", int layer = 0, const std::string& tag = "Untagged");
+	static std::shared_ptr<GameObject> Create(const std::string& name = "New Game Object", int layer = 0, const std::string& tag = "Untagged");
 	static std::shared_ptr<GameObject> Find(const std::string& name);
 	static std::shared_ptr<GameObject> FindWithTag(const std::string & tag);
 	static std::vector<std::shared_ptr<GameObject>> FindGameObjectsWithTag(const std::string & tag);

@@ -2,10 +2,10 @@
 #include "Scene.h"
 #include "SceneManager.h"
 
-GameObject::GameObject(const std::string& name, const std::string& tag, int layer)
+GameObject::GameObject(const std::string& name, int layer, const std::string& tag)
 	: name(name)
-	, tag(tag)
 	, layer(layer)
+	, tag(tag)
 	, components(nullptr)
 	, destroyed(false)
 {
@@ -47,16 +47,16 @@ bool GameObject::IsDestroyed()
 	return destroyed;
 }
 
-std::shared_ptr<GameObject> GameObject::CreatePrefab(const std::string& name, const std::string& tag, int layer)
+std::shared_ptr<GameObject> GameObject::CreatePrefab(const std::string& name, int layer, const std::string& tag)
 {
-	auto obj = std::shared_ptr<GameObject>(new GameObject(name, tag, layer));
+	auto obj = std::shared_ptr<GameObject>(new GameObject(name, layer, tag));
 	obj->Initialize();
 	return obj;
 }
 
-std::shared_ptr<GameObject> GameObject::Create(const std::string& name, const std::string& tag, int layer)
+std::shared_ptr<GameObject> GameObject::Create(const std::string& name, int layer, const std::string& tag)
 {
-	auto object = CreatePrefab(name);
+	auto object = CreatePrefab(name, layer, tag);
 	SceneManager::GetInstance().AddObject(object);
 	return object;
 }

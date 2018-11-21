@@ -21,50 +21,28 @@ PlayScene::PlayScene()
 	: Scene()
 {
 	{
-		auto paddle = GameObject::Create();
+		auto paddle = GameObject::Create("Paddle", 3);
 		paddle->transform()->position = { static_cast<float>(SCREEN_CENTER_X), static_cast<float>(SCREEN_BOTTOM) - 20.f };
 		paddle->transform()->scale = { 80, 16 };
-		paddle->AddComponent(std::make_shared<Rigidbody>());
-		paddle->AddComponent(std::make_shared<Paddle>(
+		paddle->AddNewComponent<Rigidbody>();
+		paddle->AddNewComponent<Paddle>(
 			InputManager::GetInstance().GetInput<JoypadInput>()->GetInputButton(PAD_INPUT_LEFT),
 			InputManager::GetInstance().GetInput<JoypadInput>()->GetInputButton(PAD_INPUT_RIGHT),
 			InputManager::GetInstance().GetInput<JoypadInput>()->GetInputButton(PAD_INPUT_1),
 			InputManager::GetInstance().GetInput<JoypadInput>()->GetInputButton(PAD_INPUT_2)
-			));
-		paddle->AddComponent(std::make_shared<BoxRenderer>());
-		paddle->AddComponent<Collider>(std::make_shared<BoxCollider>(Box{ Vec2{}, paddle->transform()->scale }));
-		class PaddleBehaviour : public Component
-		{
-			std::weak_ptr<GameObject> ball;
-
-			void Start()
-			{
-				ball = gameObject()->Find("Ball");
-			}
-
-			void Update()
-			{
-				if (auto ball0 = ball.lock())
-				{
-					CollisionResult result = ball0->GetComponent<Collider>()->Collide(*gameObject()->GetComponent<Collider>());
-					if (result.hit)
-					{
-						ball0->GetComponent<Collider>()->Apply(result);
-					}
-				}
-			}
-		};
-		paddle->AddNewComponent<PaddleBehaviour>();
+			);
+		paddle->AddNewComponent<BoxRenderer>();
+		paddle->AddNewComponentAs<Collider, BoxCollider>(Box{ Vec2{}, paddle->transform()->scale }, false);
 	}
 
 	{
-		auto ball = GameObject::Create("Ball", "Ball", 0);
+		auto ball = GameObject::Create("Ball", 2);
 		ball->transform()->position = { static_cast<float>(SCREEN_CENTER_X), static_cast<float>(SCREEN_CENTER_Y) };
 		ball->transform()->scale = { 5, 5 };
-		ball->AddNewComponent<Rigidbody>(Vec2{ 5,5 });
+		ball->AddNewComponent<Rigidbody>(Vec2{ 5,5 }, std::vector<int>{ {1, 3} });
 		ball->AddNewComponent<Ball>();
 		ball->AddNewComponent<CircleRenderer>();
-		ball->AddComponent<Collider>(std::make_shared<CircleCollider>(Circle{ Vec2{}, ball->transform()->scale.x }));
+		ball->AddNewComponentAs<Collider, CircleCollider>(Circle{ Vec2{}, ball->transform()->scale.x }, false);
 	}
 
 	{
@@ -78,33 +56,18 @@ PlayScene::PlayScene()
 				int type = STAGE_DATA[iy][ix];
 				if (type != 0)
 				{
-					auto block = GameObject::Create("Block");
+					auto block = GameObject::Create("Block", 1);
 					block->transform()->scale = { width, height };
 					block->AddNewComponent<Block>();
-					block->AddComponent<Collider>(std::make_shared<BoxCollider>(Box{ Vec2{}, block->transform()->scale }));
-					class BlockBehaviour : public Component
+					block->AddNewComponentAs<Collider, BoxCollider>(Box{ Vec2{}, block->transform()->scale }, false);
+					class BlockBehaviour : public CollisionEvent
 					{
-						std::weak_ptr<GameObject> ball;
-
-						void Start()
+						void OnCollisionEnter(GameObject& other)
 						{
-							ball = gameObject()->Find("Ball");
-						}
-
-						void Update()
-						{
-							if (auto ball0 = ball.lock())
-							{
-								CollisionResult result = ball0->GetComponent<Collider>()->Collide(*gameObject()->GetComponent<Collider>());
-								if (result.hit)
-								{
-									ball0->GetComponent<Collider>()->Apply(result);
-									gameObject()->Destroy();
-								}
-							}
+							gameObject()->Destroy();
 						}
 					};
-					block->AddNewComponent<BlockBehaviour>();
+					block->AddNewComponentAs<CollisionEvent, BlockBehaviour>();
 
 					block->transform()->position = { ix * width + width / 2, iy * height + height / 2 };
 					auto renderer = std::make_shared<BoxRenderer>();

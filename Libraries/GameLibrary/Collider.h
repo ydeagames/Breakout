@@ -29,7 +29,11 @@ class LineCollider;
 class Collider : public Component
 {
 public:
-	Collider() = default;
+	bool isTrigger;
+
+public:
+	Collider(bool isTrigger = false)
+		: isTrigger(isTrigger) {}
 	~Collider() = default;
 
 public:
@@ -51,8 +55,9 @@ public:
 	T shape;
 
 public:
-	AbstractCollider(const T& shape)
-		: shape(shape) {}
+	AbstractCollider(const T& shape, bool isTrigger = false)
+		: Collider(isTrigger)
+		, shape(shape) {}
 	~AbstractCollider() = default;
 
 	virtual ShapeType GetType() const
@@ -69,8 +74,8 @@ public:
 class BoxCollider final : public AbstractCollider<Box>
 {
 public:
-	BoxCollider(const Box& shape)
-		: AbstractCollider(shape) {}
+	BoxCollider(const Box& shape, bool isTrigger = false)
+		: AbstractCollider(shape, isTrigger) {}
 
 public:
 	void Apply(const CollisionResult& result) const override;
@@ -85,8 +90,8 @@ public:
 class CircleCollider final : public AbstractCollider<Circle>
 {
 public:
-	CircleCollider(const Circle& shape)
-		: AbstractCollider(shape) {}
+	CircleCollider(const Circle& shape, bool isTrigger = false)
+		: AbstractCollider(shape, isTrigger) {}
 
 public:
 	void Apply(const CollisionResult& result) const override;
@@ -101,8 +106,8 @@ public:
 class LineCollider final : public AbstractCollider<Line>
 {
 public:
-	LineCollider(const Line& shape)
-		: AbstractCollider(shape) {}
+	LineCollider(const Line& shape, bool isTrigger = false)
+		: AbstractCollider(shape, isTrigger) {}
 
 public:
 	void Apply(const CollisionResult& result) const override;
