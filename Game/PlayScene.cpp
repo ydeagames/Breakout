@@ -37,8 +37,20 @@ PlayScene::PlayScene()
 		ball->transform()->scale = { 5, 5 };
 		ball->AddNewComponent<Rigidbody>(Vec2{ 5,5 });
 		ball->AddNewComponent<Ball>();
-		ball->AddNewComponent<BoxRenderer>();
-		ball->AddComponent<Collider>(std::make_shared<BoxCollider>(Box{ Vec2{}, ball->transform()->scale }));
+		ball->AddNewComponent<CircleRenderer>();
+		ball->AddComponent<Collider>(std::make_shared<CircleCollider>(Circle{ Vec2{}, ball->transform()->scale.x }));
+		class BallBehaviour : public Component
+		{
+			void Start()
+			{
+			}
+
+			void Update()
+			{
+				//gameObject()->transform()->position = InputManager::GetInstance().mouse->GetPosition();
+			}
+		};
+		ball->AddNewComponent<BallBehaviour>();
 	}
 
 	{

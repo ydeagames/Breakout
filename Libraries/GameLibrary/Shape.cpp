@@ -220,7 +220,7 @@ Bounds Box::GetBounds() const
 
 Box Box::Transformed(const Transform& t) const
 {
-	return{ center + t.position, size * t.scale, angle + t.rotation };
+	return{ center + t.position, size/* * t.scale*/, angle + t.rotation };
 }
 
 Circle::Circle(const Vec2 & center, float size)
@@ -231,7 +231,7 @@ Circle::Circle(const Vec2 & center, float size)
 
 Circle Circle::Transformed(const Transform & t) const
 {
-	return{ center + t.position, size * MathUtils::GetMin(t.scale.x, t.scale.y) };
+	return{ center + t.position, size/* * MathUtils::GetMin(t.scale.x, t.scale.y)*/ };
 }
 
 Line::Line(const Vec2 & p1, const Vec2 & p2)
@@ -245,8 +245,8 @@ Line Line::Transformed(const Transform & t) const
 	Vec2 center = (p1 + p2) / 2;
 	Vec2 q1 = p1 - center;
 	Vec2 q2 = p2 - center;
-	q1 *= t.scale;
-	q2 *= t.scale;
+	//q1 *= t.scale;
+	//q2 *= t.scale;
 	q1 = q1.Rotate(t.rotation);
 	q2 = q2.Rotate(t.rotation);
 	q1 += t.position;

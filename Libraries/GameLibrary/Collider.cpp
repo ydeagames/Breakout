@@ -114,7 +114,7 @@ static CollisionResult CollisionCircleSegment(const Circle& _circle, const Vec2&
 	//始点との衝突判定
 	CollisionResult result3 = CollisionRayCircle(_circle.center, _circle_vel, _p1, _circle.size);
 	if (result3.hit) {
-		if (result2.time <= 1.f && result2.time >= 0.f) {
+		if (result3.time <= 1.f && result3.time >= 0.f) {
 			if (!is_collision || result3.time < _time) {
 				is_collision = true;
 				_time = result3.time;
@@ -125,7 +125,7 @@ static CollisionResult CollisionCircleSegment(const Circle& _circle, const Vec2&
 	//終点との衝突判定
 	CollisionResult result4 = CollisionRayCircle(_circle.center, _circle_vel, _p2, _circle.size);
 	if (result4.hit) {
-		if (result3.time <= 1.f && result3.time >= 0.f) {
+		if (result4.time <= 1.f && result4.time >= 0.f) {
 			if (!is_collision || result4.time < _time) {
 				is_collision = true;
 				_time = result4.time;
@@ -133,7 +133,9 @@ static CollisionResult CollisionCircleSegment(const Circle& _circle, const Vec2&
 		}
 	}
 
-	return{ is_collision, _time, 0 };
+	if (is_collision)
+		return{ is_collision, _time, 0 };
+	return{};
 }
 
 
@@ -187,8 +189,8 @@ CollisionResult BoxCollider::Collide(const CircleCollider& other) const
 {
 	const Box& _rect = GetShape(*gameObject()->transform());
 	const Circle& _circle = other.GetShape(*other.gameObject()->transform());
-	const Rigidbody& _rigid1 = *gameObject()->GetComponent<Rigidbody>();
-	const Rigidbody& _rigid2 = *other.gameObject()->GetComponent<Rigidbody>();
+	const auto _rigid1 = gameObject()->GetComponent<Rigidbody>();
+	const auto _rigid2 = other.gameObject()->GetComponent<Rigidbody>();
 
 	float _time;
 	float _ref_normal;
@@ -198,7 +200,7 @@ CollisionResult BoxCollider::Collide(const CircleCollider& other) const
 	const Vec2& circle_pos = _circle.center;
 
 	//相対速度の計算
-	Vec2 vel = _rigid2.vel - _rigid1.vel;
+	Vec2 vel = (_rigid2 != nullptr ? _rigid2->vel : Vec2{}) - (_rigid1 != nullptr ? _rigid1->vel : Vec2{});
 
 	//各線分との衝突するまでの時間
 	float t_a, t_b;
@@ -271,7 +273,9 @@ CollisionResult BoxCollider::Collide(const CircleCollider& other) const
 		_ref_normal = _rect.angle + DX_PI_F * 5 / 4 + DX_PI_F / 2 * min_distance_index;
 	}
 
-	return{ is_collision, _time, _ref_normal };
+	if (is_collision)
+		return{ is_collision, _time, _ref_normal };
+	return{};
 }
 
 CollisionResult BoxCollider::Collide(const LineCollider& other) const
@@ -283,6 +287,16 @@ CollisionResult BoxCollider::Collide(const LineCollider& other) const
 
 void CircleCollider::Apply(const CollisionResult & result) const
 {
+	auto transform = gameObject()->transform();
+	transform->position += GetVelocity() * result.time;
+	float rotate = DX_PI_F / 2 - result.normal;
+	float rotate_angle = transform->rotation + rotate;
+	if (sinf(rotate_angle) < 0) {
+		transform->rotation = MathUtils::GetLoop(-rotate_angle - rotate, DX_TWO_PI_F);
+	}
+	auto rigidbody = gameObject()->GetComponent<Rigidbody>();
+	if (rigidbody)
+		rigidbody->vel = Vec2::right.Rotate(transform->rotation) * (1.f - result.time);
 }
 
 CollisionResult CircleCollider::Collide(const Collider& other) const
