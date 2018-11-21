@@ -23,7 +23,7 @@ private:
 	std::unordered_map<SceneID, FactoryMethod> m_scene_factory_methods;    // 各シーンのファクトリメソッド
 
 private:
-	std::queue<std::pair<std::string, std::shared_ptr<GameObject>>> addingObjects;
+	std::queue<std::shared_ptr<GameObject>> addingObjects;
 
 private:
 	SceneManager();

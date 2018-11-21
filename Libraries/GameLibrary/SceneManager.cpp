@@ -44,7 +44,10 @@ void SceneManager::UpdateActiveScene()
 
 	// 追加キューのオブジェクトを追加
 	while (!addingObjects.empty()) {
-		m_active_scene->objects.emplace(std::move(addingObjects.front()));
+		auto& node = addingObjects.front();
+		m_active_scene->tags.insert(std::make_pair(node->tag, node));
+		m_active_scene->layers.insert(std::make_pair(node->layer, node));
+		m_active_scene->objects.emplace(node->name, node);
 		addingObjects.pop();
 	}
 
@@ -78,7 +81,7 @@ std::shared_ptr<Scene> SceneManager::GetActiveScene()
 
 void SceneManager::AddObject(const std::shared_ptr<GameObject>& object)
 {
-	addingObjects.push(std::make_pair(object->name, object));
+	addingObjects.push(object);
 }
 
 // <シーン変更>
