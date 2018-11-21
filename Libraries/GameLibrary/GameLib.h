@@ -1,6 +1,5 @@
 #pragma once
 
-#include "CollisionBehaviour.h"
 #include "Collider.h"
 #include "Component.h"
 #include "ComponentContainer.h"

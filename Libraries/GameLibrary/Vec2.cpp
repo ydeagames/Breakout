@@ -22,8 +22,12 @@ const Vec2 Vec2::down = { 0, 1 };
 
 // <ベクトル作成>
 Vec2::Vec2(float x, float y)
-	: x(x),
-	y(y) {};
+	: x(x)
+	, y(y) {}
+
+// <ベクトル作成>
+Vec2::Vec2(int x, int y)
+	: Vec2(static_cast<float>(x), static_cast<float>(y)) {}
 
 // <ベクトルの長さ>
 float Vec2::Length() const

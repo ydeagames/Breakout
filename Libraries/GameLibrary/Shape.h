@@ -115,7 +115,7 @@ public:
 	float angle;
 
 public:
-	Box(const Vec2& center, const Vec2& size, float angle);
+	Box(const Vec2& center, const Vec2& size, float angle = 0);
 	virtual ~Box() {}
 
 public:

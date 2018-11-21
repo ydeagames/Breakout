@@ -1,11 +1,6 @@
 #include "Collider.h"
 #include "MathUtils.h"
 
-std::shared_ptr<GameObject> Collider::gameObject() const
-{
-	return gameobject.lock();
-}
-
 Vec2 Collider::GetVelocity() const
 {
 	auto rigidbody = gameObject()->GetComponent<Rigidbody>();
@@ -13,6 +8,134 @@ Vec2 Collider::GetVelocity() const
 		return rigidbody->vel;
 	return Vec2{};
 }
+
+// Utils
+static CollisionResult CollisionSegment(const Vec2& _p1, const Vec2& _p2, const Vec2& _p3, const Vec2& _p4) {
+	float _time;
+
+	//交差判定
+	float d1 = (_p4 - _p3).Cross(_p1 - _p3);
+	float d2 = (_p4 - _p3).Cross(_p2 - _p3);
+	float d3 = (_p2 - _p1).Cross(_p3 - _p1);
+	float d4 = (_p2 - _p1).Cross(_p4 - _p1);
+	if (d1*d2 > 0.f || d3 * d4 > 0.f) {
+		return{};
+	}
+	//線分が一直線上にあるかの確認
+	if (MathUtils::FloatEquals(d1, 0.f) && MathUtils::FloatEquals(d2, 0.f) && MathUtils::FloatEquals(d3, 0.f) && MathUtils::FloatEquals(d4, 0.f)) {
+		float dot1 = (_p1 - _p3).Dot(_p2 - _p3);
+		float dot2 = (_p1 - _p4).Dot(_p2 - _p4);
+		if (dot1 <= 0.f || dot2 <= 0.f) {
+			_time = 0.f;
+			return{ true, _time, 0 };
+		}
+		return{};
+	}
+	d1 = fabsf(d1);
+	d2 = fabsf(d2);
+	_time = d1 / (d1 + d2);
+
+	return{ true, _time, 0 };
+}
+
+static CollisionResult CollisionRayCircle(const Vec2& _ray_pos, const Vec2& _ray_vec, const Vec2& _circle_pos, const float _radius) {
+	float _time;
+
+	//エラーチェック
+	if (_radius < 0.f) {
+		return{};
+	}
+	if (MathUtils::FloatEquals(_ray_vec.x, 0.f) && MathUtils::FloatEquals(_ray_vec.y, 0.f)) {
+		return{};
+	}
+
+	//オフセットの計算
+	Vec2 ray_pos = _ray_pos - _circle_pos;
+
+	//レイの方向ベクトルの正規化
+	Vec2 ray_vec = _ray_vec.Normalized();
+
+	// 係数を算出
+	float dot = ray_pos.Dot(ray_vec);
+	float s = dot * dot - ray_pos.Dot(ray_pos) + _radius * _radius;
+
+	//誤差の修正
+	if (MathUtils::FloatEquals(s, 0.f)) {
+		s = 0.f;
+	}
+	if (s < 0.0f) {
+		return{};
+	}
+
+	//衝突するまでの時間
+	_time = -dot - sqrtf(s);
+
+	return{ true, _time, 0 };
+}
+
+static CollisionResult CollisionCircleSegment(const Circle& _circle, const Vec2& _circle_vel, Vec2& _p1, Vec2& _p2) {
+	float _time;
+
+	//衝突したかの判定
+	bool is_collision = false;
+
+	//位置関係の把握
+	float cross = (_circle.center - _p1).Cross(_p2 - _p1);
+
+	//円に近い線分の計算
+	Vec2 p3, p4, translate;
+	if (cross >= 0) {
+		translate = Vec2::right.Rotate((_p2 - _p1).Angle() - DX_PI_F / 2) * (_circle.size + 1);
+	}
+	else {
+		translate = Vec2::right.Rotate((_p2 - _p1).Angle() + DX_PI_F / 2) * (_circle.size + 1);
+	}
+	p3 = _p1 + translate;
+	p4 = _p2 + translate;
+
+	//DrawLineAA(p3.x, p3.y, p4.x, p4.y, COLOR_BLUE, 3);
+
+	//バグ対策の線分との衝突判定
+	CollisionResult result1 = CollisionSegment(_circle.center, _circle.center + _circle_vel, _p1, _p2);
+	if (result1.hit) {
+		is_collision = true;
+		_time = result1.time;
+	}
+
+	//近い線分との衝突判定
+	CollisionResult result2 = CollisionSegment(_circle.center, _circle.center + _circle_vel, p3, p4);
+	if (result2.hit) {
+		if (!is_collision || result2.time < _time) {
+			is_collision = true;
+			_time = result2.time;
+		}
+	}
+
+	//始点との衝突判定
+	CollisionResult result3 = CollisionRayCircle(_circle.center, _circle_vel, _p1, _circle.size);
+	if (result3.hit) {
+		if (result2.time <= 1.f && result2.time >= 0.f) {
+			if (!is_collision || result3.time < _time) {
+				is_collision = true;
+				_time = result3.time;
+			}
+		}
+	}
+
+	//終点との衝突判定
+	CollisionResult result4 = CollisionRayCircle(_circle.center, _circle_vel, _p2, _circle.size);
+	if (result4.hit) {
+		if (result3.time <= 1.f && result3.time >= 0.f) {
+			if (!is_collision || result4.time < _time) {
+				is_collision = true;
+				_time = result4.time;
+			}
+		}
+	}
+
+	return{ is_collision, _time, 0 };
+}
+
 
 // Box
 
@@ -37,107 +160,27 @@ CollisionResult BoxCollider::Collide(const Collider& other) const
 
 CollisionResult BoxCollider::Collide(const BoxCollider& other) const
 {
-	const Box& _rect1 = shape;
-	const Box& _rect2 = other.shape;
+	const Box& _rect1 = GetShape(*gameObject()->transform());
+	const Box& _rect2 = other.GetShape(*other.gameObject()->transform());
 
-#ifndef BOXROTATE
 	//各頂点座標の計算
 	Vec2 vertex1[4];
 	Vec2 vertex2[4];
 	for (int i = 0; i < 4; ++i) {
 		Vec2 c = { (i == 0 || i == 3) ? -1 : 1, (i < 2) ? -1 : 1 };
 		vertex1[i] = (_rect1.size / 2 * c).Rotate(_rect1.angle) + _rect1.center;
-		vertex2[i] = (_rect2.size / 2 * c).Rotate(_rect2.angle) + _rect1.center;
+		vertex2[i] = (_rect2.size / 2 * c).Rotate(_rect2.angle) + _rect2.center;
 	}
 
 	//線分の交差判定
-	float dummy;
 	for (int i = 0; i < 4; ++i) {
 		for (int j = 0; j < 4; ++j) {
-			LineCollider line1 = { gameobject, Line{ vertex1[i], vertex1[(i + 1) % 4] } };
-			LineCollider line2 = { other.gameobject, Line{ vertex2[j], vertex2[(j + 1) % 4] } };
-			CollisionResult result = line1.Collide(line2);
+			CollisionResult result = CollisionSegment(vertex1[i], vertex1[(i + 1) % 4], vertex2[j], vertex2[(j + 1) % 4]);
 			if (result.hit)
 				return result;
 		}
 	}
 	return{};
-
-#else 
-	//各方向の衝突するまでの時間
-	float xmin, xmax, ymin, ymax;
-	xmin = xmax = ymin = ymax = -1.f;
-	//座標の計算
-	Vec2 pos1 = *_rect1.center;
-	Vec2 pos2 = *_rect2.center;
-	//_rect1から見た相対速度
-	Vec2 vel = *_rigid1.vel - *_rigid2.vel;
-
-	//X方向の衝突するまでの時間
-	if (!MathUtils::FloatEquals(vel.x, 0.f)) {
-		xmin = ((pos2.x - _rect2.size.x / 2) - (pos1.x + _rect1.size.x / 2)) / vel.x;
-		xmax = ((pos2.x + _rect2.size.x / 2) - (pos1.x - _rect1.size.x / 2)) / vel.x;
-		if (vel.x < 0) {
-			std::swap(xmin, xmax);
-		}
-	}
-	//X方向の速度が0の場合
-	else {
-		if ((pos1.x + _rect2.size.x / 2) > (pos2.x - _rect1.size.x / 2) &&
-			(pos1.x - _rect2.size.x / 2) < (pos2.x + _rect1.size.x / 2)) {
-			xmin = 0.0f;
-			xmax = 1.0f;
-		}
-	}
-
-	//Y方向の衝突するまでの時間
-	if (!MathUtils::FloatEquals(vel.y, 0.f)) {
-		ymin = ((pos2.y - _rect2.size.y / 2) - (pos1.y + _rect1.size.y / 2)) / vel.y;
-		ymax = ((pos2.y + _rect2.size.y / 2) - (pos1.y - _rect1.size.y / 2)) / vel.y;
-		if (vel.y < 0) {
-			std::swap(ymin, ymax);
-		}
-	}
-	//Y方向の速度が0の場合
-	else {
-		if ((pos1.y + _rect2.size.y / 2) > (pos2.y - _rect1.size.y / 2) &&
-			(pos1.y - _rect2.size.y / 2) < (pos2.y + _rect1.size.y / 2)) {
-			ymin = 0.0f;
-			ymax = 1.0f;
-		}
-	}
-
-	//衝突判定
-	if (xmin <= 1.0f && xmax >= 0.0f &&
-		ymin <= 1.0f && ymax >= 0.0f &&
-		xmin <= ymax && ymin <= xmax) {
-		float _time;
-		float _ref_normal = 0;
-
-		//X方向が先に衝突している
-		if (xmin > ymin) {
-			_time = xmin;
-			if (pos1.x < pos2.x) {
-				_ref_normal = DX_PI_F;
-			}
-			else {
-				_ref_normal = 0.f;
-			}
-		}
-		//Y方向が先に衝突している
-		else {
-			_time = ymin;
-			if (pos1.y < pos2.y) {
-				_ref_normal = PI * 1.5f;
-			}
-			else {
-				_ref_normal = PI * 0.5f;
-			}
-		}
-		return{ true, _time, _ref_normal };
-	}
-	return{};
-#endif
 }
 
 CollisionResult BoxCollider::Collide(const CircleCollider& other) const
@@ -147,16 +190,15 @@ CollisionResult BoxCollider::Collide(const CircleCollider& other) const
 	const Rigidbody& _rigid1 = *gameObject()->GetComponent<Rigidbody>();
 	const Rigidbody& _rigid2 = *other.gameObject()->GetComponent<Rigidbody>();
 
-#ifndef CIRCLEROTATE
+	float _time;
+	float _ref_normal;
+
 	//オフセットの計算
 	const Vec2& rect_rotate_pos = _rect.center;
 	const Vec2& circle_pos = _circle.center;
 
 	//相対速度の計算
-	Vec2 vel = *_circle.vel - *_rect_rotate.vel;
-
-	//線分との判定用当たり判定
-	CircleCollider circle(&circle_pos, Vec2(0, 0), &vel, _circle.radius);
+	Vec2 vel = _rigid2.vel - _rigid1.vel;
 
 	//各線分との衝突するまでの時間
 	float t_a, t_b;
@@ -170,12 +212,9 @@ CollisionResult BoxCollider::Collide(const CircleCollider& other) const
 	float vertex_distance[4];
 	int min_distance_index = 0;
 	for (int i = 0; i < 4; ++i) {
-		float x = _rect_rotate.width / 2.f;
-		float y = _rect_rotate.height / 2.f;
-		int xc = (i == 0 || i == 3) ? -1 : 1;
-		int yc = (i < 2) ? -1 : 1;
-		vertex[i] = Vec2::rotate(Vec2(x*xc, y*yc), *_rect_rotate.angle) + rect_rotate_pos;
-		vertex_distance[i] = Vec2::distanceSquare(circle_pos, vertex[i]);
+		Vec2 c = { (i == 0 || i == 3) ? -1 : 1, (i < 2) ? -1 : 1 };
+		vertex[i] = (_rect.size / 2 * c).Rotate(_rect.angle) + rect_rotate_pos;
+		vertex_distance[i] = circle_pos.LengthSquaredTo(vertex[i]);
 		if (vertex_distance[i] < vertex_distance[min_distance_index]) {
 			min_distance_index = i;
 		}
@@ -183,95 +222,56 @@ CollisionResult BoxCollider::Collide(const CircleCollider& other) const
 
 	//回転矩形の左側に近い場合
 	if (vertex_distance[0] < vertex_distance[1]) {
-		if (collisionCircleSegment(circle, vertex[0], vertex[3], &t_a)) {
-			*_time = t_a;
-			*_ref_normal = *_rect_rotate.angle + PI;
+		CollisionResult result = CollisionCircleSegment(_circle, vel, vertex[0], vertex[3]);
+		if (result.hit) {
+			t_a = result.time;
+			_time = result.time;
+			_ref_normal = _rect.angle + DX_PI_F;
 			is_collision = true;
 		}
 	}
 	//回転矩形の右側に近い場合
 	else {
-		if (collisionCircleSegment(circle, vertex[1], vertex[2], &t_a)) {
-			*_time = t_a;
-			*_ref_normal = *_rect_rotate.angle;
+		CollisionResult result = CollisionCircleSegment(_circle, vel, vertex[1], vertex[2]);
+		if (result.hit) {
+			t_a = result.time;
+			_time = result.time;
+			_ref_normal = _rect.angle;
 			is_collision = true;
 		}
 	}
 
 	//回転矩形の上側に近い場合
 	if (vertex_distance[1] < vertex_distance[2]) {
-		if (collisionCircleSegment(circle, vertex[0], vertex[1], &t_b)) {
+		CollisionResult result = CollisionCircleSegment(_circle, vel, vertex[0], vertex[1]);
+		if (result.hit) {
+			t_b = result.time;
 			if (!is_collision || t_b < t_a) {
-				*_time = t_b;
-				*_ref_normal = *_rect_rotate.angle + PI * 3 / 2;
+				_time = result.time;
+				_ref_normal = _rect.angle + DX_PI_F * 3 / 2;
 				is_collision = true;
 			}
 		}
 	}
 	//回転矩形の下側に近い場合
 	else {
-		if (collisionCircleSegment(circle, vertex[2], vertex[3], &t_b)) {
+		CollisionResult result = CollisionCircleSegment(_circle, vel, vertex[2], vertex[3]);
+		if (result.hit) {
+			t_b = result.time;
 			if (!is_collision || t_b < t_a) {
-				*_time = t_b;
-				*_ref_normal = *_rect_rotate.angle + PI / 2;
+				_time = result.time;;
+				_ref_normal = _rect.angle + DX_PI_F / 2;
 				is_collision = true;
 			}
 		}
 	}
 
 	//角に当たった場合
-	if (is_collision && FloatEqual(t_a, t_b)) {
-		*_ref_normal = *_rect_rotate.angle + PI * 5 / 4 + PI / 2 * min_distance_index;
+	if (is_collision && MathUtils::FloatEquals(t_a, t_b)) {
+		_ref_normal = _rect.angle + DX_PI_F * 5 / 4 + DX_PI_F / 2 * min_distance_index;
 	}
 
-	return is_collision;
-#else
-	//オフセットの計算
-	const Vec2& rect_rotate_pos = _rect.center;
-	const Vec2& circle_pos = _circle.center;
-
-	//各頂点との判定
-	Vec2 vertex[4];
-	for (int i = 0; i < 4; ++i) {
-		Vec2 c = { (i == 0 || i == 3) ? -1 : 1, (i < 2) ? -1 : 1 };
-		vertex[i] = (_rect.size / 2 * c).Rotate(_rect.angle) + rect_rotate_pos;
-
-		CircleCollider circle1 = { gameobject, Circle{ vertex[i], _circle.size / 2 } };
-		CircleCollider circle2 = { other.gameobject, Circle{ _circle.center, _circle.size / 2 } };
-		CollisionResult result = circle1.Collide(circle2);
-		if (result.hit)
-			return result;
-	}
-
-	//各線分との判定
-	for (int i = 0; i < 4; ++i) {
-		Vec2 vec1 = vertex[(i + 1) % 4] - vertex[i];
-		Vec2 vec2 = circle_pos - vertex[i];
-		Vec2 vec3 = circle_pos - vertex[(i + 1) % 4];
-		float cross = vec2.Cross(vec1);
-		float d = cross * cross / vec1.Length();
-		if (d <= _circle.size*_circle.size) {
-			if (vec2.Dot(vec1)*vec3.Dot(vec1) < 0) {
-				return true;
-			}
-		}
-	}
-
-	//内外判定
-	float theta[2];
-	for (int i = 0; i < 2; i++) {
-		Vec2 vec1 = vertex[i * 2 + 1] - vertex[i * 2];
-		Vec2 vec2 = circle_pos - vertex[i * 2];
-		theta[i] = atan2f(vec1.Cross(vec2), vec1.Dot(vec2));
-	}
-
-	if (0 <= theta[0] && theta[0] <= PI / 2 &&
-		0 <= theta[1] && theta[1] <= PI / 2) {
-		return true;
-	}
-
-	return false;
-#endif
+	return{ is_collision, _time, _ref_normal };
 }
 
 CollisionResult BoxCollider::Collide(const LineCollider& other) const

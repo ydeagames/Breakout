@@ -31,6 +31,9 @@ public:
 	// <ベクトル作成>
 	Vec2(float x = 0.f, float y = 0.f);
 
+	// <ベクトル作成>
+	Vec2(int x, int y);
+
 	// <ベクトルの長さ>
 	float Length() const;
 

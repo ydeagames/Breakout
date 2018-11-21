@@ -100,7 +100,6 @@
     <ClCompile Include="Libraries\Dependencies\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Libraries\GameLibrary\CollisionBehaviour.cpp" />
     <ClCompile Include="Libraries\GameLibrary\Collider.cpp" />
     <ClCompile Include="Libraries\GameLibrary\Component.cpp" />
     <ClCompile Include="Libraries\GameLibrary\ComponentContainer.cpp" />
@@ -145,7 +144,6 @@
     <ClInclude Include="Game\PlayScene.h" />
     <ClInclude Include="Game\TitleScene.h" />
     <ClInclude Include="Libraries\Dependencies\pch.h" />
-    <ClInclude Include="Libraries\GameLibrary\CollisionBehaviour.h" />
     <ClInclude Include="Libraries\GameLibrary\Collider.h" />
     <ClInclude Include="Libraries\GameLibrary\Component.h" />
     <ClInclude Include="Libraries\GameLibrary\ComponentContainer.h" />

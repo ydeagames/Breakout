@@ -22,41 +22,15 @@ public:
 
 class Collider;
 
-class Collision : public Component
-{
-private:
-	ShapeType type;
-	std::unique_ptr<Collider> collider;
-
-public:
-	Collision(ShapeType type, std::unique_ptr<Collider>&& collider)
-		: type(type)
-		, collider(std::move(collider)) {}
-	virtual ~Collision() = default;
-
-public:
-	inline ShapeType GetType() const
-	{
-		return type;
-	}
-};
-
 class BoxCollider;
 class CircleCollider;
 class LineCollider;
 
-class Collider
+class Collider : public Component
 {
 public:
-	const std::weak_ptr<GameObject>& gameobject;
-
-public:
-	Collider(const std::weak_ptr<GameObject>& gameObject)
-		: gameobject(gameObject) {}
+	Collider() = default;
 	~Collider() = default;
-
-public:
-	std::shared_ptr<GameObject> gameObject() const;
 
 public:
 	virtual ShapeType GetType() const = 0;
@@ -77,9 +51,8 @@ public:
 	T shape;
 
 public:
-	AbstractCollider(const std::weak_ptr<GameObject>& gameObject, const T& shape)
-		: Collider(gameObject)
-		, shape(shape) {}
+	AbstractCollider(const T& shape)
+		: shape(shape) {}
 	~AbstractCollider() = default;
 
 	virtual ShapeType GetType() const
@@ -96,8 +69,8 @@ public:
 class BoxCollider final : public AbstractCollider<Box>
 {
 public:
-	BoxCollider(const std::weak_ptr<GameObject>& gameObject, const Box& shape)
-		: AbstractCollider(gameObject, shape) {}
+	BoxCollider(const Box& shape)
+		: AbstractCollider(shape) {}
 
 public:
 	void Apply(const CollisionResult& result) const override;
@@ -112,8 +85,8 @@ public:
 class CircleCollider final : public AbstractCollider<Circle>
 {
 public:
-	CircleCollider(const std::weak_ptr<GameObject>& gameObject, const Circle& shape)
-		: AbstractCollider(gameObject, shape) {}
+	CircleCollider(const Circle& shape)
+		: AbstractCollider(shape) {}
 
 public:
 	void Apply(const CollisionResult& result) const override;
@@ -128,8 +101,8 @@ public:
 class LineCollider final : public AbstractCollider<Line>
 {
 public:
-	LineCollider(const std::weak_ptr<GameObject>& gameObject, const Line& shape)
-		: AbstractCollider(gameObject, shape) {}
+	LineCollider(const Line& shape)
+		: AbstractCollider(shape) {}
 
 public:
 	void Apply(const CollisionResult& result) const override;
