@@ -13,7 +13,7 @@ public:
 	void Initialize(const std::weak_ptr<GameObject>& gameobj);
 	void Finalize();
 	bool Initialized() const;
-	GameObject& gameObject() const;
+	std::shared_ptr<GameObject> gameObject() const;
 
 public:
 	virtual void Start() {}

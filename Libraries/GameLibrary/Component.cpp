@@ -17,9 +17,9 @@ bool Component::Initialized() const
 	return !gameobject.expired();
 }
 
-GameObject& Component::gameObject() const
+std::shared_ptr<GameObject> Component::gameObject() const
 {
 	if (!Initialized())
 		throw std::logic_error("コンポーネントが初期化されていません");
-	return *gameobject.lock();
+	return gameobject.lock();
 }

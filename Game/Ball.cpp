@@ -6,8 +6,8 @@ Ball::Ball()
 
 void Ball::Update()
 {
-	auto transform = gameObject().transform();
-	auto rigidbody = gameObject().GetComponent<Rigidbody>();
+	auto transform = gameObject()->transform();
+	auto rigidbody = gameObject()->GetComponent<Rigidbody>();
 
 	Bounds bounds = { Vec2{320, 240}, Vec2{640, 480} };
 	Bounds rect = { transform->position, transform->scale };

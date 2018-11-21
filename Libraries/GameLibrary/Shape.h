@@ -112,10 +112,10 @@ class Box final : public Shape
 public:
 	Vec2 center;
 	Vec2 size;
+	float angle;
 
 public:
-	Box(const Vec2& pos, const Vec2& size);
-
+	Box(const Vec2& center, const Vec2& size, float angle);
 	virtual ~Box() {}
 
 public:
@@ -126,4 +126,44 @@ public:
 
 	// <オブジェクト枠>
 	Bounds GetBounds() const;
+
+	Box Transformed(const Transform& transform) const;
+};
+
+class Circle final : public Shape
+{
+public:
+	Vec2 center;
+	float size;
+
+public:
+	Circle(const Vec2& center, float size);
+	virtual ~Circle() {}
+
+public:
+	inline ShapeType GetType() const override
+	{
+		return ShapeType::CIRCLE;
+	}
+
+	Circle Transformed(const Transform& transform) const;
+};
+
+class Line final : public Shape
+{
+public:
+	Vec2 p1;
+	Vec2 p2;
+
+public:
+	Line(const Vec2& p1, const Vec2& p2);
+	virtual ~Line() {}
+
+public:
+	inline ShapeType GetType() const override
+	{
+		return ShapeType::LINE;
+	}
+
+	Line Transformed(const Transform& transform) const;
 };

@@ -202,9 +202,10 @@ HorizontalSide Bounds::CollisionHorizontal(const Bounds& field, Connection conne
 	return side_hit;
 }
 
-Box::Box(const Vec2& center, const Vec2& size) :
-	center(center),
-	size(size)
+Box::Box(const Vec2& center, const Vec2& size, float angle)
+	: center(center)
+	, size(size)
+	, angle(angle)
 {
 }
 
@@ -215,4 +216,40 @@ Bounds Box::GetBounds() const
 		center,
 		size,
 	};
+}
+
+Box Box::Transformed(const Transform& t) const
+{
+	return{ center + t.position, size * t.scale, angle + t.rotation };
+}
+
+Circle::Circle(const Vec2 & center, float size)
+	: center(center)
+	, size(size)
+{
+}
+
+Circle Circle::Transformed(const Transform & t) const
+{
+	return{ center + t.position, size * MathUtils::GetMin(t.scale.x, t.scale.y) };
+}
+
+Line::Line(const Vec2 & p1, const Vec2 & p2)
+	: p1(p1)
+	, p2(p2)
+{
+}
+
+Line Line::Transformed(const Transform & t) const
+{
+	Vec2 center = (p1 + p2) / 2;
+	Vec2 q1 = p1 - center;
+	Vec2 q2 = p2 - center;
+	q1 *= t.scale;
+	q2 *= t.scale;
+	q1 = q1.Rotate(t.rotation);
+	q2 = q2.Rotate(t.rotation);
+	q1 += t.position;
+	q2 += t.position;
+	return{ q1 + center, q2 + center };
 }

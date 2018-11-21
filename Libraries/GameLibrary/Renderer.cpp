@@ -18,7 +18,7 @@ Material& Material::SetBorder(Color color, float transparency, float thickness)
 
 void BoxRenderer::Render()
 {
-	auto t = gameObject().transform();
+	auto t = gameObject()->transform();
 	Bounds box = Bounds{ Vec2{}, Vec2{ 1, 1 } }.Transformed(*t);
 
 	// TODO “§–¾“x
@@ -30,7 +30,7 @@ void BoxRenderer::Render()
 
 void CircleRenderer::Render()
 {
-	auto t = gameObject().transform();
+	auto t = gameObject()->transform();
 	Bounds box = Bounds{ Vec2{}, Vec2{ 1, 1 } }.Transformed(*t);
 
 	// TODO “§–¾“x
@@ -51,6 +51,6 @@ TextRenderer::TextRenderer(std::string text)
 
 void TextRenderer::Render()
 {
-	Vec2 pos = gameObject().transform()->position;
+	Vec2 pos = gameObject()->transform()->position;
 	DrawFormatStringF(pos.x, pos.y, Colors::White, text.c_str());
 }
