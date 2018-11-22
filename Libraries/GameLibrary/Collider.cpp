@@ -73,7 +73,7 @@ static CollisionResult CollisionRayCircle(const Vec2& _ray_pos, const Vec2& _ray
 	return{ true, _time, 0 };
 }
 
-static CollisionResult CollisionCircleSegment(const Circle& _circle, const Vec2& _circle_vel, Vec2& _p1, Vec2& _p2) {
+static CollisionResult CollisionCircleSegment(const Circle& _circle, const Vec2& _circle_vel, const Vec2& _p1, const Vec2& _p2) {
 	float _time = -1;
 
 	//衝突したかの判定
@@ -162,8 +162,8 @@ CollisionResult BoxCollider::Collide(const Collider& other) const
 
 CollisionResult BoxCollider::Collide(const BoxCollider& other) const
 {
-	const Box& _rect1 = GetShape(*gameObject()->transform());
-	const Box& _rect2 = other.GetShape(*other.gameObject()->transform());
+	const Box _rect1 = GetShape(*gameObject()->transform());
+	const Box _rect2 = other.GetShape(*other.gameObject()->transform());
 
 	//各頂点座標の計算
 	Vec2 vertex1[4];
@@ -187,8 +187,8 @@ CollisionResult BoxCollider::Collide(const BoxCollider& other) const
 
 CollisionResult BoxCollider::Collide(const CircleCollider& other) const
 {
-	const Box& _rect = GetShape(*gameObject()->transform());
-	const Circle& _circle = other.GetShape(*other.gameObject()->transform());
+	const Box _rect = GetShape(*gameObject()->transform());
+	const Circle _circle = other.GetShape(*other.gameObject()->transform());
 	const auto _rigid1 = gameObject()->GetComponent<Rigidbody>();
 	const auto _rigid2 = other.gameObject()->GetComponent<Rigidbody>();
 
@@ -319,7 +319,20 @@ CollisionResult CircleCollider::Collide(const CircleCollider& other) const
 
 CollisionResult CircleCollider::Collide(const LineCollider& other) const
 {
-	return CollisionResult();
+	const Line _line = other.GetShape(*other.gameObject()->transform());
+	const Circle _circle = GetShape(*gameObject()->transform());
+	const auto _rigid1 = gameObject()->GetComponent<Rigidbody>();
+	const auto _rigid2 = other.gameObject()->GetComponent<Rigidbody>();
+
+	//相対速度の計算
+	Vec2 vel = (_rigid2 != nullptr ? _rigid2->vel : Vec2{}) - (_rigid1 != nullptr ? _rigid1->vel : Vec2{});
+
+	CollisionResult result = CollisionCircleSegment(_circle, vel, _line.p1, _line.p2);
+	if (result.hit) {
+		float _ref_normal = (_line.p2 - _line.p1).Angle();
+		return { true, result.time, _ref_normal };
+	}
+	return {};
 }
 
 // Line

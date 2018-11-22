@@ -115,6 +115,24 @@ void Vec2::Decompose(const Vec2& angle, Vec2& vec_a, Vec2& vec_b) const
 	vec_b = { vec_b_length * std::cosf(vec_b_rota), vec_b_length * std::sinf(vec_b_rota) };
 }
 
+// <ベクトルループ>
+Vec2 Vec2::GetLoop(const Vec2& max) const
+{
+	return{
+		MathUtils::GetLoop(x, max.x),
+		MathUtils::GetLoop(y, max.y),
+	};
+}
+
+// <ベクトルループ>
+Vec2 Vec2::GetLoopRange(const Vec2& min, const Vec2& max) const
+{
+	return{
+		MathUtils::GetLoopRange(x, min.x, max.x),
+		MathUtils::GetLoopRange(y, min.y, max.y),
+	};
+}
+
 // <ベクトルはそのまま>
 Vec2 Vec2::operator +() const
 {
@@ -152,12 +170,27 @@ Vec2 Vec2::operator *(float scale) const
 }
 
 // <ベクトルをスケール>
+Vec2 Vec2::operator/(const Vec2 & scale) const
+{
+	return{ x / scale.x, y / scale.y };
+}
+
+// <ベクトルをスケール>
 Vec2 Vec2::operator /(float scale) const
 {
-	Vec2 vec = {};
-	if (scale != 0)
-		vec = { x / scale, y / scale };
-	return vec;
+	return{ x / scale, y / scale };
+}
+
+// <ベクトルを剰余>
+Vec2 Vec2::operator%(const Vec2 & scale) const
+{
+	return{ MathUtils::GetLoop(x, scale.x), MathUtils::GetLoop(y, scale.y) };
+}
+
+// <ベクトルを剰余>
+Vec2 Vec2::operator%(float scale) const
+{
+	return{ MathUtils::GetLoop(x, scale), MathUtils::GetLoop(y, scale) };
 }
 
 // <複合代入演算 +=>
@@ -193,15 +226,34 @@ Vec2& Vec2::operator *=(float scale)
 }
 
 // <複合代入演算 /=>
+Vec2 & Vec2::operator/=(const Vec2 & scale)
+{
+	x /= scale.x;
+	y /= scale.y;
+	return *this;
+}
+
+// <複合代入演算 /=>
 Vec2& Vec2::operator /=(float scale)
 {
-	if (scale == 0)
-		*this = {};
-	else
-	{
-		x /= scale;
-		y /= scale;
-	}
+	x /= scale;
+	y /= scale;
+	return *this;
+}
+
+// <複合代入演算 %=>
+Vec2 & Vec2::operator%=(const Vec2 & scale)
+{
+	x = MathUtils::GetLoop(x, scale.x);
+	y = MathUtils::GetLoop(x, scale.y);
+	return *this;
+}
+
+// <複合代入演算 %=>
+Vec2 & Vec2::operator%=(float scale)
+{
+	x = MathUtils::GetLoop(x, scale);
+	y = MathUtils::GetLoop(x, scale);
 	return *this;
 }
 
@@ -209,4 +261,16 @@ Vec2& Vec2::operator /=(float scale)
 Vec2 operator *(float scale, const Vec2& vec)
 {
 	return{ scale * vec.x, scale * vec.y };
+}
+
+// <Vec2 が後にくる 2項 />
+Vec2 operator /(float scale, const Vec2& vec)
+{
+	return{ scale / vec.x, scale / vec.y };
+}
+
+// <Vec2 が後にくる 2項 %>
+Vec2 operator %(float scale, const Vec2& vec)
+{
+	return{ MathUtils::GetLoop(scale, vec.x), MathUtils::GetLoop(scale, vec.y) };
 }

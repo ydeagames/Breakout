@@ -70,6 +70,12 @@ public:
 	// <ベクトルを分解>
 	void Decompose(const Vec2& angle, Vec2& vec_a, Vec2& vec_b) const;
 
+	// <ベクトルループ>
+	Vec2 GetLoop(const Vec2& max) const;
+
+	// <ベクトルループ>
+	Vec2 GetLoopRange(const Vec2& min, const Vec2& max) const;
+
 	// <ベクトルはそのまま>
 	Vec2 operator +() const;
 
@@ -89,7 +95,16 @@ public:
 	Vec2 operator *(float scale) const;
 
 	// <ベクトルをスケール>
+	Vec2 operator /(const Vec2& scale) const;
+
+	// <ベクトルをスケール>
 	Vec2 operator /(float scale) const;
+
+	// <ベクトルを剰余>
+	Vec2 operator %(const Vec2& scale) const;
+
+	// <ベクトルを剰余>
+	Vec2 operator %(float scale) const;
 
 	// <複合代入演算 +=>
 	Vec2& operator +=(const Vec2& other);
@@ -104,8 +119,23 @@ public:
 	Vec2& operator *=(float scale);
 
 	// <複合代入演算 /=>
+	Vec2& Vec2::operator /=(const Vec2& scale);
+
+	// <複合代入演算 /=>
 	Vec2& operator /=(float scale);
+
+	// <複合代入演算 %=>
+	Vec2& Vec2::operator %=(const Vec2& scale);
+
+	// <複合代入演算 %=>
+	Vec2& operator %=(float scale);
 };
 
 // <Vec2 が後にくる 2項 *>
 Vec2 operator *(float scale, const Vec2& vec);
+
+// <Vec2 が後にくる 2項 />
+Vec2 operator /(float scale, const Vec2& vec);
+
+// <Vec2 が後にくる 2項 %>
+Vec2 operator %(float scale, const Vec2& vec);

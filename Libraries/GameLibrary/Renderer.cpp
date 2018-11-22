@@ -42,6 +42,8 @@ void CircleRenderer::Render()
 
 void LineRenderer::Render()
 {
+	auto line = std::dynamic_pointer_cast<LineCollider>(gameObject()->GetComponent<Collider>())->GetShape(*gameObject()->transform());
+	DrawLineAA(line.p1.x, line.p1.y, line.p2.x, line.p2.y, material.edge_color, material.edge_thickness);
 }
 
 TextRenderer::TextRenderer(std::string text)

@@ -17,7 +17,7 @@ const char* const GAME_TITLE = "Sample Game";
 // <‰æ–Ê>
 
 // ‰æ–Ê‚ÌƒTƒCƒY[pixel]
-const Vec2 SCREEN_SIZE = { 640, 480 };
+const Vec2 SCREEN_SIZE = { 800, 800 };
 
 // ‰æ–Ê
 const Bounds SCREEN = { SCREEN_SIZE / 2, SCREEN_SIZE };
