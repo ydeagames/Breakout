@@ -57,7 +57,7 @@ public:
 
 class TextRenderer : public Component
 {
-private:
+public:
 	std::string text;
 
 public:

@@ -5,14 +5,51 @@
 #include "Ball.h"
 // <ƒV[ƒ“>
 
+class Score : public Component {
+public:
+	Timer timer;
+	float score;
+};
+
 PlayScene::PlayScene()
 	: Scene()
 {
 	{
+		auto score = GameObject::Create("Score");
+		score->transform()->position = { SCREEN.GetX(HorizontalSide::LEFT) + 20.f, SCREEN.GetY(VerticalSide::TOP) + 20.f };
+		score->transform()->scale = { 80, 16 };
+		class ScoreBehaviour : public Component
+		{
+			std::weak_ptr<Score> wscore;
+			std::weak_ptr<TextRenderer> wtext;
+
+			void Start()
+			{
+				wscore = gameObject()->GetComponent<Score>();
+				wtext = gameObject()->GetComponent<TextRenderer>();
+				if (auto score = wscore.lock())
+				{
+					score->timer.Start(30);
+				}
+			}
+
+			void Update()
+			{
+				if (auto text = wtext.lock())
+					if (auto score = wscore.lock())
+						text->text = "Score: " + std::to_string(score->score) + "   Žc‚èŽžŠÔ: " + std::to_string(score->timer.GetRemaining());
+			}
+		};
+		score->AddNewComponent<ScoreBehaviour>();
+		score->AddNewComponent<TextRenderer>("");
+		score->AddNewComponent<Score>();
+	}
+
+	{
 		auto paddle = GameObject::Create("Paddle", 3);
 		paddle->transform()->position = { SCREEN.GetX(HorizontalSide::CENTER), SCREEN.GetY(VerticalSide::BOTTOM) - 20.f };
 		paddle->transform()->scale = { 80, 16 };
-		paddle->AddNewComponent<Rigidbody>(Vec2{}, std::vector<int>{ {3} });
+		paddle->AddNewComponent<Rigidbody>(Vec2{}, std::vector<int>{ {1} });
 		paddle->AddNewComponent<Paddle>(SCREEN.Expand(-200));
 		paddle->AddNewComponent<BoxRenderer>();
 		paddle->AddNewComponentAs<Collider, BoxCollider>(Box{ Vec2{}, paddle->transform()->scale }, false);
@@ -47,7 +84,7 @@ PlayScene::PlayScene()
 
 			void Start()
 			{
-				timer = Timer{}.Start(2);
+				timer = Timer{}.Start(1);
 			}
 
 			void Update()
@@ -56,7 +93,7 @@ PlayScene::PlayScene()
 				{
 					timer.ResetRemaining();
 
-					auto block = GameObject::Create("Block", 1);
+					auto block = GameObject::Create("Block", 1, "Block");
 					block->transform()->scale = { 80, 20 };
 					block->AddNewComponent<Block>();
 					block->AddNewComponentAs<Collider, BoxCollider>(Box{ Vec2{}, block->transform()->scale }, false);
@@ -65,6 +102,7 @@ PlayScene::PlayScene()
 						void OnCollisionEnter(GameObject& other)
 						{
 							gameObject()->Destroy();
+							GameObject::Find("Score")->GetComponent<Score>()->score++;
 						}
 					};
 					block->AddNewComponentAs<CollisionEvent, BlockCollisionEvent>();
