@@ -96,6 +96,8 @@
     <ClCompile Include="Game\GameObjectLegacy.cpp" />
     <ClCompile Include="Game\Paddle.cpp" />
     <ClCompile Include="Game\PlayScene.cpp" />
+    <ClCompile Include="Game\ResultScene.cpp" />
+    <ClCompile Include="Game\Score.cpp" />
     <ClCompile Include="Game\TitleScene.cpp" />
     <ClCompile Include="Libraries\Dependencies\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -144,6 +146,8 @@
     <ClInclude Include="Game\GameObjectLegacy.h" />
     <ClInclude Include="Game\Paddle.h" />
     <ClInclude Include="Game\PlayScene.h" />
+    <ClInclude Include="Game\ResultScene.h" />
+    <ClInclude Include="Game\Score.h" />
     <ClInclude Include="Game\TitleScene.h" />
     <ClInclude Include="Libraries\Dependencies\pch.h" />
     <ClInclude Include="Libraries\GameLibrary\Collider.h" />

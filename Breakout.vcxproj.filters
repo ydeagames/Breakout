@@ -142,6 +142,12 @@
     <ClCompile Include="Libraries\GameLibrary\CollisionEvent.cpp">
       <Filter>ライブラリ\ゲームライブラリ</Filter>
     </ClCompile>
+    <ClCompile Include="Game\ResultScene.cpp">
+      <Filter>ゲーム</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\Score.cpp">
+      <Filter>ゲーム</Filter>
+    </ClCompile>
   </ItemGroup>
   <!-- ヘッダファイル -->
   <ItemGroup>
@@ -246,6 +252,12 @@
     </ClInclude>
     <ClInclude Include="Libraries\GameLibrary\CollisionEvent.h">
       <Filter>ライブラリ\ゲームライブラリ</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\ResultScene.h">
+      <Filter>ゲーム</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\Score.h">
+      <Filter>ゲーム</Filter>
     </ClInclude>
   </ItemGroup>
   <!-- リソースファイル -->

@@ -3,13 +3,8 @@
 #include "Paddle.h"
 #include "Block.h"
 #include "Ball.h"
+#include "Score.h"
 // <シーン>
-
-class Score : public Component {
-public:
-	Timer timer;
-	float score;
-};
 
 PlayScene::PlayScene()
 	: Scene()
@@ -20,29 +15,31 @@ PlayScene::PlayScene()
 		score->transform()->scale = { 80, 16 };
 		class ScoreBehaviour : public Component
 		{
-			std::weak_ptr<Score> wscore;
 			std::weak_ptr<TextRenderer> wtext;
 
 			void Start()
 			{
-				wscore = gameObject()->GetComponent<Score>();
+				Score::GetInstance().alive = true;
+				Score::GetInstance().score = 0;
+				Score::GetInstance().timer.Start(30);
+
 				wtext = gameObject()->GetComponent<TextRenderer>();
-				if (auto score = wscore.lock())
-				{
-					score->timer.Start(30);
-				}
 			}
 
 			void Update()
 			{
 				if (auto text = wtext.lock())
-					if (auto score = wscore.lock())
-						text->text = "Score: " + std::to_string(score->score) + "   残り時間: " + std::to_string(score->timer.GetRemaining());
+					text->text = "Score: " + std::to_string(Score::GetInstance().score) + "   残り時間: " + std::to_string(Score::GetInstance().timer.GetRemaining());
+
+				if (Score::GetInstance().timer.IsFinished())
+				{
+					Score::GetInstance().timer.Pause();
+					SceneManager::GetInstance().RequestScene(SceneID::RESULT);
+				}
 			}
 		};
 		score->AddNewComponent<ScoreBehaviour>();
 		score->AddNewComponent<TextRenderer>("");
-		score->AddNewComponent<Score>();
 	}
 
 	{
@@ -58,7 +55,12 @@ PlayScene::PlayScene()
 			void OnCollisionEnter(GameObject& other)
 			{
 				if (other.tag == "Block")
+				{
 					gameObject()->Destroy();
+					Score::GetInstance().alive = false;
+					Score::GetInstance().timer.Pause();
+					SceneManager::GetInstance().RequestScene(SceneID::RESULT);
+				}
 			}
 		};
 		paddle->AddNewComponentAs<CollisionEvent, PaddleCollisionEvent>();
@@ -101,8 +103,11 @@ PlayScene::PlayScene()
 					{
 						void OnCollisionEnter(GameObject& other)
 						{
-							gameObject()->Destroy();
-							GameObject::Find("Score")->GetComponent<Score>()->score++;
+							if (other.tag == "Ball")
+							{
+								gameObject()->Destroy();
+								Score::GetInstance().score++;
+							}
 						}
 					};
 					block->AddNewComponentAs<CollisionEvent, BlockCollisionEvent>();

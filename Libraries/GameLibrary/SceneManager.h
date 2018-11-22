@@ -7,6 +7,7 @@ enum class SceneID
 	LOGO,
 	TITLE,
 	PLAY,
+	RESULT,
 };
 
 class Scene;

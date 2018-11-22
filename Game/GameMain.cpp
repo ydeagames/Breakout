@@ -1,9 +1,8 @@
 #include "GameMain.h"
 #include <cmath>
-//#include "Demo\DemoSceneLogo.h"
-//#include "Demo\DemoSceneTitle.h"
-//#include "Demo\DemoScenePlay.h"
+#include "TitleScene.h"
 #include "PlayScene.h"
+#include "ResultScene.h"
 
 // <GameƒNƒ‰ƒX>
 
@@ -13,13 +12,12 @@ Game::Game() :
 {
 	SceneManager& scene_manager = SceneManager::GetInstance();
 
-	//scene_manager.AddScene<DemoSceneLogo>(SceneID::LOGO);
-	//scene_manager.AddScene<DemoSceneTitle>(SceneID::TITLE);
-	//scene_manager.AddScene<DemoScenePlay>(SceneID::PLAY);
-
+	scene_manager.AddScene<TitleScene>(SceneID::LOGO);
+	scene_manager.AddScene<TitleScene>(SceneID::TITLE);
 	scene_manager.AddScene<PlayScene>(SceneID::PLAY);
+	scene_manager.AddScene<ResultScene>(SceneID::RESULT);
 
-	scene_manager.SetStartScene(SceneID::PLAY);
+	scene_manager.SetStartScene(SceneID::LOGO);
 }
 
 // ƒQ[ƒ€‚ÌI—¹ˆ—
@@ -41,7 +39,7 @@ void Game::Update(void)
 // ƒQ[ƒ€‚Ì•`‰æˆ—
 void Game::Render(void)
 {
-	DrawFormatString(10, 10, Colors::White, "FPS = %f", m_frame_timer->GetFrameRate());
+	//DrawFormatString(10, 10, Colors::White, "FPS = %f", m_frame_timer->GetFrameRate());
 
 	SceneManager::GetInstance().RenderActiveScene();
 }
