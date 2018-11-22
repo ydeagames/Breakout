@@ -21,11 +21,32 @@ void BoxRenderer::Render()
 	auto t = gameObject()->transform();
 	Box box = Box{ Vec2{}, t->scale, 0 }.Transformed(*t);
 
-	// TODO “§–¾“x
 	if (material.base_transparency > 0)
-		Graphics::DrawBoxRotate(box, material.base_color, true);
+	{
+		if (material.base_transparency < 1)
+		{
+			int mode, alpha;
+			GetDrawBlendMode(&mode, &alpha);
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast<int>(material.base_transparency * 255));
+			Graphics::DrawBoxRotate(box, material.base_color, true);
+			SetDrawBlendMode(mode, alpha);
+		}
+		else
+			Graphics::DrawBoxRotate(box, material.base_color, true);
+	}
 	if (material.edge_transparency > 0)
-		Graphics::DrawBoxRotate(box, material.edge_color, false, material.edge_thickness);
+	{
+		if (material.edge_transparency < 1)
+		{
+			int mode, alpha;
+			GetDrawBlendMode(&mode, &alpha);
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast<int>(material.edge_transparency * 255));
+			Graphics::DrawBoxRotate(box, material.edge_color, false, material.edge_thickness);
+			SetDrawBlendMode(mode, alpha);
+		}
+		else
+			Graphics::DrawBoxRotate(box, material.edge_color, false, material.edge_thickness);
+	}
 }
 
 void CircleRenderer::Render()
@@ -33,11 +54,32 @@ void CircleRenderer::Render()
 	auto t = gameObject()->transform();
 	Bounds box = Bounds{ Vec2{}, Vec2{ 1, 1 } }.Transformed(*t);
 
-	// TODO “§–¾“x
 	if (material.base_transparency > 0)
-		DrawOvalAA(box.GetX(HorizontalSide::LEFT), box.GetY(VerticalSide::TOP), box.GetExtents().x, box.GetExtents().y, 32, material.base_color, true);
+	{
+		if (material.base_transparency < 1)
+		{
+			int mode, alpha;
+			GetDrawBlendMode(&mode, &alpha);
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast<int>(material.base_transparency * 255));
+			DrawOvalAA(box.GetX(HorizontalSide::LEFT), box.GetY(VerticalSide::TOP), box.GetExtents().x, box.GetExtents().y, 32, material.base_color, true);
+			SetDrawBlendMode(mode, alpha);
+		}
+		else
+			DrawOvalAA(box.GetX(HorizontalSide::LEFT), box.GetY(VerticalSide::TOP), box.GetExtents().x, box.GetExtents().y, 32, material.base_color, true);
+	}
 	if (material.edge_transparency > 0)
-		DrawOvalAA(box.GetX(HorizontalSide::LEFT), box.GetY(VerticalSide::TOP), box.GetExtents().x, box.GetExtents().y, 32, material.edge_color, false, material.edge_thickness);
+	{
+		if (material.edge_transparency < 1)
+		{
+			int mode, alpha;
+			GetDrawBlendMode(&mode, &alpha);
+			SetDrawBlendMode(DX_BLENDMODE_ALPHA, static_cast<int>(material.edge_transparency * 255));
+			DrawOvalAA(box.GetX(HorizontalSide::LEFT), box.GetY(VerticalSide::TOP), box.GetExtents().x, box.GetExtents().y, 32, material.edge_color, false, material.edge_thickness);
+			SetDrawBlendMode(mode, alpha);
+		}
+		else
+			DrawOvalAA(box.GetX(HorizontalSide::LEFT), box.GetY(VerticalSide::TOP), box.GetExtents().x, box.GetExtents().y, 32, material.edge_color, false, material.edge_thickness);
+	}
 }
 
 void LineRenderer::Render()

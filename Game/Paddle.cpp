@@ -8,22 +8,28 @@ Paddle::Paddle(const Bounds& limit)
 
 void Paddle::Start()
 {
-	auto transform = gameObject()->transform();
-	gameObject()->GetComponent<Rigidbody>()->hit_layers.push_back(5);
-	for (int i = 0; i < 4; ++i)
-	{
-		Vec2 c1 = { (i == 0 || i == 3) ? -1 : 1, (i < 2) ? -1 : 1 };
-		int j = (i + 1) % 4;
-		Vec2 c2 = { (j == 0 || j == 3) ? -1 : 1, (j < 2) ? -1 : 1 };
-		Vec2 p1 = limit.GetExtents() * c1;
-		Vec2 p2 = limit.GetExtents() * c2;
-		auto obj = GameObject::Create(gameObject()->name + ":Wall", 5);
-		*obj->transform() = *transform;
-		obj->AddNewComponentAs<Collider, LineCollider>(Line{ p1, p2 });
-		auto renderer = std::make_shared<LineRenderer>();
-		renderer->material = Material{}.SetBorder(Colors::White, 1.f, 2.f);
-		obj->AddComponent<LineRenderer>(renderer);
-	}
+	//auto transform = gameObject()->transform();
+	//gameObject()->GetComponent<Rigidbody>()->hit_layers.push_back(5);
+	//for (int i = 0; i < 4; ++i)
+	//{
+	//	Vec2 c1 = { (i == 0 || i == 3) ? -1 : 1, (i < 2) ? -1 : 1 };
+	//	int j = (i + 1) % 4;
+	//	Vec2 c2 = { (j == 0 || j == 3) ? -1 : 1, (j < 2) ? -1 : 1 };
+	//	Vec2 p1 = limit.GetExtents() * c1;
+	//	Vec2 p2 = limit.GetExtents() * c2;
+	//	auto obj = GameObject::Create(gameObject()->name + ":Wall", 5);
+	//	*obj->transform() = *transform;
+	//	obj->AddNewComponentAs<Collider, LineCollider>(Line{ p1, p2 });
+	//	auto renderer = std::make_shared<LineRenderer>();
+	//	renderer->material = Material{}.SetBorder(Colors::White, 1.f, 2.f);
+	//	obj->AddComponent<LineRenderer>(renderer);
+	//}
+	auto obj = GameObject::Create();
+	obj->transform()->position = limit.Expand(80).GetCenter();
+	obj->transform()->scale = limit.Expand(80).GetSize();
+	auto renderer = std::make_shared<BoxRenderer>();
+	renderer->material = Material{}.SetBase(Colors::Blue, .2f).SetBorder(Colors::White, 1.f, .5f);
+	obj->AddComponent<BoxRenderer>(renderer);
 }
 
 void Paddle::Update()
@@ -62,13 +68,7 @@ void Paddle::Update()
 	gameObject()->GetComponent<Rigidbody>()->vel = vel;
 	transform->rotation += rot;
 
-	/*
-	Bounds rect = { transform->position, transform->scale };
-	rect.CollisionHorizontal(limit, Connection::BARRIER, Edge::INNER);
-	rect.CollisionVertical(limit, Connection::BARRIER, Edge::INNER);
-	transform->position = rect.GetCenter();
-	transform->scale = rect.GetSize();
-	*/
+	transform->position = limit.ClosestPoint(transform->position);
 }
 
 void Paddle::Render()
