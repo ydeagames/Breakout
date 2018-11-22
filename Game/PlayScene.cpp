@@ -43,7 +43,7 @@ PlayScene::PlayScene()
 	}
 
 	{
-		auto paddle = GameObject::Create("Paddle", 3);
+		auto paddle = GameObject::Create("Paddle", 3, "Paddle");
 		paddle->transform()->position = { SCREEN.GetX(HorizontalSide::CENTER), SCREEN.GetY(VerticalSide::BOTTOM) - 20.f };
 		paddle->transform()->scale = { 80, 16 };
 		paddle->AddNewComponent<Rigidbody>(Vec2{}, std::vector<int>{ {1} });
@@ -67,7 +67,7 @@ PlayScene::PlayScene()
 	}
 
 	{
-		auto ball = GameObject::Create("Ball", 2);
+		auto ball = GameObject::Create("Ball", 2, "Ball");
 		ball->transform()->position = SCREEN.GetCenter();
 		ball->transform()->scale = { 5, 5 };
 		ball->AddNewComponent<Rigidbody>(Vec2{ 5,5 }, std::vector<int>{ {1, 3} });

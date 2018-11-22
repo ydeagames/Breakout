@@ -73,7 +73,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ForcedIncludeFiles>DxLib.h;GameLibrary\GameLib.h;Utilities\MemoryLeakDetector.h</ForcedIncludeFiles>
+      <ForcedIncludeFiles>Dependencies\pch.h;Utilities\MemoryLeakDetector.h;GameLibrary\GameLib.h</ForcedIncludeFiles>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <DisableSpecificWarnings>4996</DisableSpecificWarnings>
       <PrecompiledHeaderFile>Dependencies\pch.h</PrecompiledHeaderFile>
