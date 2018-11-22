@@ -33,7 +33,7 @@ void Rigidbody::Update()
 									else
 										event1->OnCollisionEnter(*object2);
 							}
-							if (!object2->HasComponent<Rigidbody>())
+							//if (!object2->HasComponent<Rigidbody>())
 							{
 								if (!collider1->isTrigger && !collider2->isTrigger)
 									collider2->Apply(result);

@@ -27,23 +27,27 @@ private:
 
 public:
 	template<class T>
-	void AddComponent(const std::shared_ptr<T>& component)
+	auto AddComponent(const std::shared_ptr<T>& component)
 	{
 		components->AddComponent(component);
+		return component;
 	}
 
 	template<class T, typename... Args>
-	void AddNewComponent(Args&&... args)
+	auto AddNewComponent(Args&&... args)
 	{
-		AddComponent<T>(std::make_shared<T>(std::forward<Args>(args)...));
+		auto component = std::make_shared<T>(std::forward<Args>(args)...);
+		AddComponent<T>(component);
+		return component;
 	}
 
 	template<class TypeClass, class CreateClass, typename... Args>
-	void AddNewComponentAs(Args&&... args)
+	auto AddNewComponentAs(Args&&... args)
 	{
 		auto component = std::make_shared<CreateClass>(std::forward<Args>(args)...);
 		AddComponent<TypeClass>(component);
 		AddComponent<CreateClass>(component);
+		return component;
 	}
 
 	template<class T>
