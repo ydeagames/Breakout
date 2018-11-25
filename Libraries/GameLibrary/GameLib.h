@@ -10,6 +10,7 @@
 #include "GameObject.h"
 #include "Graphics.h"
 #include "Input.h"
+#include "Resource.h"
 #include "MathUtils.h"
 #include "Renderer.h"
 #include "Rigidbody.h"

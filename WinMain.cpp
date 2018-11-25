@@ -1,12 +1,46 @@
 #include "Game\GameMain.h"
 #include "Resources\Icon\Icon.h"
 
+#include <shlwapi.h>
+#pragma comment( lib , "shlwapi.lib" )
+
+// <カレントディレクトリの修正>
+static void UpdateCurrentDir(void)
+{
+	TCHAR m_Path[MAX_PATH];
+	TCHAR m_Path2[MAX_PATH];
+
+	if (GetModuleFileName(NULL, m_Path, MAX_PATH))    //実行ファイルのフルパスを取得
+	{   //取得に成功
+		TCHAR* ptmp = _tcsrchr(m_Path, _T('\\')); // \の最後の出現位置を取得
+		if (ptmp != NULL)
+		{   //ファイル名を削除
+			*ptmp = _T('\0');
+
+			sprintf_s(m_Path2, MAX_PATH, "%s\\Resources", m_Path);
+			if (!PathFileExists(m_Path2) || !PathIsDirectory(m_Path2))
+			{
+				TCHAR* ptmp = _tcsrchr(m_Path, _T('\\')); // \の最後の出現位置を取得
+				if (ptmp != NULL)
+				{   //ファイル名を削除
+					*ptmp = _T('\0');
+				}
+			}
+			sprintf_s(m_Path2, MAX_PATH, "%s\\Resources", m_Path);
+			if (PathFileExists(m_Path2) && PathIsDirectory(m_Path2))
+				SetCurrentDirectory(m_Path);
+		}
+	}
+}
+
 // プログラムのエントリーポイント
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	// 未使用引数の警告対策
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(nCmdShow);
+
+	UpdateCurrentDir();
 
 #if defined(_DEBUG)
 	// メモリーリーク検出機構のセットアップ

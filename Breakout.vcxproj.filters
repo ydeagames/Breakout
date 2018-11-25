@@ -160,6 +160,9 @@
     <ClCompile Include="Libraries\GameLibrary\Transform.cpp">
       <Filter>ライブラリ\ゲームライブラリ\コンポーネント</Filter>
     </ClCompile>
+    <ClCompile Include="Libraries\GameLibrary\Resource.cpp">
+      <Filter>ライブラリ\ゲームライブラリ\マネージャー</Filter>
+    </ClCompile>
   </ItemGroup>
   <!-- ヘッダファイル -->
   <ItemGroup>
@@ -261,6 +264,9 @@
     </ClInclude>
     <ClInclude Include="Libraries\GameLibrary\Transform.h">
       <Filter>ライブラリ\ゲームライブラリ\コンポーネント</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\GameLibrary\Resource.h">
+      <Filter>ライブラリ\ゲームライブラリ\マネージャー</Filter>
     </ClInclude>
   </ItemGroup>
   <!-- リソースファイル -->
